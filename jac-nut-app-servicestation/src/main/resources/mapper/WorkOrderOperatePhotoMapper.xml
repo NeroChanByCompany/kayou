@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.WorkOrderOperatePhotoDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.WorkOrderOperatePhoto">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="wo_code" jdbcType="VARCHAR" property="woCode" />
+        <result column="operate_id" jdbcType="VARCHAR" property="operateId" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
+        <result column="timestamp" jdbcType="BIGINT" property="timestamp" />
+        <result column="lon" jdbcType="VARCHAR" property="lon" />
+        <result column="lat" jdbcType="VARCHAR" property="lat" />
+        <result column="addr" jdbcType="VARCHAR" property="addr" />
+        <result column="device_no" jdbcType="VARCHAR" property="deviceNo" />
+        <result column="is_offline" jdbcType="INTEGER" property="isOffline" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, wo_code, operate_id, type, url, timestamp, lon, lat, addr, device_no, is_offline,
+    create_time, update_time
+  </sql>
+    <!-- 根据工单号、操作ID 查询 照片列表 -->
+    <select id="selectByWoCodeAndOperateId" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        work_order_operate_photo
+        WHERE
+        wo_code = #{woCode,jdbcType=VARCHAR}
+        AND operate_id = #{operateId,jdbcType=VARCHAR}
+    </select>
+    <select id="queryWoCalculationPhotosByWoCode" parameterType="java.lang.String"
+            resultType="com.nut.servicestation.app.dto.WoCalculationPhotosDto">
+  SELECT
+  woop.operate_id AS operateId,
+  woop.type AS type,
+  woop.url AS url
+  FROM
+  work_order_operate_photo woop
+  WHERE woop.wo_code = #{woCode,jdbcType=VARCHAR}
+  </select>
+    <!-- 根据工单号、操作ID、时间戳查询照片数量 -->
+    <select id="queryPicNum" parameterType="com.nut.servicestation.app.form.UploadPhotoInfoForm"
+            resultType="java.lang.Integer">
+    SELECT
+      count(1)
+    FROM
+      work_order_operate_photo
+    WHERE
+      wo_code = #{woCode,jdbcType=VARCHAR}
+    AND operate_id = #{operateId,jdbcType=VARCHAR}
+    AND timestamp = #{timestamp,jdbcType=BIGINT}
+  </select>
+    <insert id="insertSelective" parameterType="com.nut.servicestation.app.domain.WorkOrderOperatePhoto">
+        insert into work_order_operate_photo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="woCode != null">
+                wo_code,
+            </if>
+            <if test="operateId != null">
+                operate_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="timestamp != null">
+                timestamp,
+            </if>
+            <if test="lon != null">
+                lon,
+            </if>
+            <if test="lat != null">
+                lat,
+            </if>
+            <if test="addr != null">
+                addr,
+            </if>
+            <if test="deviceNo != null">
+                device_no,
+            </if>
+            <if test="isOffline != null">
+                is_offline,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="woCode != null">
+                #{woCode,jdbcType=VARCHAR},
+            </if>
+            <if test="operateId != null">
+                #{operateId,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="timestamp != null">
+                #{timestamp,jdbcType=BIGINT},
+            </if>
+            <if test="lon != null">
+                #{lon,jdbcType=VARCHAR},
+            </if>
+            <if test="lat != null">
+                #{lat,jdbcType=VARCHAR},
+            </if>
+            <if test="addr != null">
+                #{addr,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceNo != null">
+                #{deviceNo,jdbcType=VARCHAR},
+            </if>
+            <if test="isOffline != null">
+                #{isOffline,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+</mapper>

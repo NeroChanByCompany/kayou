@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.SlaveMessageDao">
+    <update id="update">
+        update ${table} umr set umr.read_flag=2 <where> umr.message_type = #{messageType} and receiver_id = #{userId}</where>
+    </update>
+    <!-- 查询消息详情列表 -->
+    <select id="queryNowMessageDetailList" resultType="com.nut.driver.app.dto.QueryMessageDetailListDto">
+        SELECT
+            umr.id id,
+            umr.title AS title,
+            umr.content AS content,
+            umr.message_id AS messageId,
+            umr.read_flag AS readFlag,
+            umr.send_time AS sendTime,
+            umr.message_extra AS messageExtra,
+            umr.message_code AS messageCode,
+            umr.stype AS imageCode,
+            umr.invitation_id as invitationId
+        FROM
+            ${nowTable} umr
+        WHERE
+            umr.push_show_type = #{pushShowType,jdbcType=INTEGER}
+          AND umr.receiver_id = #{receiverId,jdbcType=VARCHAR}
+          AND umr.user_visible = 2
+          AND umr.send_time &lt;= #{sendTime,jdbcType=BIGINT}
+          AND umr.message_type = #{messageType,jdbcType=INTEGER}
+        order by id DESC
+    </select>
+    <select id="queryAfterMessageList" resultType="com.nut.driver.app.dto.QueryMessageListDto">
+        SELECT
+        umr.message_type_name typeName,
+        umr.content content,
+        umr.send_time sendTime,
+        umr.message_type messageType
+        FROM
+            ${beforeTable} umr
+        WHERE
+            umr.push_show_type = #{pushShowType,jdbcType=INTEGER}
+          AND umr.receiver_id = #{receiverId,jdbcType=VARCHAR}
+          AND umr.user_visible = 2
+          AND umr.send_time &lt;= #{sendTime,jdbcType=BIGINT}
+          AND umr.message_type = #{messageType}
+        ORDER BY sendTime DESC limit 1
+    </select>
+    <select id="queryNowMessageList" resultType="com.nut.driver.app.dto.QueryMessageListDto">
+        SELECT
+        umr.message_type_name typeName,
+        umr.content content,
+        umr.send_time sendTime,
+        umr.message_type messageType
+        FROM
+            ${nowTable} umr
+        WHERE
+            umr.push_show_type = #{pushShowType,jdbcType=INTEGER}
+          AND umr.receiver_id = #{receiverId,jdbcType=VARCHAR}
+          AND umr.user_visible = 2
+          AND umr.send_time &lt;= #{sendTime,jdbcType=BIGINT}
+          AND umr.message_type = #{messageType}
+        ORDER BY sendTime DESC limit 1
+    </select>
+    <select id="queryBeforeMessageDetailList" resultType="com.nut.driver.app.dto.QueryMessageDetailListDto">
+        SELECT
+            um.id id,
+            um.title AS title,
+            um.content AS content,
+            um.message_id AS messageId,
+            um.read_flag AS readFlag,
+            um.send_time AS sendTime,
+            um.message_extra AS messageExtra,
+            um.message_code AS messageCode,
+            um.stype AS imageCode,
+            um.invitation_id as invitationId
+        FROM
+            ${beforeTable} um
+        WHERE
+            um.push_show_type = #{pushShowType,jdbcType=INTEGER}
+          AND um.receiver_id = #{receiverId,jdbcType=VARCHAR}
+          AND um.user_visible = 2
+          AND um.send_time &lt;= #{sendTime,jdbcType=BIGINT}
+          AND um.message_type = #{messageType,jdbcType=INTEGER}
+        order by id DESC
+    </select>
+    <select id="queryNowCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1) AS count
+        FROM
+        ${nowTable} umr
+        WHERE
+        umr.push_show_type = #{pushShowType,jdbcType=INTEGER}
+        AND umr.receiver_id = #{receiverId,jdbcType=VARCHAR}
+        AND umr.user_visible = 2
+        AND umr.read_flag = 1
+        AND umr.send_time &lt;= #{sendTime,jdbcType=BIGINT}
+        AND umr.message_type =#{messageType}
+        GROUP BY
+        umr.message_type
+    </select>
+    <select id="queryBeforeCount" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1) AS count
+        FROM
+            ${beforeTable} umr
+        WHERE
+            umr.push_show_type = #{pushShowType,jdbcType=INTEGER}
+          AND umr.receiver_id = #{receiverId,jdbcType=VARCHAR}
+          AND umr.user_visible = 2
+          AND umr.read_flag = 1
+          AND umr.send_time &lt;= #{sendTime,jdbcType=BIGINT}
+          AND umr.message_type =#{messageType}
+        GROUP BY
+            umr.message_type
+    </select>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.WorkOrderHistoryDao">
+    <insert id="insert" parameterType="java.util.Map">
+    insert into work_order_history (wo_code, wo_status,
+      wo_type, time_create, time_accept,
+      time_depart, time_arrive_expected, time_receive,
+      time_inspect_begin, time_inspected, time_repair_photo,
+      time_close, time_applyRefuse, time_applyModify,
+      time_applyClose, assign_to, refuse_type,
+      refuse_reason, refuse_times, close_type,
+      close_reason, close_times, chassis_num, station_id,
+      station_code, station_name, area_code,
+      appo_station_id, appo_arrive_time, appo_type,
+      appo_user_id, appo_user_name, appo_user_phone,
+      send_to_repair_name, send_to_repair_phone, car_lon,
+      car_lat, car_location, car_distance,
+      repair_item, maintain_item, registered_phone,
+      user_comment, mileage, customer_level,
+      modify_reason, modify_times, rescue_staff_name, rescue_staff_phone,
+      rescue_staff_num, rescue_car_device, is_abnormal_receive,
+      device_id, operator_id, remind_times,
+      last_remind_time, cancel_reason, is_emergency,
+      break_status, load_description, estimate_time,
+      estimate_fee,
+      times_rescue_number, rescue_type, create_time, update_time, rescue_create_time
+      )
+      values (#{wrkOrder.woCode,jdbcType=VARCHAR}, #{wrkOrder.woStatus,jdbcType=INTEGER},
+      #{wrkOrder.woType,jdbcType=INTEGER}, #{wrkOrder.timeCreate,jdbcType=TIMESTAMP}, #{wrkOrder.timeAccept,jdbcType=TIMESTAMP},
+      #{wrkOrder.timeDepart,jdbcType=TIMESTAMP}, #{wrkOrder.timeArriveExpected,jdbcType=TIMESTAMP}, #{wrkOrder.timeReceive,jdbcType=TIMESTAMP},
+      #{wrkOrder.timeInspectBegin,jdbcType=TIMESTAMP}, #{wrkOrder.timeInspected,jdbcType=TIMESTAMP}, #{wrkOrder.timeRepairPhoto,jdbcType=TIMESTAMP},
+      #{wrkOrder.timeClose,jdbcType=TIMESTAMP}, #{wrkOrder.timeApplyrefuse,jdbcType=TIMESTAMP}, #{wrkOrder.timeApplymodify,jdbcType=TIMESTAMP},
+      #{wrkOrder.timeApplyclose,jdbcType=TIMESTAMP}, #{wrkOrder.assignTo,jdbcType=VARCHAR}, #{wrkOrder.refuseType,jdbcType=INTEGER},
+      #{wrkOrder.refuseReason,jdbcType=VARCHAR}, #{wrkOrder.refuseTimes,jdbcType=INTEGER}, #{wrkOrder.closeType,jdbcType=INTEGER},
+      #{wrkOrder.closeReason,jdbcType=VARCHAR}, #{wrkOrder.closeTimes,jdbcType=INTEGER}, #{wrkOrder.chassisNum,jdbcType=VARCHAR}, #{wrkOrder.stationId,jdbcType=VARCHAR},
+      #{wrkOrder.stationCode,jdbcType=VARCHAR}, #{wrkOrder.stationName,jdbcType=VARCHAR}, #{wrkOrder.areaCode,jdbcType=VARCHAR},
+      #{wrkOrder.appoStationId,jdbcType=VARCHAR}, #{wrkOrder.appoArriveTime,jdbcType=TIMESTAMP}, #{wrkOrder.appoType,jdbcType=INTEGER},
+      #{wrkOrder.appoUserId,jdbcType=BIGINT}, #{wrkOrder.appoUserName,jdbcType=VARCHAR}, #{wrkOrder.appoUserPhone,jdbcType=VARCHAR},
+      #{wrkOrder.sendToRepairName,jdbcType=VARCHAR}, #{wrkOrder.sendToRepairPhone,jdbcType=VARCHAR}, #{wrkOrder.carLon,jdbcType=VARCHAR},
+      #{wrkOrder.carLat,jdbcType=VARCHAR}, #{wrkOrder.carLocation,jdbcType=VARCHAR}, #{wrkOrder.carDistance,jdbcType=VARCHAR},
+      #{wrkOrder.repairItem,jdbcType=VARCHAR}, #{wrkOrder.maintainItem,jdbcType=VARCHAR}, #{wrkOrder.registeredPhone,jdbcType=VARCHAR},
+      #{wrkOrder.userComment,jdbcType=VARCHAR}, #{wrkOrder.mileage,jdbcType=VARCHAR}, #{wrkOrder.customerLevel,jdbcType=INTEGER},
+      #{wrkOrder.modifyReason,jdbcType=VARCHAR}, #{wrkOrder.modifyTimes,jdbcType=INTEGER}, #{wrkOrder.rescueStaffName,jdbcType=VARCHAR}, #{wrkOrder.rescueStaffPhone,jdbcType=VARCHAR},
+      #{wrkOrder.rescueStaffNum,jdbcType=INTEGER}, #{wrkOrder.rescueCarDevice,jdbcType=INTEGER}, #{wrkOrder.isAbnormalReceive,jdbcType=INTEGER},
+      #{wrkOrder.deviceId,jdbcType=VARCHAR}, #{wrkOrder.operatorId,jdbcType=VARCHAR}, #{wrkOrder.remindTimes,jdbcType=INTEGER},
+      #{wrkOrder.lastRemindTime,jdbcType=TIMESTAMP}, #{wrkOrder.cancelReason,jdbcType=VARCHAR}, #{wrkOrder.isEmergency,jdbcType=INTEGER},
+      #{wrkOrder.breakStatus,jdbcType=INTEGER}, #{wrkOrder.loadDescription,jdbcType=VARCHAR}, #{wrkOrder.estimateTime,jdbcType=TIMESTAMP},
+      #{wrkOrder.estimateFee,jdbcType=VARCHAR},
+      #{timesRescueNumber,jdbcType=INTEGER}, #{wrkOrder.rescueType,jdbcType=INTEGER}, #{wrkOrder.createTime,jdbcType=TIMESTAMP}, #{wrkOrder.updateTime,jdbcType=TIMESTAMP}, NOW()
+      )
+  </insert>
+
+</mapper>

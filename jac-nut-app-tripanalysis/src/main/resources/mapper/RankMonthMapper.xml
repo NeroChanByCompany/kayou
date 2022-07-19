@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.tripanalysis.app.dao.RankMonthDao">
+    <resultMap id="BaseResultMap" type="com.nut.tripanalysis.app.entity.RankMonthEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="car_id" jdbcType="VARCHAR" property="carId"/>
+        <result column="car_num" jdbcType="VARCHAR" property="carNum"/>
+        <result column="statis_date" jdbcType="DATE" property="statisDate"/>
+        <result column="mileage" jdbcType="REAL" property="mileage"/>
+        <result column="oilwear" jdbcType="REAL" property="oilwear"/>
+        <result column="oilwear_avg" jdbcType="REAL" property="oilwearAvg"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="statis_timestamp" jdbcType="BIGINT" property="statisTimestamp"/>
+        <result column="car_model" jdbcType="VARCHAR" property="carModel"/>
+        <result column="ranking" jdbcType="INTEGER" property="ranking"/>
+        <result column="percentage" jdbcType="INTEGER" property="percentage"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, car_id, car_num, statis_date, mileage, oilwear, oilwear_avg, create_time, statis_timestamp,
+    car_model, ranking, percentage
+  </sql>
+
+    <select id="getOilwearByCarId" resultType="com.nut.tripanalysis.app.pojo.OilwearRankingPojo">
+        SELECT
+        car_id carId,
+        car_model carModel,
+        car_num carNumber,
+        oilwear_avg avgOilwear,
+        ranking,
+        percentage
+        FROM
+        car_ranking_month
+        WHERE
+        statis_timestamp = #{timeStamp,jdbcType=BIGINT}
+        AND
+        car_id in(
+        <foreach collection="carlist" item="item" index="index" separator=",">
+            #{item.carId,jdbcType=VARCHAR}
+        </foreach>
+        )
+    </select>
+    <select id="avgOilwear4MonthRanking" resultType="com.nut.tripanalysis.app.dto.AvgOilwearRankingDto">
+    <![CDATA[
+
+            SELECT
+            crm.car_id AS carId,
+            crm.car_num as carNumber,
+            crm.mileage,
+            crm.oilwear,
+            crm.oilwear_avg as avgOilwear,
+            crm.statis_timestamp,
+            crm.car_model as carModel,
+            crm.ranking as ranking,
+            floor(crm.percentage) as percentage,
+            c.car_vin AS vin
+            FROM car_ranking_month crm
+            LEFT JOIN car c ON crm.car_id = c.id
+            WHERE crm.statis_timestamp =  #{timeStamp,jdbcType=BIGINT}
+            AND crm.model_name = ( SELECT
+		      CONCAT(if(mi.simple_name is null or mi.simple_name in ('null','NULL') ,'',mi.simple_name),
+		      if(mi.driver_type_name is null or mi.driver_type_name in ('null','NULL') ,'',mi.driver_type_name),
+		      if(mi.car_type_name is null or mi.car_type_name in ('null','NULL') ,'',mi.car_type_name))
+	          FROM
+		      car cc LEFT JOIN model_info mi ON mi.model_id = cc.car_model
+		      WHERE  cc.car_model  in (${modelId}) limit 1)
+            ORDER BY crm.oilwear_avg
+            LIMIT 10
+
+        ]]>
+  </select>
+</mapper>

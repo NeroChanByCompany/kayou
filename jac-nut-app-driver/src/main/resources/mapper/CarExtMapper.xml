@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.CarExtDao">
+    <resultMap type="com.nut.driver.app.entity.CarExtEntity" id="carExtMap">
+        <result property="carId" column="car_id"/>
+        <result property="vin" column="vin"/>
+        <result property="license" column="license"/>
+        <result property="identity" column="identity"/>
+        <result property="brand" column="brand"/>
+        <result property="series" column="series"/>
+        <result property="engineNum" column="engine_num"/>
+        <result property="color" column="color"/>
+        <result property="vehicleUse" column="vehicle_use"/>
+        <result property="industry" column="industry"/>
+        <result property="typeOfGoods" column="type_of_goods"/>
+        <result property="typeOfVan" column="type_of_van"/>
+        <result property="ratedLoad" column="rated_load"/>
+        <result property="weight" column="weight"/>
+        <result property="length" column="length"/>
+        <result property="width" column="width"/>
+        <result property="insuranceDate" column="insurance_date"/>
+        <result property="insuredAmount" column="insured_amount"/>
+        <result property="insuranceCompany" column="insurance_company"/>
+        <result property="transferCycle" column="transfer_cycle"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedTime" column="updated_time"/>
+    </resultMap>
+
+    <select id="findByCarId" resultMap="carExtMap">
+        SELECT *
+        FROM car_ext
+        Where car_id = #{carId}
+    </select>
+
+    <select id="findByClassesNum" resultMap="carExtMap">
+        SELECT *
+        FROM car_ext
+        Where vin LIKE CONCAT('%', #{classesNum})
+    </select>
+
+    <insert id="insert" parameterType="com.nut.driver.app.form.UpdateCarExtForm">
+        insert into car_ext
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="carId != null">
+                car_id,
+            </if>
+            <if test="vin != null">
+                vin,
+            </if>
+            <if test="license != null">
+                license,
+            </if>
+            <if test="identity != null">
+                identity,
+            </if>
+            <if test="brand != null">
+                brand,
+            </if>
+            <if test="series != null">
+                series,
+            </if>
+            <if test="engineNum != null">
+                engine_num,
+            </if>
+            <if test="color != null">
+                color,
+            </if>
+            <if test="vehicleUse != null">
+                vehicle_use,
+            </if>
+            <if test="industry != null">
+                industry,
+            </if>
+            <if test="typeOfGoods != null">
+                type_of_goods,
+            </if>
+            <if test="typeOfVan != null">
+                type_of_van,
+            </if>
+            <if test="ratedLoad != null">
+                rated_load,
+            </if>
+            <if test="weight != null">
+                weight,
+            </if>
+            <if test="length != null">
+                length,
+            </if>
+            <if test="width != null">
+                width,
+            </if>
+            <if test="insuranceDate != null">
+                insurance_date,
+            </if>
+            <if test="insuredAmount != null">
+                insured_amount,
+            </if>
+            <if test="insuranceCompany != null">
+                insurance_company,
+            </if>
+            <if test="transferCycle != null">
+                transfer_cycle,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="carId != null">
+                #{carId,jdbcType=VARCHAR},
+            </if>
+            <if test="vin != null">
+                #{vin,jdbcType=VARCHAR},
+            </if>
+            <if test="license != null">
+                #{license,jdbcType=VARCHAR},
+            </if>
+            <if test="identity != null">
+                #{identity,jdbcType=VARCHAR},
+            </if>
+            <if test="brand != null">
+                #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="series != null">
+                #{series,jdbcType=VARCHAR},
+            </if>
+            <if test="engineNum != null">
+                #{engineNum,jdbcType=VARCHAR},
+            </if>
+            <if test="color != null">
+                #{color,jdbcType=VARCHAR},
+            </if>
+            <if test="vehicleUse != null">
+                #{vehicleUse,jdbcType=INTEGER},
+            </if>
+            <if test="industry != null">
+                #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="typeOfGoods != null">
+                #{typeOfGoods,jdbcType=VARCHAR},
+            </if>
+            <if test="typeOfVan != null">
+                #{typeOfVan,jdbcType=VARCHAR},
+            </if>
+            <if test="ratedLoad != null">
+                #{ratedLoad,jdbcType=VARCHAR},
+            </if>
+            <if test="weight != null">
+                #{weight,jdbcType=INTEGER},
+            </if>
+            <if test="length != null">
+                #{length,jdbcType=VARCHAR},
+            </if>
+            <if test="width != null">
+                #{width,jdbcType=VARCHAR},
+            </if>
+            <if test="insuranceDate != null">
+                #{insuranceDate,jdbcType=VARCHAR},
+            </if>
+            <if test="insuredAmount != null">
+                #{insuredAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="insuranceCompany != null">
+                #{insuranceCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="transferCycle != null">
+                #{transferCycle,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.nut.driver.app.form.UpdateCarExtForm">
+        update car_ext
+        <set>
+            <if test="license != null">
+                license = #{license,jdbcType=VARCHAR},
+            </if>
+            <if test="identity != null">
+                identity = #{identity,jdbcType=VARCHAR},
+            </if>
+            <if test="brand != null">
+                brand = #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="series != null">
+                series = #{series,jdbcType=VARCHAR},
+            </if>
+            <if test="engineNum != null">
+                engine_num = #{engineNum,jdbcType=VARCHAR},
+            </if>
+            <if test="color != null">
+                color = #{color,jdbcType=VARCHAR},
+            </if>
+            <if test="vehicleUse != null">
+                vehicle_use = #{vehicleUse,jdbcType=INTEGER},
+            </if>
+            <if test="industry != null">
+                industry = #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="typeOfGoods != null">
+                type_of_goods = #{typeOfGoods,jdbcType=VARCHAR},
+            </if>
+            <if test="typeOfVan != null">
+                type_of_van = #{typeOfVan,jdbcType=VARCHAR},
+            </if>
+            <if test="ratedLoad != null">
+                rated_load = #{ratedLoad,jdbcType=VARCHAR},
+            </if>
+            <if test="weight != null">
+                weight = #{weight,jdbcType=VARCHAR},
+            </if>
+            <if test="length != null">
+                length = #{length,jdbcType=VARCHAR},
+            </if>
+            <if test="width != null">
+                width = #{width,jdbcType=VARCHAR},
+            </if>
+            <if test="insuranceDate != null">
+                insurance_date = #{insuranceDate,jdbcType=VARCHAR},
+            </if>
+            <if test="insuredAmount != null">
+                insured_amount = #{insuredAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="insuranceCompany != null">
+                insurance_company = #{insuranceCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="transferCycle != null">
+                transfer_cycle = #{transferCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                updated_time = #{updateTime},
+            </if>
+        </set>
+        <where>car_id = #{carId,jdbcType=BIGINT}</where>
+    </update>
+
+    <select id="countByCarId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(1)
+        from car_ext
+        where car_id = #{carId,jdbcType=BIGINT}
+    </select>
+</mapper>

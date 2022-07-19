@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.CarDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.Car">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="car_vin" jdbcType="VARCHAR" property="carVin"/>
+        <result column="car_brand" jdbcType="VARCHAR" property="carBrand"/>
+        <result column="car_series" jdbcType="VARCHAR" property="carSeries"/>
+        <result column="car_series_name" jdbcType="VARCHAR" property="carSeriesName"/>
+        <result column="car_model" jdbcType="VARCHAR" property="carModel"/>
+        <result column="car_model_code" jdbcType="VARCHAR" property="carModelCode"/>
+        <result column="car_model_name" jdbcType="VARCHAR" property="carModelName"/>
+        <result column="engine" jdbcType="VARCHAR" property="engine"/>
+        <result column="engine_no" jdbcType="VARCHAR" property="engineNo"/>
+        <result column="is_vip" jdbcType="CHAR" property="isVip"/>
+        <result column="owner_id" jdbcType="VARCHAR" property="ownerId"/>
+        <result column="invoice_photo" jdbcType="VARCHAR" property="invoicePhoto"/>
+        <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo"/>
+        <result column="identity_card" jdbcType="VARCHAR" property="identityCard"/>
+        <result column="organization" jdbcType="VARCHAR" property="organization"/>
+        <result column="car_number" jdbcType="VARCHAR" property="carNumber"/>
+        <result column="terminal_id" jdbcType="VARCHAR" property="terminalId"/>
+        <result column="auto_terminal" jdbcType="VARCHAR" property="autoTerminal"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="sales_date" jdbcType="TIMESTAMP" property="salesDate"/>
+        <result column="T_ID" jdbcType="BIGINT" property="tId"/>
+        <result column="MB_SALES_STATUS" jdbcType="INTEGER" property="mbSalesStatus"/>
+        <result column="MB_SALES_DATE" jdbcType="TIMESTAMP" property="mbSalesDate"/>
+        <result column="SALES_STATUS" jdbcType="INTEGER" property="salesStatus"/>
+        <result column="tbox_type" jdbcType="INTEGER" property="tboxType"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , car_vin, car_brand, car_series, car_series_name, car_model, car_model_code, car_model_name,
+    engine, engine_no, is_vip, owner_id, invoice_photo, invoice_no, identity_card, organization,
+    car_number, terminal_id, auto_terminal, create_time, update_time, sales_date, T_ID,
+    MB_SALES_STATUS, MB_SALES_DATE, SALES_STATUS, tbox_type
+    </sql>
+
+    <select id="queryCarNumberByVin" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT car_number AS carNumber
+        FROM car
+        WHERE car_vin = #{carVin,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 根据底盘号查询相关用户ID（创建者、管理员、司机、车主） -->
+    <select id="selectUcIdByChassisNum" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT uu.uc_id AS userId
+        FROM flt_fleet_car_mapping fcm
+                 LEFT JOIN flt_fleet_user_mapping fum ON fum.team_id = fcm.team_id
+                 LEFT JOIN car cc ON cc.id = fcm.car_id
+                 LEFT JOIN user uu ON uu.id = fum.user_id
+        WHERE cc.car_vin = #{chassisNum,jdbcType=VARCHAR}
+          AND fum.role IN (0, 1)
+        UNION
+        SELECT uu.uc_id AS userId
+        FROM flt_car_driver_mapping cdm
+                 LEFT JOIN car cc ON cc.id = cdm.car_id
+                 LEFT JOIN user uu ON uu.id = cdm.user_id
+        WHERE cc.car_vin = #{chassisNum,jdbcType=VARCHAR}
+        UNION
+        SELECT uu.uc_id AS userId
+        FROM flt_car_owner_mapping com
+                 LEFT JOIN car cc ON cc.id = com.car_id
+                 LEFT JOIN user uu ON uu.id = com.user_id
+        WHERE cc.car_vin = #{chassisNum,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from car
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="selectCarByCarVin" parameterType="java.lang.String" resultType="com.nut.servicestation.app.domain.Car">
+        SELECT id,
+               car_vin    as carVin,
+               car_number AS carNumber
+        FROM car
+        WHERE car_vin like CONCAT('%', #{chassisNum,jdbcType=VARCHAR})
+        ORDER BY create_time desc LIMIT 1
+    </select>
+    <select id="queryCarIdByVin" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT id
+        FROM car
+        WHERE car_vin = #{carVin,jdbcType=VARCHAR}
+    </select>
+    <select id="queryLocationByCarByTerminalId" resultType="com.nut.servicestation.app.pojo.LocationByCarPojo">
+        SELECT c.car_vin                                     AS carVin,
+               c.car_number                                  AS carNumber,
+               CONCAT(mi.driver_type_name, mi.car_type_name) AS carModelName,
+               mi.simple_name                                AS carSeriesName,
+               mi.engine                                     AS engine,
+               c.auto_terminal                               AS autoTerminal
+        FROM car c
+                 LEFT JOIN model_info mi ON mi.model_id = c.car_model
+        where c.auto_terminal = #{terminalId} limit 1
+    </select>
+    <select id="selectTerminalTypeFromTsp" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select IFNULL(MIN(TER.T_STYLE), 8)
+        FROM ${DbName}.hy_terminal TER,
+             ${DbName}.hy_car C
+        WHERE C.CAR_TERMINAL = TER.T_ID
+          AND C.CHASSIS_NUM = #{chassisNum,jdbcType=VARCHAR}
+    </select>
+    <select id="queryCarModelBaseByVin" parameterType="java.lang.String"
+            resultType="com.nut.servicestation.app.domain.Car">
+        SELECT id,
+               car_model_base AS carModelBase,
+               car_number     AS carNumber
+        FROM car
+        WHERE car_vin = #{vin,jdbcType=VARCHAR} LIMIT 1
+    </select>
+    <select id="queryCarByAutoTerminal" resultType="com.nut.servicestation.app.pojo.CarRedisPojo">
+        SELECT id            AS carId,
+               car_vin       AS carVin,
+               auto_terminal AS terId
+        FROM car
+        WHERE auto_terminal = #{autoTerminal, jdbcType=VARCHAR}
+        ORDER BY CAST(id AS signed) DESC LIMIT 1
+    </select>
+
+    <select id="queryUcIdByVin0" parameterType="java.lang.String" resultType="java.lang.Long">
+        SELECT ftl.user_id AS userId
+        FROM flt_car_owner_mapping ftl
+                 INNER join car c on ftl.car_id = c.id
+        WHERE c.car_vin like CONCAT('%', #{vin}, '%')
+    </select>
+
+    <select id="queryUcIdByVin1" parameterType="java.lang.String" resultType="java.lang.Long">
+        SELECT ftl.user_id AS userId
+        FROM flt_car_owner_mapping ftl
+                 INNER join car c on ftl.car_id = c.id
+        WHERE c.car_vin like CONCAT('%', #{vin}, '%')
+    </select>
+
+    <select id="queryUcIdByVin2" parameterType="java.lang.String" resultType="java.lang.Long">
+        SELECT ftl.user_id AS userId
+        FROM flt_car_owner_mapping ftl
+                 INNER join car c on ftl.car_id = c.id
+                 INNER JOIN flt_fleet_user_mapping ffum ON ftl.user_id = ffum.user_id
+        WHERE c.car_vin like CONCAT('%', #{vin}, '%')
+          AND role = 0
+    </select>
+</mapper>

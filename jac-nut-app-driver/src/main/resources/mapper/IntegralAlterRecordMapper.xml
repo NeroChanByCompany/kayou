@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.IntegralAlterRecordDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.IntegralAlterRecordEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="credits" column="credits"/>
+        <result property="type" column="type"/>
+        <result property="integralItem" column="integral_item"/>
+        <result property="integralResource" column="integral_resource"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="countByUserIdAndItemAndToday" resultType="java.lang.Integer">
+        select count(1)
+        from integral_alter_record
+        where uid = #{userId}
+          and integral_item = #{item}
+          and create_time between CURDATE() and date_add(CURDATE(), interval 1 day)
+    </select>
+
+    <select id="findByUserId" resultType="com.nut.driver.app.entity.IntegralAlterRecordEntity">
+        select id,
+               credits,
+               `type`,
+               (case integral_item
+                    when '1' then '注册'
+                    when '2' then '绑车'
+                    when '3' then '评论'
+                    when '4' then '发帖'
+                    when '5' then '分享'
+                    when '6' then '服务预约'
+                    when '7' then '服务评价'
+                    when '8' then '兑吧积分消费成功'
+                    when '9' then '兑吧积分消费失败'
+                    when '10' then '积分导入'
+                    when '100' then '用户完善资料'
+                    when '101' then '完善车辆资料'
+                    when '21' then '活动发帖'
+                    when '22' then '活动点赞'
+                    when '24' then '邀请有礼-二级'
+                    when '25' then '邀请有礼'
+                    when '26' then '邀请有礼'
+                    when '27' then '问卷调查'
+                    when '28' then '投票'
+                    when '29' then '配件商城'
+                    when '31' then '连续1天签到'
+                    when '32' then '连续2天签到'
+                    when '33' then '连续3天签到'
+                    when '34' then '连续4天签到'
+                    when '35' then '连续5天签到'
+                    when '36' then '连续6天签到'
+                    when '37' then '连续7天签到'
+                    when '38' then '连续签到一周以上'
+                    when '51' then '邀请注册-水军'
+                    when '52' then '邀请注册-官方号'
+                    when '53' then '邀请注册-认证号'
+                    when '54' then '邀请注册-经销商认证号'
+                    when '55' then '邀请注册-服务站认证号'
+                    when '56' then '邀请注册-普通APP账号'
+                    when '61' then '邀请注册-二级-水军'
+                    when '62' then '邀请注册-二级-官方号'
+                    when '63' then '邀请注册-二级-认证号'
+                    when '64' then '邀请注册-二级-经销商认证号'
+                    when '65' then '邀请注册-二级-服务站认证号'
+                    when '66' then '邀请注册-二级-普通APP账号'
+                    when '71' then '中秋活动-签到'
+                    when '72' then '中秋活动-抽奖'
+                    when '73' then '中秋活动-发帖'
+                    when '74' then '中秋活动-浏览车联网'
+                    when '75' then '中秋活动-绑定车辆'
+                    when '76' then '中秋活动-推荐注册'
+                    when '81' then '国庆活动-签到'
+                    when '82' then '国庆活动-抽奖'
+                    when '83' then '国庆活动-发帖'
+                    when '84' then '国庆活动-浏览直销商城'
+                    when '85' then '国庆活动-绑定车辆'
+                    when '86' then '国庆活动-推荐注册'
+                    when '91' then '双十一送积分-浏览国六页面'
+                    when '92' then '双十一送积分-浏览配件商城'
+                    when '93' then '双十一送积分-浏览整车商城'
+                    when '94' then '双十一送积分-邀请注册'
+                    when '95' then '双十一送积分-邀请有礼'
+                    when '1100' then '冻结回退'
+                    else integral_item end) as integralItem,
+               create_time                  as createTime
+        from integral_alter_record
+        where uid = #{userId}
+        order by create_time desc
+    </select>
+
+    <insert id="insertIntegralAlterRecord" parameterType="com.nut.driver.app.entity.IntegralAlterRecordEntity">
+        insert into integral_alter_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="uid != null">
+                uid,
+            </if>
+            <if test="credits != null">
+                credits,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="integralItem != null">
+                integral_item,
+            </if>
+            <if test="integralResource != null">
+                integral_resource,
+            </if>
+            <if test="orderNum != null">
+                order_num,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="balance != null">
+                balance,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="uid != null">
+                #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="credits != null">
+                #{credits,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="integralItem != null">
+                #{integralItem,jdbcType=VARCHAR},
+            </if>
+            <if test="integralResource != null">
+                #{integralResource,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNum != null">
+                #{orderNum,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="balance != null">
+                #{balance,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="countByRuleId" resultType="java.lang.Integer">
+        select count(*)
+        from integral_alter_record
+        where uid = #{ucId,jdbcType=VARCHAR}
+          and integral_item = #{ruleId,jdbcType=VARCHAR}
+          and create_time <![CDATA[ > ]]> #{startDate}
+          and create_time <![CDATA[ < ]]> #{endDate}
+    </select>
+
+    <select id="integralCount" resultType="java.lang.Integer">
+        SELECT SUM(credits)
+        FROM integral_alter_record
+        WHERE uid = #{ucId,jdbcType=VARCHAR}
+          AND (integral_item = '3'
+            OR integral_item = '4')
+          and freeze is null
+          and create_time <![CDATA[ > ]]> #{startDate}
+          and create_time <![CDATA[ < ]]> #{endDate}
+    </select>
+
+    <update id="updateFreeze">
+        update integral_alter_record
+        set freeze = 1
+        WHERE (uid = #{ucId,jdbcType=VARCHAR}
+            AND (integral_item = '3'
+                OR integral_item = '4')
+            and freeze is null
+            and create_time <![CDATA[ > ]]> #{startDate}
+            and create_time <![CDATA[ < ]]> #{endDate})
+    </update>
+
+
+</mapper>

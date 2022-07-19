@@ -1,0 +1,63 @@
+### 获取服务版本信息
+GET {{base_url}}/driver/dev/getAppInfo
+
+### 登录
+GET {{base_url}}/driver/dev/login?account=huangchaobin&pwd=123456
+
+> {% client.global.set("global_auth_token", response.body.data.token); %}
+
+### 获取账号
+POST {{base_url}}/driver/dev/getAccount
+token: {{global_auth_token}}
+Content-Type: application/json
+
+{
+}
+
+### 添加车辆
+POST {{base_url}}/driver/dev/user/car/add
+token: {{global_auth_token}}
+Content-Type: application/json
+
+{
+  "brand": null,
+  "carNumber": null,
+  "vin": null,
+  "engineNum": null
+}
+
+### 添加车辆
+POST {{base_url}}/driver/dev/user/car/add
+token: {{global_auth_token}}
+Content-Type: application/json
+
+{
+  "brand": "骏铃",
+  "carNumber": null,
+  "vin": null,
+  "engineNum": null
+}
+
+### 添加车辆
+POST {{base_url}}/driver/dev/user/car/add
+token: {{global_auth_token}}
+Content-Type: application/json
+
+{
+  "brand": "骏铃",
+  "carNumber": "辽A12345678",
+  "vin": "LJ11KBBD7K1103452",
+  "engineNum": null
+}
+
+### 添加车辆
+POST {{base_url}}/driver/dev/user/car/add
+token: {{global_auth_token}}
+Content-Type: application/json
+
+{
+  "brand": "骏铃",
+  "carNumber": "辽A12345",
+  "vin": "LJ11KBBD7K1103452",
+  "engineNum": "K4412014"
+}

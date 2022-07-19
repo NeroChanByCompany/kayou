@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.MaintainRuleDao">
+    <resultMap id="BaseResultMap" type="com.nut.driver.app.entity.MaintainRuleEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="structure_num" jdbcType="VARCHAR" property="structureNum"/>
+        <result column="sum_type" jdbcType="INTEGER" property="sumType"/>
+        <result column="maintain_content" jdbcType="VARCHAR" property="maintainContent"/>
+        <result column="maintain_type" jdbcType="INTEGER" property="maintainType"/>
+        <result column="first_mileage" jdbcType="INTEGER" property="firstMileage"/>
+        <result column="first_month" jdbcType="INTEGER" property="firstMonth"/>
+        <result column="routine_mileage" jdbcType="INTEGER" property="routineMileage"/>
+        <result column="routine_month" jdbcType="INTEGER" property="routineMonth"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, structure_num, sum_type, maintain_content, maintain_type,first_mileage,first_month,routine_mileage,routine_month,create_date,
+        update_date,create_user,update_user
+    </sql>
+</mapper>

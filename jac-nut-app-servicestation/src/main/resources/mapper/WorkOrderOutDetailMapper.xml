@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.WorkOrderOutDetailDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.WorkOrderOutDetail">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="wo_code" jdbcType="VARCHAR" property="woCode" />
+        <result column="out_times" jdbcType="INTEGER" property="outTimes" />
+        <result column="s_out_date" jdbcType="TIMESTAMP" property="sOutDate" />
+        <result column="e_out_date" jdbcType="TIMESTAMP" property="eOutDate" />
+        <result column="service_license" jdbcType="VARCHAR" property="serviceLicense" />
+        <result column="start_mileage" jdbcType="FLOAT" property="startMileage" />
+        <result column="end_mileage" jdbcType="FLOAT" property="endMileage" />
+        <result column="app_out_mileage" jdbcType="FLOAT" property="appOutMileage" />
+        <result column="start_address" jdbcType="VARCHAR" property="startAddress" />
+        <result column="end_address" jdbcType="VARCHAR" property="endAddress" />
+        <result column="twice_s_out_date" jdbcType="TIMESTAMP" property="twiceSOutDate" />
+        <result column="twice_e_out_date" jdbcType="TIMESTAMP" property="twiceEOutDate" />
+        <result column="twice_service_license" jdbcType="VARCHAR" property="twiceServiceLicense" />
+        <result column="twice_start_mileage" jdbcType="FLOAT" property="twiceStartMileage" />
+        <result column="twice_end_mileage" jdbcType="FLOAT" property="twiceEndMileage" />
+        <result column="twice_app_out_mileage" jdbcType="FLOAT" property="twiceAppOutMileage" />
+        <result column="twice_start_address" jdbcType="VARCHAR" property="twiceStartAddress" />
+        <result column="twice_end_address" jdbcType="VARCHAR" property="twiceEndAddress" />
+        <result column="twice_out_cause" jdbcType="VARCHAR" property="twiceOutCause" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, wo_code, out_times, s_out_date, e_out_date, service_license, start_mileage, end_mileage, app_out_mileage,
+    start_address, end_address, twice_s_out_date, twice_e_out_date, twice_service_license, twice_start_mileage,
+    twice_end_mileage, twice_app_out_mileage, twice_start_address, twice_end_address, twice_out_cause
+  </sql>
+
+
+    <select id="selectByWoCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from work_order_out_detail
+        where wo_code = #{woCode,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateByPrimaryKey" parameterType="com.nut.servicestation.app.domain.WorkOrder">
+    update work_order_out_detail
+    set wo_code = #{woCode,jdbcType=VARCHAR},
+    out_times = #{outTimes,jdbcType=INTEGER},
+    s_out_date = #{sOutDate,jdbcType=TIMESTAMP},
+    e_out_date = #{eOutDate,jdbcType=TIMESTAMP},
+    service_license = #{serviceLicense,jdbcType=VARCHAR},
+    start_mileage = #{startMileage,jdbcType=FLOAT},
+    end_mileage = #{endMileage,jdbcType=FLOAT},
+    app_out_mileage = #{appOutMileage,jdbcType=FLOAT},
+    start_address = #{startMileage,jdbcType=FLOAT},
+    end_address = #{endMileage,jdbcType=FLOAT},
+    twice_s_out_date = #{twiceSOutDate,jdbcType=TIMESTAMP},
+    twice_e_out_date = #{twiceEOutDate,jdbcType=TIMESTAMP},
+    twice_service_license = #{twiceServiceLicense,jdbcType=VARCHAR},
+    twice_start_mileage = #{twiceStartMileage,jdbcType=FLOAT},
+    twice_end_mileage = #{twiceEndMileage,jdbcType=FLOAT},
+    twice_app_out_mileage = #{twiceAppOutMileage,jdbcType=FLOAT},
+    twice_start_address = #{twiceStartAddress,jdbcType=VARCHAR},
+    twice_end_address = #{twiceEndAddress,jdbcType=VARCHAR},
+    twice_out_cause = #{twiceOutCause,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+    <insert id="insert" parameterType="com.nut.servicestation.app.domain.WorkOrderOutDetail">
+    insert into work_order_out_detail (id, wo_code, out_times, s_out_date, e_out_date, service_license, start_mileage, end_mileage, app_out_mileage,
+    start_address, end_address, twice_s_out_date, twice_e_out_date, twice_service_license, twice_start_mileage,
+    twice_end_mileage, twice_app_out_mileage, twice_start_address, twice_end_address, twice_out_cause)
+    values (#{id,jdbcType=BIGINT}, #{woCode,jdbcType=VARCHAR},
+    #{outTimes,jdbcType=INTEGER},
+    #{sOutDate,jdbcType=TIMESTAMP},
+    #{eOutDate,jdbcType=TIMESTAMP},
+    #{serviceLicense,jdbcType=VARCHAR},
+    #{startMileage,jdbcType=FLOAT},
+    #{endMileage,jdbcType=FLOAT},
+    #{appOutMileage,jdbcType=FLOAT},
+    #{startAddress,jdbcType=VARCHAR},
+    #{endAddress,jdbcType=VARCHAR},
+    #{twiceSOutDate,jdbcType=TIMESTAMP},
+    #{twiceEOutDate,jdbcType=TIMESTAMP},
+    #{twiceServiceLicense,jdbcType=VARCHAR},
+    #{twiceStartMileage,jdbcType=FLOAT},
+    #{twiceEndMileage,jdbcType=FLOAT},
+    #{twiceAppOutMileage,jdbcType=FLOAT},
+    #{twiceStartAddress,jdbcType=VARCHAR},
+    #{twiceEndAddress,jdbcType=VARCHAR},
+    #{twiceOutCause,jdbcType=VARCHAR})
+  </insert>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.ServiceAarNoticeDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.ServiceAarNotice">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="notice_code" jdbcType="VARCHAR" property="noticeCode" />
+        <result column="notice_name" jdbcType="VARCHAR" property="noticeName" />
+        <result column="notice_type" jdbcType="VARCHAR" property="noticeType" />
+        <result column="end_dt" jdbcType="DATE" property="endDt" />
+        <result column="chk_service" jdbcType="VARCHAR" property="chkService" />
+        <result column="check_veh" jdbcType="VARCHAR" property="checkVeh" />
+        <result column="ident_num" jdbcType="VARCHAR" property="identNum" />
+        <result column="station_name" jdbcType="VARCHAR" property="stationName" />
+        <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+        <result column="chassis_no_final" jdbcType="VARCHAR" property="chassisNoFinal" />
+        <result column="chassis_no" jdbcType="VARCHAR" property="chassisNo" />
+        <result column="vehicle_model" jdbcType="VARCHAR" property="vehicleModel" />
+        <result column="ca_num" jdbcType="VARCHAR" property="caNum" />
+        <result column="al_num" jdbcType="VARCHAR" property="alNum" />
+        <result column="effective_flag" jdbcType="VARCHAR" property="effectiveFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, notice_code, notice_name, notice_type, end_dt, chk_service, check_veh, ident_num,
+    station_name, org_id, chassis_no_final, chassis_no, vehicle_model, ca_num, al_num,
+    effective_flag, create_time, update_time
+  </sql>
+    <select id="countProtocolVin" resultType="java.lang.Long">
+        SELECT
+        count(1)
+        FROM service_aar_notice a
+        WHERE
+        a.notice_type in
+        <foreach collection="queryNoticeTypeList" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        AND a.chassis_no_final= #{vin,jdbcType=VARCHAR}
+    </select>
+    <select id="queryServiceAarNotices" resultType="com.nut.servicestation.app.dto.ServiceAarNoticeDto">
+        SELECT
+        distinct
+        a.notice_code AS noticeCode,
+        a.notice_name AS noticeName,
+        DATE_FORMAT(a.end_dt,'%Y-%m-%d') AS endTime
+        FROM service_aar_notice a
+        INNER JOIN service_aar_notice b
+        ON a.notice_code= b.notice_code AND b.ident_num= #{stationCode,jdbcType=VARCHAR}
+        AND a.chassis_no_final= #{vin,jdbcType=VARCHAR} AND a.end_dt >= CURDATE()
+        AND a.notice_type in
+        <foreach collection="queryNoticeTypeList" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        ORDER BY a.end_dt;
+    </select>
+</mapper>

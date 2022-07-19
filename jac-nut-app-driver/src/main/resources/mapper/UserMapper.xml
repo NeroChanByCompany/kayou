@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.UserDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.UserEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="ucId" column="uc_id"/>
+        <result property="accountName" column="account_name"/>
+        <result property="ucPassword" column="uc_password"/>
+        <result property="password" column="password"/>
+        <result property="createType" column="create_type"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="orgCode" column="org_code"/>
+        <result property="custTag" column="cust_tag"/>
+        <result property="region" column="region"/>
+        <result property="provinceDesc" column="province_desc"/>
+        <result property="cityDesc" column="city_desc"/>
+        <result property="countyDesc" column="county_desc"/>
+        <result property="identityCard" column="identity_card"/>
+        <result property="drivingLicense" column="driving_license"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="ownrCurTeamId" column="ownr_cur_team_id"/>
+        <result property="drvrCurTeamId" column="drvr_cur_team_id"/>
+        <result property="drvrCurCarId" column="drvr_cur_car_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="lastLogonTime" column="last_logon_time"/>
+        <result property="firstLoginTime" column="first_login_time"/>
+        <result property="inviterId" column="inviter_id"/>
+        <result property="userPicUrl" column="user_pic_url"/>
+        <result property="noviceGuideTag" column="novice_guide_tag"/>
+        <result property="sendMessageKey" column="send_message_key"/>
+        <result property="appType" column="app_type"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="signature" column="signature"/>
+        <result property="sex" column="sex"/>
+        <result property="interest" column="interest"/>
+        <result property="birthday" column="birthday"/>
+        <result property="drivingAge" column="driving_age"/>
+        <result property="email" column="email"/>
+        <result property="annualIncome" column="annual_income"/>
+        <result property="realName" column="real_name"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="infoOk" column="info_ok"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , uc_id, account_name, uc_password, password, create_type, name, phone,org_code,cust_tag,region,province_desc,city_desc,county_desc, identity_card,
+    driving_license, create_user_id, ownr_cur_team_id, drvr_cur_team_id, drvr_cur_car_id,
+    create_time, update_time, last_logon_time , first_login_time,inviter_id,novice_guide_tag, user_pic_url,
+      signature,
+      sex,
+      interest,
+      birthday,
+      driving_age,
+      email,
+      annual_income,
+      real_name,
+      info_ok,
+      app_type
+    </sql>
+
+    <sql id="Base_Column_List_ForForum">
+        id
+        id, uc_id ucId, account_name accountName, uc_password ucPassword, password password, create_type createType,  name name, phone phone,org_code orgCode,cust_tag custTag,region region,province_desc provinceDesc,city_desc cityDesc,county_desc countyDesc, identity_card identityCard,
+    driving_license drivingLicense, create_user_id createUserId, ownr_cur_team_id ownrCurTeamId, drvr_cur_team_id drvrCurTeamId, drvr_cur_car_id drvrCurCarId,
+    create_time createTime, update_time updateTime, last_logon_time lastLogonTime, first_login_time firstLoginTime,inviter_id inviterId,novice_guide_tag noviceGuideTag
+    </sql>
+
+
+    <select id="findByPhoneAndType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>,
+        app_type appType,
+        status status
+        from user
+        where phone = #{phone,jdbcType=VARCHAR}
+        and app_type = #{type,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findNoRegisterPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>,app_type appType
+        from user
+        where phone = #{phone,jdbcType=VARCHAR}
+        and (app_type = null or app_type ="")
+        and (uc_id = null or uc_id = "")
+    </select>
+
+    <insert id="insertSelective" parameterType="com.nut.driver.app.entity.UserEntity" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="ucId != null">
+                uc_id,
+            </if>
+            <if test="accountName != null">
+                account_name,
+            </if>
+            <if test="ucPassword != null">
+                uc_password,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="createType != null">
+                create_type,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="orgCode != null">
+                org_code,
+            </if>
+            <if test="custTag != null">
+                cust_tag,
+            </if>
+            <if test="region != null">
+                region,
+            </if>
+            <if test="provinceDesc != null">
+                province_desc,
+            </if>
+            <if test="cityDesc != null">
+                city_desc,
+            </if>
+            <if test="countyDesc != null">
+                county_desc,
+            </if>
+            <if test="identityCard != null">
+                identity_card,
+            </if>
+            <if test="drivingLicense != null">
+                driving_license,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="ownrCurTeamId != null">
+                ownr_cur_team_id,
+            </if>
+            <if test="drvrCurTeamId != null">
+                drvr_cur_team_id,
+            </if>
+            <if test="drvrCurCarId != null">
+                drvr_cur_car_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="lastLogonTime != null">
+                last_logon_time,
+            </if>
+            <if test="firstLoginTime != null">
+                first_login_time,
+            </if>
+            <if test="inviterId != null">
+                inviter_id,
+            </if>
+            <if test="noviceGuideTag != null">
+                novice_guide_tag,
+            </if>
+            <if test="appType != null">
+                app_type,
+            </if>
+            <if test="deviceId != null">
+                device_id,
+            </if>
+            <if test="ip != null">
+                ip,
+            </if>
+            <if test="userType != null">
+                user_type,
+            </if>
+            <if test="registerFlag != null">
+                register_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="ucId != null">
+                #{ucId,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null">
+                #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="ucPassword != null">
+                #{ucPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="createType != null">
+                #{createType,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null">
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custTag != null">
+                #{custTag,jdbcType=VARCHAR},
+            </if>
+            <if test="region != null">
+                #{region,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceDesc != null">
+                #{provinceDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="cityDesc != null">
+                #{cityDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="countyDesc != null">
+                #{countyDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="identityCard != null">
+                #{identityCard,jdbcType=VARCHAR},
+            </if>
+            <if test="drivingLicense != null">
+                #{drivingLicense,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="ownrCurTeamId != null">
+                #{ownrCurTeamId,jdbcType=VARCHAR},
+            </if>
+            <if test="drvrCurTeamId != null">
+                #{drvrCurTeamId,jdbcType=VARCHAR},
+            </if>
+            <if test="drvrCurCarId != null">
+                #{drvrCurCarId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastLogonTime != null">
+                #{lastLogonTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="firstLoginTime != null">
+                #{firstLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="inviterId != null">
+                #{inviterId,jdbcType=VARCHAR},
+            </if>
+            <if test="noviceGuideTag != null">
+                #{noviceGuideTag,jdbcType=INTEGER},
+            </if>
+            <if test="appType != null">
+                #{appType,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceId != null">
+                #{deviceId,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null">
+                #{ip,jdbcType=VARCHAR},
+            </if>
+            <if test="userType != null">
+                #{userType,jdbcType=INTEGER},
+            </if>
+            <if test="registerFlag != null">
+                #{registerFlag},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.nut.driver.app.entity.UserEntity">
+        update user
+        <set>
+            <if test="ucId != null">
+                uc_id = #{ucId,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null">
+                account_name = #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="ucPassword != null">
+                uc_password = #{ucPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="createType != null">
+                create_type = #{createType,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null">
+                org_code = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custTag != null">
+                cust_tag = #{custTag,jdbcType=VARCHAR},
+            </if>
+            <if test="region != null">
+                region = #{region,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceDesc != null">
+                province_desc = #{provinceDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="cityDesc != null">
+                city_desc = #{cityDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="countyDesc != null">
+                county_desc = #{countyDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="identityCard != null">
+                identity_card = #{identityCard,jdbcType=VARCHAR},
+            </if>
+            <if test="drivingLicense != null">
+                driving_license = #{drivingLicense,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="ownrCurTeamId != null">
+                ownr_cur_team_id = #{ownrCurTeamId,jdbcType=VARCHAR},
+            </if>
+            <if test="drvrCurTeamId != null">
+                drvr_cur_team_id = #{drvrCurTeamId,jdbcType=VARCHAR},
+            </if>
+            <if test="drvrCurCarId != null">
+                drvr_cur_car_id = #{drvrCurCarId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastLogonTime != null">
+                last_logon_time = #{lastLogonTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="firstLoginTime != null">
+                first_login_time = #{firstLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="inviterId != null">
+                inviter_id = #{inviterId,jdbcType=VARCHAR},
+            </if>
+            <if test="noviceGuideTag != null">
+                novice_guide_tag = #{noviceGuideTag,jdbcType=INTEGER},
+            </if>
+            <if test="sendMessageKey != null">
+                send_message_key = #{sendMessageKey,jdbcType=VARCHAR},
+            </if>
+            <if test="appType != null">
+                app_type = #{appType,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceId != null">
+                device_id = #{deviceId,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null">
+                ip = #{ip,jdbcType=VARCHAR},
+            </if>
+            <if test="userType != null">
+                user_type = #{userType,jdbcType=VARCHAR},
+            </if>
+            <if test="registerFlag != null">
+                register_flag = #{registerFlag},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.nut.driver.app.entity.UserEntity">
+        update user
+        set uc_id            = #{ucId,jdbcType=VARCHAR},
+            account_name     = #{accountName,jdbcType=VARCHAR},
+            uc_password      = #{ucPassword,jdbcType=VARCHAR},
+            password         = #{password,jdbcType=VARCHAR},
+            create_type      = #{createType,jdbcType=INTEGER},
+            name             = #{name,jdbcType=VARCHAR},
+            phone            = #{phone,jdbcType=VARCHAR},
+            org_code         = #{orgCode,jdbcType=VARCHAR},
+            cust_tag         = #{custTag,jdbcType=VARCHAR},
+            region           = #{region,jdbcType=VARCHAR},
+            province_desc    = #{provinceDesc,jdbcType=VARCHAR},
+            city_desc        = #{cityDesc,jdbcType=VARCHAR},
+            county_desc      = #{countyDesc,jdbcType=VARCHAR},
+            identity_card    = #{identityCard,jdbcType=VARCHAR},
+            driving_license  = #{drivingLicense,jdbcType=INTEGER},
+            create_user_id   = #{createUserId,jdbcType=VARCHAR},
+            ownr_cur_team_id = #{ownrCurTeamId,jdbcType=VARCHAR},
+            drvr_cur_team_id = #{drvrCurTeamId,jdbcType=VARCHAR},
+            drvr_cur_car_id  = #{drvrCurCarId,jdbcType=VARCHAR},
+            create_time      = #{createTime,jdbcType=TIMESTAMP},
+            update_time      = #{updateTime,jdbcType=TIMESTAMP},
+            last_logon_time  = #{lastLogonTime,jdbcType=TIMESTAMP},
+            first_login_time = #{firstLoginTime,jdbcType=TIMESTAMP},
+            inviter_id       = #{inviterId,jdbcType=VARCHAR},
+            user_pic_url     = #{userPicUrl},
+            novice_guide_tag = #{noviceGuideTag,jdbcType=INTEGER},
+            signature        = #{signature},
+            sex              = #{sex},
+            interest         = #{interest},
+            birthday         = #{birthday},
+            driving_age      = #{drivingAge},
+            email            = #{email},
+            annual_income    = #{annualIncome},
+            real_name        = #{realName},
+            info_ok          = #{infoOk}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="findById" parameterType="java.lang.Long" resultType="com.nut.driver.app.pojo.UserInfoPojo">
+        SELECT u.account_name  as accountName,
+               u.id,
+               u.name,
+               u.phone,
+               u.org_code      as orgCode,
+               u.cust_tag      as custTag,
+               u.phone,
+               u.user_pic_url  AS userPicUrl,
+               u.signature,
+               u.sex,
+               u.interest,
+               u.birthday,
+               u.driving_age   as drivingAge,
+               u.email,
+               u.annual_income as annualIncome,
+               u.province_desc as provinceDesc,
+               u.city_desc     as cityDesc,
+               u.real_name     as realName
+        FROM user u
+        WHERE u.id = #{id}
+    </select>
+
+    <select id="findByUcId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where uc_id = #{ucId,jdbcType=VARCHAR}
+    </select>
+
+    <update id="resetPasswordInfo"
+            parameterType="com.nut.driver.app.form.UpdatePasswordForm">
+        UPDATE user
+        set uc_password = #{newPassword,jdbcType=VARCHAR},
+            update_time = SYSDATE()
+        WHERE uc_id = #{userId,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <update id="updateSignature" parameterType="java.lang.String">
+        update user
+        set signature   = #{signature, jdbcType=VARCHAR},
+            update_time = Now()
+        where id = #{id, jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="getCustomIdsByUserIdNew" parameterType="java.lang.Long" resultType="java.lang.String">
+        SELECT GROUP_CONCAT(cmi.id) FROM custom_maintain_info cmi
+        INNER JOIN user uu ON uu.uc_id = cmi.USER_ID
+        WHERE uu.id = #{driverId,jdbcType=BIGINT} AND cmi.MAINTAIN_STATUS !=2 AND cmi.`STATUS` = 200
+        <if test="list != null">
+            AND cmi.`CAR_ID` NOT IN
+            <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <update id="deleteUserCustomMaintanceCommon" parameterType="java.util.List">
+        update custom_maintain_info set
+        STATUS = 0
+        WHERE ID IN
+        <foreach item="tempId" collection="list" open="(" separator="," close=")">
+            #{tempId}
+        </foreach>
+    </update>
+    <select id="findListByPhoneAndApptype" resultType="com.nut.driver.app.entity.UserEntity">
+        select id
+        from user
+        where phone = #{phone}
+          and app_type = '1'
+    </select>
+    <select id="queryUcIdById" parameterType="java.util.List" resultType="java.lang.String">
+        SELECT
+        uc_id
+        FROM
+        `user`
+        WHERE id IN
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND uc_id IS NOT NULL AND uc_id != ''
+    </select>
+
+    <select id="findPhoneByUcid" parameterType="java.lang.String" resultType="java.lang.String">
+        select phone
+        from user
+        where uc_id = #{ucid,jdbcType=VARCHAR}
+    </select>
+    <select id="findUserListByIdList" resultType="com.nut.driver.app.domain.UserForForum">
+        select
+        <include refid="Base_Column_List_ForForum"/>,app_type appType,user_pic_url userPicUrl,send_message_key
+        sendMessageKey,device_type deviceType
+        from user
+        WHERE id IN
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectById" resultType="java.lang.String">
+
+        select uc_id
+        from user
+        where id = #{userId}
+
+    </select>
+
+    <select id="findUcId" parameterType="java.lang.Long" resultType="java.lang.String">
+        select uc_id
+        from user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectUserTypeByucId" parameterType="java.lang.String"
+            resultType="com.nut.driver.app.domain.InviterMessage">
+        select user_type as userType,
+               phone     as phone
+        from user
+        where uc_id = #{ucId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="userStar" resultType="java.lang.Integer">
+        select count(*)
+        from jac_mall_zhixiao.star
+        where user_id = #{ucId,jdbcType=BIGINT}
+          and (
+            star_status = 0 and del_flag = 0
+            )
+    </select>
+
+    <select id="isStat" resultType="java.lang.Integer">
+        select count(*)
+        from jac_mall_zhixiao.star
+        where user_id = #{userId,jdbcType=INTEGER}
+          and del_flag = 0
+    </select>
+
+    <select id="isDisable" resultType="java.lang.Integer">
+        select count(*)
+        from jac_mall_zhixiao.star
+        where user_id = #{userId,jdbcType=BIGINT}
+          and (
+            star_status = 0 and del_flag = 0
+            )
+    </select>
+
+    <select id="ucIdByPhoneType" resultType="java.lang.String">
+        select uc_id
+        from user
+        where (phone = #{phone,jdbcType=VARCHAR} and app_type = #{type,jdbcType=VARCHAR})
+    </select>
+</mapper>

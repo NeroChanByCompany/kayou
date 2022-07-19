@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.CarTypeIntroduceDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.CarTypeIntroduceEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="carModel" column="car_model"/>
+        <result property="appearanceImg" column="appearance_img"/>
+        <result property="strains" column="strains"/>
+        <result property="marketSeparate" column="market_separate"/>
+        <result property="platform" column="platform"/>
+        <result property="driverType" column="driver_type"/>
+        <result property="industry" column="industry"/>
+        <result property="series" column="series"/>
+        <result property="guidancePrice" column="guidance_price"/>
+        <result property="vehicleWeight" column="vehicle_weight"/>
+        <result property="maxTonnage" column="max_tonnage"/>
+        <result property="boxLength" column="box_length"/>
+        <result property="cabType" column="cab_type"/>
+        <result property="cabFlip" column="cab_flip"/>
+        <result property="isAirConditioner" column="is_air_conditioner"/>
+        <result property="isElectricWindow" column="is_electric_window"/>
+        <result property="engineModel" column="engine_model"/>
+        <result property="displacement" column="displacement"/>
+        <result property="emissionStandards" column="emission_standards"/>
+        <result property="technologyRoute" column="technology_route"/>
+        <result property="fuelType" column="fuel_type"/>
+        <result property="isBrake" column="is_brake"/>
+        <result property="horsePower" column="horse_power"/>
+        <result property="torque" column="torque"/>
+        <result property="transmissionModel" column="transmission_model"/>
+        <result property="gearType" column="gear_type"/>
+        <result property="speedRatio" column="speed_ratio"/>
+        <result property="frontAxle" column="front_axle"/>
+        <result property="middleRearAxleModel" column="middle_rear_axle_model"/>
+        <result property="bridgeSpeedRatio" column="bridge_speed_ratio"/>
+        <result property="frame" column="frame"/>
+        <result property="wheelbase" column="wheelbase"/>
+        <result property="supension" column="supension"/>
+        <result property="tankCapacity" column="tank_capacity"/>
+        <result property="tireSpecification" column="tire_specification"/>
+        <result property="rollingRadius" column="rolling_radius"/>
+        <result property="tireBrand" column="tire_brand"/>
+        <result property="tirePattern" column="tire_pattern"/>
+        <result property="rim" column="rim"/>
+        <result property="brake" column="brake"/>
+        <result property="laneDeviate" column="lane_deviate"/>
+        <result property="collisionEarlyWarning" column="collision_early_warning"/>
+        <result property="blindSpotTest" column="blind_spot_test"/>
+        <result property="ringViewImage" column="ring_view_image"/>
+        <result property="tirePressureTest" column="tire_pressure_test"/>
+        <result property="fatigueDetection" column="fatigue_detection"/>
+        <result property="vehicleEmergencyBraking" column="vehicle_emergency_braking"/>
+        <result property="adaptiveCruise" column="adaptive_cruise"/>
+        <result property="laneKeep" column="lane_keep"/>
+        <result property="electronicBrakeControl" column="electronic_brake_control"/>
+        <result property="electStabilityControl" column="elect_stability_control"/>
+        <result property="diffSpeedLock" column="diff_speed_lock"/>
+        <result property="hydraulicRetarder" column="hydraulic_retarder"/>
+        <result property="northVersion" column="north_version"/>
+        <result property="sourthVersion" column="sourth_version"/>
+        <result property="homePackage" column="home_package"/>
+        <result property="fashionPackage" column="fashion_package"/>
+        <result property="usePavement" column="use_pavement"/>
+        <result property="dlCondition" column="dl_condition"/>
+        <result property="dxCondition" column="dx_condition"/>
+        <result property="optimumEconomyRotarySpeed" column="optimum_economy_rotary_speed"/>
+        <result property="economySpeed" column="economy_speed"/>
+        <result property="otherConfig" column="other_config"/>
+        <result property="newNotice" column="new_notice"/>
+        <result property="saleStatus" column="sale_status"/>
+        <result property="cargoWeight" column="cargo_weight"/>
+        <result property="mileageByYear" column="mileage_by_year"/>
+        <result property="vehicleUsage" column="vehicle_usage"/>
+        <result property="singleTripMileage" column="single_trip_mileage"/>
+        <result property="selfOrOther" column="self_or_other"/>
+        <result property="workCondition" column="work_condition"/>
+        <result property="commonSpeed" column="common_speed"/>
+        <result property="surroundMeter" column="surround_meter"/>
+        <result property="alloyDriveShaft" column="alloy_drive_shaft"/>
+        <result property="wadeBridge" column="wade_bridge"/>
+        <result property="engineBreak" column="engine_break"/>
+        <result property="dfRearViewMirror" column="df_rear_view_mirror"/>
+        <result property="multimediaScreen" column="multimedia_screen"/>
+        <result property="powerTakeOff" column="power_take_off"/>
+        <result property="mtOrAt" column="mt_or_at"/>
+        <result property="hydraulicRetarder2" column="hydraulic_retarder2"/>
+        <result property="extraConfig" column="extra_config"/>
+        <result property="carriageLength" column="carriage_length"/>
+        <result property="singleOrDouble" column="single_or_double"/>
+        <result property="roadOrConstruction" column="road_or_construction"/>
+        <result property="driver" column="driver"/>
+        <result property="xpxApp" column="xpx_app"/>
+        <result property="isShow" column="is_show"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tcApp" column="tc_app"/>
+        <result property="speedChange" column="speed_change"/>
+        <result property="hbgd" column="hbgd"/>
+        <result property="hjwd" column="hjwd"/>
+        <result property="schj" column="schj"/>
+        <result property="chzzSuggest" column="chzz_suggest"/>
+        <result property="chzzEffect" column="chzz_effect"/>
+        <result property="dltjSuggest" column="dltj_suggest"/>
+        <result property="dltjEffect" column="dltj_effect"/>
+        <result property="dxtjSuggest" column="dxtj_suggest"/>
+        <result property="dxtjEffect" column="dxtj_effect"/>
+        <result property="schjSuggest" column="schj_suggest"/>
+        <result property="schjEffect" column="schj_effect"/>
+        <result property="prodTag" column="prod_tag"/>
+        <result property="prodColor" column="prod_color"/>
+    </resultMap>
+
+    <!--自定义sql：查询品系、驱动、排放、排量、平台查询车型号-->
+    <select id="queryCarModels" parameterType="java.util.Map"
+            resultType="java.lang.String">
+        SELECT
+        car_model
+        FROM
+        car_type_introduce
+        WHERE 1=1
+        <if test="strains != null and strains != '-1' and strains != '未知'">
+            AND strains = #{strains,jdbcType=VARCHAR}
+        </if>
+        <if test="strains == '未知'">
+            AND strains is null
+        </if>
+        <if test="platform != null and platform != '-1' and platform != '未知'">
+            AND platform = #{platform,jdbcType=VARCHAR}
+        </if>
+        <if test="platform == '未知'">
+            AND platform is null
+        </if>
+        <if test="driverType != null and driverType != '-1' and driverType != '未知'">
+            AND driver_type = #{driverType,jdbcType=VARCHAR}
+        </if>
+        <if test="driverType == '未知'">
+            AND driver_type is null
+        </if>
+        <if test="displacement != null and displacement != '-1' and displacement != '未知'">
+            AND displacement = #{displacement,jdbcType=VARCHAR}
+        </if>
+        <if test="displacement == '未知'">
+            AND displacement is null
+        </if>
+        <if test="emissionStandards != null and emissionStandards != '-1' and emissionStandards != '未知'">
+            AND emission_standards = #{emissionStandards,jdbcType=VARCHAR}
+        </if>
+        <if test="emissionStandards == '未知'">
+            AND emission_standards is null
+        </if>
+    </select>
+
+
+</mapper>

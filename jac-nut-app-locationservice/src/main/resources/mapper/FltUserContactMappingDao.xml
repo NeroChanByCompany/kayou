@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.locationservice.app.dao.CarDao">
+
+    <select id="queryCarInfoList" resultType="com.nut.locationservice.app.pojo.CarInfoPojo">
+        SELECT
+        c.id AS carId,
+        c.car_vin AS vin,
+        CASE
+        WHEN c.auto_terminal IS NULL OR c.auto_terminal = ''
+        THEN CAST(c.terminal_id AS SIGNED)
+        ELSE CAST(c.auto_terminal AS SIGNED)
+        END AS terminalId
+        FROM
+        car c
+        WHERE
+        c.car_vin IN
+        <foreach collection="vinList" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+</mapper>

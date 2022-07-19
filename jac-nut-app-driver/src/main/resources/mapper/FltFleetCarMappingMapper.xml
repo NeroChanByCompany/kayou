@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.FltFleetCarMappingDao">
+    <resultMap id="BaseResultMap" type="com.nut.driver.app.entity.FltFleetCarMappingEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="team_id" jdbcType="BIGINT" property="teamId"/>
+        <result column="car_id" jdbcType="VARCHAR" property="carId"/>
+        <result column="create_type" jdbcType="INTEGER" property="createType"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="tboss_user_id" jdbcType="VARCHAR" property="tbossUserId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , team_id, car_id, create_type, create_user_id, tboss_user_id, create_time, update_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from flt_fleet_car_mapping
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from flt_fleet_car_mapping
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.nut.driver.app.domain.FltFleetCarMapping">
+        insert into flt_fleet_car_mapping (id, team_id, car_id,
+                                           create_type, create_user_id, tboss_user_id,
+                                           create_time, update_time)
+        values (#{id,jdbcType=BIGINT}, #{teamId,jdbcType=BIGINT}, #{carId,jdbcType=VARCHAR},
+                #{createType,jdbcType=INTEGER}, #{createUserId,jdbcType=BIGINT}, #{tbossUserId,jdbcType=VARCHAR},
+                #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.nut.driver.app.domain.FltFleetCarMapping">
+        insert into flt_fleet_car_mapping
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="teamId != null">
+                team_id,
+            </if>
+            <if test="carId != null">
+                car_id,
+            </if>
+            <if test="createType != null">
+                create_type,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="tbossUserId != null">
+                tboss_user_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="teamId != null">
+                #{teamId,jdbcType=BIGINT},
+            </if>
+            <if test="carId != null">
+                #{carId,jdbcType=VARCHAR},
+            </if>
+            <if test="createType != null">
+                #{createType,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="tbossUserId != null">
+                #{tbossUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.nut.driver.app.domain.FltFleetCarMapping">
+        update flt_fleet_car_mapping
+        <set>
+            <if test="teamId != null">
+                team_id = #{teamId,jdbcType=BIGINT},
+            </if>
+            <if test="carId != null">
+                car_id = #{carId,jdbcType=VARCHAR},
+            </if>
+            <if test="createType != null">
+                create_type = #{createType,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="tbossUserId != null">
+                tboss_user_id = #{tbossUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.nut.driver.app.domain.FltFleetCarMapping">
+        update flt_fleet_car_mapping
+        set team_id        = #{teamId,jdbcType=BIGINT},
+            car_id         = #{carId,jdbcType=VARCHAR},
+            create_type    = #{createType,jdbcType=INTEGER},
+            create_user_id = #{createUserId,jdbcType=BIGINT},
+            tboss_user_id  = #{tbossUserId,jdbcType=VARCHAR},
+            create_time    = #{createTime,jdbcType=TIMESTAMP},
+            update_time    = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 自定义sql由此向下 -->
+
+    <select id="selectByTeamIdAndCarId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM flt_fleet_car_mapping fcm
+        WHERE fcm.team_id = #{teamId,jdbcType=BIGINT}
+        AND fcm.car_id = #{carId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectCarByTeamId" resultType="com.nut.driver.app.pojo.CarInfoPojo">
+        SELECT
+        fcm.car_id AS carId,
+        cc.car_number AS carNumber,
+        cc.car_vin AS carVin
+        FROM flt_fleet_car_mapping fcm
+        LEFT JOIN car cc ON cc.id = fcm.car_id
+        WHERE fcm.team_id = #{teamId,jdbcType=BIGINT}
+        <if test="keyword != null and keyword != ''">
+            AND (cc.car_number LIKE CONCAT('%', #{keyword,jdbcType=VARCHAR}, '%')
+            OR cc.car_vin LIKE CONCAT('%', #{keyword,jdbcType=VARCHAR}, '%'))
+        </if>
+    </select>
+
+    <select id="countCarsByTeamIdIn" parameterType="java.util.List" resultType="com.nut.driver.app.pojo.FleetInfoPojo">
+        SELECT
+        COUNT(1) AS carTotal,
+        fcm.team_id AS teamId
+        FROM flt_fleet_car_mapping fcm
+        WHERE fcm.team_id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY fcm.team_id
+    </select>
+
+    <select id="selectByTeamId" resultType="com.nut.driver.app.entity.FltFleetCarMappingEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM flt_fleet_car_mapping fcm
+        WHERE fcm.team_id = #{teamId,jdbcType=BIGINT}
+    </select>
+
+    <delete id="batchDelete" parameterType="java.util.List">
+        DELETE FROM flt_fleet_car_mapping
+        WHERE id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="countByCarId" parameterType="java.util.List"
+            resultType="com.nut.driver.app.pojo.CarDriverInfoCountPojo">
+        SELECT
+        COUNT(fcm.id) AS count,
+        cc.car_vin AS chassisNum,
+        cc.id AS carId
+        FROM
+        car cc
+        LEFT JOIN flt_fleet_car_mapping fcm ON cc.id = fcm.car_id
+        WHERE
+        cc.id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY
+        cc.id
+    </select>
+    <select id="queryOwnerCars" resultType="java.lang.String">
+        select fcm.car_id
+        from flt_fleet_user_mapping fum,
+             flt_fleet_car_mapping fcm
+        where fum.team_id = fcm.team_id
+          and fum.user_id = #{userId}
+    </select>
+</mapper>

@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.CouponInfoDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.CouponInfo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="info_type" jdbcType="VARCHAR" property="infoType"/>
+        <result column="info_name" jdbcType="VARCHAR" property="infoName"/>
+        <result column="info_content" jdbcType="VARCHAR" property="infoContent"/>
+        <result column="info_value" jdbcType="VARCHAR" property="infoValue"/>
+        <result column="info_valid" jdbcType="VARCHAR" property="infoValid"/>
+        <result column="info_valid_day" jdbcType="VARCHAR" property="infoValidDay"/>
+        <result column="info_valid_start_date" jdbcType="VARCHAR" property="infoValidStartDate"/>
+        <result column="info_valid_end_date" jdbcType="VARCHAR" property="infoValidEndDate"/>
+        <result column="info_total_count_type" jdbcType="VARCHAR" property="infoTotalCountType"/>
+        <result column="info_total_count" jdbcType="VARCHAR" property="infoTotalCount"/>
+        <result column="info_rule" jdbcType="VARCHAR" property="infoRule"/>
+        <result column="applicable_type" jdbcType="VARCHAR" property="applicableType"/>
+        <result column="give_type" jdbcType="VARCHAR" property="giveType"/>
+        <result column="give_time_start" jdbcType="VARCHAR" property="giveTimeStart"/>
+        <result column="give_time_end" jdbcType="VARCHAR" property="giveTimeEnd"/>
+        <result column="give_trigger" jdbcType="VARCHAR" property="giveTrigger"/>
+        <result column="exchange_type" jdbcType="VARCHAR" property="exchangeType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="info_status" jdbcType="VARCHAR" property="infoStatus"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , info_type, info_name, info_content, info_value, info_valid, info_valid_day, info_valid_start_date,
+    info_valid_end_date, info_total_count_type, info_total_count, info_rule, applicable_type,
+    give_type, give_time_start, give_time_end, give_trigger, exchange_type, create_time,
+    info_status
+    </sql>
+    <select id="queryCouponDetail" parameterType="com.nut.servicestation.app.form.CouponDetailForm"
+            resultType="com.nut.servicestation.app.domain.CouponInfoDetail">
+        select ci.id                    as infoId,
+               cum.cum_id               as cumId,
+               u.phone                  as userPhone,
+               ci.info_type             as infoType,
+               ci.info_name             as infoName,
+               ci.info_content          as infoContent,
+               ci.info_value            as infoValue,
+               ci.info_valid            as infoValid,
+               ci.info_valid_day        as infoValidDay,
+               ci.info_valid_start_date as infoValidStartDate,
+               ci.info_valid_end_date   as infoValidEndDate,
+               ci.applicable_type       as applicableType,
+               cum.cum_vin              as cumVin,
+               cum.cum_give_time        as cumGiveTime
+        from coupon_user_mapping cum
+                 left join coupon_info ci on cum.info_id = ci.id
+                 left join user u on cum.user_id = u.id
+        where cum.cum_number = #{cumNumber, jdbcType=VARCHAR} limit 1
+    </select>
+    <select id="queryCouponStatus" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT cum.cum_status AS cumStatus,
+        ci.info_status AS infoStatus,
+        ci.info_valid as infoValid,
+        ci.info_valid_day as infoValidDay,
+        ci.info_valid_start_date as infoValidStartDate,
+        ci.info_valid_end_date as infoValidEndDate,
+        cum.cum_give_time as cumGiveTime
+        FROM coupon_user_mapping cum
+        LEFT JOIN coupon_info ci ON cum.info_id = ci.id
+        WHERE 1 = 1
+        <if test="cumNumber != null">
+            and cum.cum_number = #{cumNumber, jdbcType=VARCHAR}
+        </if>
+        <if test="cumId != null">
+            and cum.cum_id = #{cumId, jdbcType=BIGINT}
+        </if>
+        limit 1
+    </select>
+    <select id="countCouponBranch" resultType="java.lang.Long" parameterType="java.util.Map">
+        SELECT COUNT(id)
+        FROM coupon_exchange ce
+        WHERE ce.exchange_branch_id = #{teamId, jdbcType=BIGINT}
+        AND ce.info_id =
+        (
+        SELECT cum.info_id
+        FROM coupon_user_mapping cum
+        WHERE 1 = 1
+        <if test="cumNumber != null">
+            and cum.cum_number = #{cumNumber, jdbcType=VARCHAR}
+        </if>
+        <if test="cumId != null">
+            and cum.cum_id = #{cumId, jdbcType=BIGINT}
+        </if>
+        LIMIT 1
+        )
+    </select>
+    <select id="queryApprovalList" resultType="com.nut.servicestation.app.domain.CouponApproval"
+            parameterType="java.util.Map">
+        select u.phone as userPhone,
+        ci.info_name as infoName,
+        ci.info_value as infoValue,
+        ci.info_type as infoType,
+        ci.info_content as infoContent,
+        ci.info_valid as infoValid,
+        ci.info_valid_day as infoValidDay,
+        ci.info_valid_start_date as infoValidStartDate,
+        ci.info_valid_end_date as infoValidEndDate,
+        ci.applicable_type as applicableType,
+        cum.cum_give_time as cumGiveTime,
+        cum.cum_exchange_time as cumExchangeTime,
+        cum.cum_approval_time as cumApprovalTime,
+        cum.cum_approval_status as cumApprovalStatus,
+        cum.cum_vin as cumVin
+        from coupon_user_mapping cum
+        left join user u on cum.user_id = u.id
+        LEFT JOIN coupon_info ci on ci.id = cum.info_id
+        where cum.cum_status = '2'
+        <if test="cumApprovalTimeStart != null and cumApprovalTimeStart !=''">
+            and cum.cum_approval_time &gt; #{cumApprovalTimeStart, jdbcType=VARCHAR}
+        </if>
+        <if test="cumApprovalTimeEnd != null and cumApprovalTimeEnd !=''">
+            and cum.cum_approval_time &lt; #{cumApprovalTimeEnd, jdbcType=VARCHAR}
+        </if>
+        <if test="userPhone != null and userPhone !=''">
+            and u.phone LIKE CONCAT('%', #{userPhone, jdbcType=VARCHAR},'%')
+        </if>
+        and cum.exchange_branch_type = #{branchType, jdbcType=VARCHAR}
+        and cum.exchange_branch_id = #{branchId, jdbcType=BIGINT}
+        order by cum_exchange_time desc
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from coupon_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <insert id="insertSelective" parameterType="com.nut.servicestation.app.domain.CouponInfo" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into coupon_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="infoType != null">
+                info_type,
+            </if>
+            <if test="isNationalThird != null">
+                is_national_third,
+            </if>
+            <if test="infoName != null">
+                info_name,
+            </if>
+            <if test="infoContent != null">
+                info_content,
+            </if>
+            <if test="infoValue != null">
+                info_value,
+            </if>
+            <if test="fullDecre != null">
+                info_full_decre,
+            </if>
+            <if test="infoValid != null">
+                info_valid,
+            </if>
+            <if test="infoValidDay != null">
+                info_valid_day,
+            </if>
+            <if test="infoValidStartDate != null">
+                info_valid_start_date,
+            </if>
+            <if test="infoValidEndDate != null">
+                info_valid_end_date,
+            </if>
+            <if test="infoTotalCountType != null">
+                info_total_count_type,
+            </if>
+            <if test="infoTotalCount != null">
+                info_total_count,
+            </if>
+            <if test="infoRule != null">
+                info_rule,
+            </if>
+            <if test="applicableType != null">
+                applicable_type,
+            </if>
+            <if test="giveType != null">
+                give_type,
+            </if>
+            <if test="giveTimeStart != null">
+                give_time_start,
+            </if>
+            <if test="giveTimeEnd != null">
+                give_time_end,
+            </if>
+            <if test="giveTrigger != null">
+                give_trigger,
+            </if>
+            <if test="exchangeType != null">
+                exchange_type,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="infoStatus != null">
+                info_status,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="productType != null">
+                product_type,
+            </if>
+            <if test="serviceStationCode != null">
+                service_station_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="infoType != null">
+                #{infoType,jdbcType=VARCHAR},
+            </if>
+            <if test="isNationalThird != null">
+                #{isNationalThird,jdbcType=BIGINT},
+            </if>
+            <if test="infoName != null">
+                #{infoName,jdbcType=VARCHAR},
+            </if>
+            <if test="infoContent != null">
+                #{infoContent,jdbcType=VARCHAR},
+            </if>
+            <if test="infoValue != null">
+                #{infoValue},
+            </if>
+            <if test="fullDecre != null">
+                #{fullDecre,jdbcType=VARCHAR},
+            </if>
+            <if test="infoValid != null">
+                #{infoValid,jdbcType=VARCHAR},
+            </if>
+            <if test="infoValidDay != null">
+                #{infoValidDay,jdbcType=VARCHAR},
+            </if>
+            <if test="infoValidStartDate != null">
+                #{infoValidStartDate,jdbcType=VARCHAR},
+            </if>
+            <if test="infoValidEndDate != null">
+                #{infoValidEndDate,jdbcType=VARCHAR},
+            </if>
+            <if test="infoTotalCountType != null">
+                #{infoTotalCountType,jdbcType=VARCHAR},
+            </if>
+            <if test="infoTotalCount != null">
+                #{infoTotalCount,jdbcType=VARCHAR},
+            </if>
+            <if test="infoRule != null">
+                #{infoRule},
+            </if>
+            <if test="applicableType != null">
+                #{applicableType,jdbcType=VARCHAR},
+            </if>
+            <if test="giveType != null">
+                #{giveType,jdbcType=VARCHAR},
+            </if>
+            <if test="giveTimeStart != null">
+                #{giveTimeStart,jdbcType=VARCHAR},
+            </if>
+            <if test="giveTimeEnd != null">
+                #{giveTimeEnd,jdbcType=VARCHAR},
+            </if>
+            <if test="giveTrigger != null">
+                #{giveTrigger,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeType != null">
+                #{exchangeType,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="infoStatus != null">
+                #{infoStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="productType != null">
+                #{productType,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceStationCode != null">
+                #{serviceStationCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsertApplicable" parameterType="com.nut.servicestation.app.domain.CouponApplicable"
+            keyProperty="id" useGeneratedKeys="true">
+        insert into coupon_applicable(info_id, applicable_type, applicable_number, create_time)
+        values (#{couponApplicable.infoId,jdbcType=BIGINT}, #{couponApplicable.applicableType,jdbcType=VARCHAR},
+                #{couponApplicable.applicableNumber,jdbcType=VARCHAR}, #{couponApplicable.createTime})
+    </insert>
+
+    <select id="queryBranchList" resultType="com.nut.servicestation.app.domain.BranchInfo">
+        select id           as branchId,
+               station_name as branchName,
+               address      as branchAddress,
+               service_code as branchCode,
+               phone        as phone
+        from ${DbName}.hy_service_station
+        where STATION_ENABLE = 1
+    </select>
+
+    <select id="batchInsertExchange" parameterType="java.util.List" resultType="java.lang.Integer">
+        insert into coupon_exchange(info_id, exchange_branch_type, exchange_branch_id, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.infoId,jdbcType=BIGINT}, #{item.exchangeBranchType,jdbcType=VARCHAR},
+            #{item.exchangeBranchId,jdbcType=BIGINT}, #{item.createTime})
+        </foreach>
+    </select>
+
+    <insert id="batchInsertCUM">
+        insert
+        coupon_user_mapping(info_id,user_id,cum_number,cum_status,give_branch_type,cum_give_time,info_valid,info_valid_start_date,info_valid_end_date)
+        values (
+        #{cum.infoId,jdbcType=BIGINT},
+        #{cum.userId,jdbcType=BIGINT},
+        #{cum.cumNumber,jdbcType=VARCHAR},
+        #{cum.cumStatus,jdbcType=VARCHAR},
+        #{cum.giveBranchType,jdbcType=VARCHAR},
+        #{cum.cumGiveTime,jdbcType=VARCHAR},
+        #{cum.infoValid,jdbcType=VARCHAR},
+        #{cum.infoValidStartDate,jdbcType=VARCHAR},
+        #{cum.infoValidEndDate,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <select id="queryListByServiceCode" parameterType="java.lang.String"
+            resultType="com.nut.servicestation.app.domain.CouponGiveInfo">
+        SELECT ci.id                  AS couponId,
+               ci.info_name           AS couponName,
+               ci.create_time         AS createTime,
+               ci.info_valid_end_date AS endDate,
+               ca.applicable_number   AS vin,
+               cum.cum_status         AS couponStatus
+        FROM coupon_info AS ci
+                 LEFT JOIN coupon_applicable AS ca ON ci.id = ca.info_id
+                 LEFT JOIN coupon_user_mapping AS cum ON ci.id = cum.info_id
+        WHERE ci.service_station_code = #{serviceCode,jdbcType=VARCHAR}
+        order by ci.create_time desc
+    </select>
+
+    <select id="queryDetailById" parameterType="java.lang.Integer"
+            resultType="com.nut.servicestation.app.domain.CouponGiveDetail">
+        SELECT ci.id                    AS couponId,
+               ci.info_name             AS couponName,
+               ci.info_content          AS couponMessage,
+               ci.info_valid_start_date AS startDate,
+               ci.info_valid_end_date   AS endDate,
+               ci.info_value            AS couponValue,
+               ca.applicable_number     AS vin,
+               cum.cum_status           AS couponStatus
+        FROM coupon_info AS ci
+                 LEFT JOIN coupon_applicable AS ca ON ci.id = ca.info_id
+                 LEFT JOIN coupon_user_mapping AS cum ON ci.id = cum.info_id
+        WHERE ci.id = #{id,jdbcType=BIGINT}
+    </select>
+</mapper>

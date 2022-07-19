@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.BannerInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.BannerInfoEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="appType" column="app_type"/>
+        <result property="bannerType" column="banner_type"/>
+        <result property="bannerName" column="banner_name"/>
+        <result property="bannerStatus" column="banner_status"/>
+        <result property="bannerIndex" column="banner_index"/>
+        <result property="imgPath" column="img_path"/>
+        <result property="bannerLink" column="banner_link"/>
+        <result property="createTime" column="create_time"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <select id="getBannerInfoForApp" parameterType="java.lang.String" resultType="com.nut.driver.app.dto.BannerInfoDto">
+        SELECT
+            bi.id id,
+            bi.app_type appType,
+            bi.banner_type bannerType,
+            bi.banner_name bannerName,
+            bi.banner_index bannerIndex,
+            bi.img_path imgPath,
+            bi.banner_link bannerLink
+        FROM
+            banner_info bi
+        WHERE
+            bi.del_flag = '0'
+          AND bi.banner_status = '1'
+          AND bi.app_type = #{appType,jdbcType=VARCHAR}
+        ORDER BY bi.banner_index DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.FltFleetDao">
+  <resultMap id="BaseResultMap" type="com.nut.driver.app.domain.FltFleet">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="create_type" jdbcType="INTEGER" property="createType" />
+    <result column="tboss_user_id" jdbcType="VARCHAR" property="tbossUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, avatar, create_type, tboss_user_id, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from flt_fleet
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from flt_fleet
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.nut.driver.app.domain.FltFleet" useGeneratedKeys="true" keyProperty="id">
+    insert into flt_fleet (id, name, avatar,
+      create_type, tboss_user_id, create_time,
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR},
+      #{createType,jdbcType=INTEGER}, #{tbossUserId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.nut.driver.app.domain.FltFleet" useGeneratedKeys="true" keyProperty="id">
+    insert into flt_fleet
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="avatar != null">
+        avatar,
+      </if>
+      <if test="createType != null">
+        create_type,
+      </if>
+      <if test="tbossUserId != null">
+        tboss_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="createType != null">
+        #{createType,jdbcType=INTEGER},
+      </if>
+      <if test="tbossUserId != null">
+        #{tbossUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nut.driver.app.domain.FltFleet">
+    update flt_fleet
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="createType != null">
+        create_type = #{createType,jdbcType=INTEGER},
+      </if>
+      <if test="tbossUserId != null">
+        tboss_user_id = #{tbossUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nut.driver.app.domain.FltFleet">
+    update flt_fleet
+    set name = #{name,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      create_type = #{createType,jdbcType=INTEGER},
+      tboss_user_id = #{tbossUserId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!-- 自定义sql由此向下 -->
+
+  <select id="selectByIdIn" parameterType="java.util.List" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM flt_fleet
+    WHERE id IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <insert id="insertFleetLine" parameterType="com.nut.driver.app.domain.FltFleetLine" useGeneratedKeys="true" keyProperty="id">
+    insert into fit_fleet_line
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="startCityCode != null">
+        start_city_code,
+      </if>
+      <if test="startCityName != null">
+        start_city_name,
+      </if>
+      <if test="endCityCode != null">
+        end_city_code,
+      </if>
+      <if test="endCityName != null">
+        end_city_name,
+      </if>
+      <if test="fleetId != null">
+        fleet_id,
+      </if>
+      <if test="maxSpeed != null">
+        max_speed,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="oilConsLimit != null">
+        oil_cons_limit,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="startCityCode != null">
+        #{startCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="startCityName != null">
+        #{startCityName,jdbcType=VARCHAR},
+      </if>
+      <if test="endCityCode != null">
+        #{endCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="endCityName != null">
+        #{endCityName,jdbcType=VARCHAR},
+      </if>
+      <if test="fleetId != null">
+        #{fleetId,jdbcType=VARCHAR},
+      </if>
+      <if test="maxSpeed != null">
+        #{maxSpeed,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="oilConsLimit != null">
+        #{oilConsLimit,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="insertFleetLineRoute" parameterType="com.nut.driver.app.domain.FltFleetLineRoute" useGeneratedKeys="true" keyProperty="id">
+    insert into fit_fleet_line_route
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="lineId != null">
+        line_id,
+      </if>
+      <if test="routeCityCode != null">
+        route_city_code,
+      </if>
+      <if test="routeCityName != null">
+        route_city_name,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="lineId != null">
+        #{lineId,jdbcType=BIGINT},
+      </if>
+      <if test="routeCityCode != null">
+        #{routeCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="routeCityName != null">
+        #{routeCityName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="insertFleetLineRouteCar" parameterType="com.nut.driver.app.domain.FltFleetLineRouteCar" useGeneratedKeys="true" keyProperty="id">
+    insert into fit_line_car_mapping
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="lineId != null">
+        line_id,
+      </if>
+      <if test="carId != null">
+        car_id,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="lineId != null">
+        #{lineId,jdbcType=BIGINT},
+      </if>
+      <if test="carId != null">
+        #{carId,jdbcType=BIGINT},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <delete id="deleteFleetLineById" parameterType="java.lang.Long">
+    delete from fit_fleet_line
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <delete id="deleteFleetLineRouteBylineId" parameterType="java.lang.Long">
+    delete from fit_fleet_line_route
+    where line_id = #{lineId,jdbcType=BIGINT}
+  </delete>
+
+  <delete id="deleteFleetLineRouteCarBylineId" parameterType="java.lang.Long">
+    delete from fit_line_car_mapping
+    where line_id = #{lineId,jdbcType=BIGINT}
+  </delete>
+
+  <select id="selectFltFleetLineList" resultType="com.nut.driver.app.domain.FltFleetLine">
+    select  t.id,t.start_city_code startCityCode
+    ,t.start_city_name startCityName,t.end_city_code endCityCode
+    ,t.end_city_name endCityName,t.max_speed maxSpeed
+    ,t.oil_cons_limit oilConsLimit,t.fleet_id fleetId
+    ,t1.name fleetName,t.create_time createTime
+    from fit_fleet_line t
+    left join flt_fleet t1 on t.fleet_id = t1.id
+    where 1 = 1
+    <if test="id != null">
+      and t.id = #{id,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="selectfltFleetLineRouteListByLineId" resultType="com.nut.driver.app.domain.FltFleetLineRoute">
+    select  id,line_id lineId,route_city_code routeCityCode,
+             route_city_name routeCityName,create_user_id createUserId,create_time createTime,update_time updateTime
+    from fit_fleet_line_route
+    where 1 = 1
+    <if test="lineId != null">
+      and line_id = #{lineId,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="selectfltFleetLineRouteCarListByLineId" resultType="com.nut.driver.app.domain.FltFleetLineRouteCar">
+    select  id,line_id lineId,car_id carId,create_user_id createUserId,create_time createTime,update_time updateTime
+    from fit_line_car_mapping
+    where 1 = 1
+    <if test="lineId != null">
+      and line_id = #{lineId,jdbcType=BIGINT}
+    </if>
+  </select>
+</mapper>

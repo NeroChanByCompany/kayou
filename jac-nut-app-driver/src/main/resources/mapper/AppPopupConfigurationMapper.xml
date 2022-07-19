@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.AppPopupConfigurationDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.AppPopupConfigurationEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="appType" column="app_type"/>
+        <result property="title" column="title"/>
+        <result property="picUrl" column="pic_url"/>
+        <result property="popupLink" column="popup_link"/>
+        <result property="displayTime" column="display_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="hitsNumber" column="hits_number"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="stopTime" column="stop_time"/>
+    </resultMap>
+
+    <select id="queryPopConfigurationByNew" parameterType="java.lang.String" resultType="com.nut.driver.app.pojo.PopConfigurationPojo">
+        select
+            apc.id AS id,
+            apc.title AS title,
+            apc.pic_url AS picUrl,
+            apc.popup_link AS linkUrl,
+            date_format( apc.display_time, '%Y-%m-%d %H:%i:%s') AS displayTime,
+            date_format( apc.end_time, '%Y-%m-%d %H:%i:%s') AS endTime,
+            stop_time as stopTime
+        from app_popup_configuration apc
+        WHERE apc.del_flag='0' and apc.display_time  &lt;= CURRENT_TIMESTAMP() and  CURRENT_TIMESTAMP()  &lt;=  apc.end_time
+    </select>
+
+
+</mapper>

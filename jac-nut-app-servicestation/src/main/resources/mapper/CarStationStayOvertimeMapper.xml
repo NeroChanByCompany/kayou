@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.CarStationStayOvertimeDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.CarStationStayOvertime">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="sta_code" jdbcType="VARCHAR" property="staCode" />
+        <result column="car_id" jdbcType="VARCHAR" property="carId" />
+        <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+        <result column="warn_level" jdbcType="INTEGER" property="warnLevel" />
+        <result column="with_work" jdbcType="INTEGER" property="withWork" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="put_off_till" jdbcType="TIMESTAMP" property="putOffTill" />
+        <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, sta_code, car_id, in_time, warn_level, with_work, status, put_off_till, release_time,
+    create_time, update_time
+  </sql>
+    <select id="queryWarningData" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM car_station_stay_overtime
+        WHERE
+        car_id = #{carId,jdbcType=VARCHAR}
+        AND sta_code = #{staCode,jdbcType=VARCHAR}
+        ORDER BY create_time DESC
+        limit 1
+    </select>
+    <update id="updateByPrimaryKeySelective" parameterType="com.nut.servicestation.app.domain.CarStationStayOvertime">
+        update car_station_stay_overtime
+        <set>
+            <if test="staCode != null">
+                sta_code = #{staCode,jdbcType=VARCHAR},
+            </if>
+            <if test="carId != null">
+                car_id = #{carId,jdbcType=VARCHAR},
+            </if>
+            <if test="inTime != null">
+                in_time = #{inTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="warnLevel != null">
+                warn_level = #{warnLevel,jdbcType=INTEGER},
+            </if>
+            <if test="withWork != null">
+                with_work = #{withWork,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="putOffTill != null">
+                put_off_till = #{putOffTill,jdbcType=TIMESTAMP},
+            </if>
+            <if test="releaseTime != null">
+                release_time = #{releaseTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="queryInStationWarningCount" parameterType="java.lang.String" resultType="java.lang.Long">
+    SELECT
+      count(1)
+    FROM
+      car_station_stay_overtime csso
+    WHERE
+      csso.sta_code = #{staCode,jdbcType=VARCHAR}
+    AND csso. STATUS = 0
+  </select>
+    <select id="queryStationStayWarnCar" parameterType="java.lang.String" resultType="com.nut.servicestation.app.pojo.CarWarnPojo">
+    SELECT
+      csso.car_id AS carId,
+      csso.warn_level AS warnLevel,
+      csso.with_work AS withWork,
+      c.auto_terminal AS autoTerminal,
+      c.car_number AS carNumber,
+      c.car_vin AS carVin,
+      CONCAT(mi.driver_type_name, mi.car_type_name) AS carModelName,
+      mi.simple_name AS carSeriesName,
+      mi.engine AS ENGINE,
+      c.auto_terminal AS autoTerminal,
+      (SELECT GROUP_CONCAT(u.phone)
+        FROM flt_car_owner_mapping com
+        LEFT JOIN user u ON u.id = com.user_id
+        WHERE com.car_id = csso.car_id) phoneNumbers
+    FROM
+      car_station_stay_overtime csso
+    INNER JOIN car c ON csso.car_id = c.id
+    LEFT JOIN model_info mi ON mi.model_id = c.car_model
+    WHERE
+      csso.sta_code = #{staCode,jdbcType=VARCHAR}
+      AND csso. STATUS = 0
+  </select>
+</mapper>

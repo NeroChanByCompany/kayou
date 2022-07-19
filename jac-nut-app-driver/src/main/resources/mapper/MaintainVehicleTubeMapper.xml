@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.MaintainVehicleTubeDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.MaintainVehicleTubeEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="chassisNo" column="chassis_no"/>
+        <result property="licenseNo" column="license_no"/>
+        <result property="companyId" column="company_id"/>
+        <result property="company" column="company"/>
+        <result property="ereaId" column="erea_id"/>
+        <result property="erea" column="erea"/>
+        <result property="mobile" column="mobile"/>
+        <result property="projectMobile" column="project_mobile"/>
+        <result property="clearingMobile" column="clearing_mobile"/>
+        <result property="trukId" column="truk_id"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,chassis_no,license_no,company_id,company,erea_id,erea,mobile,project_mobile,clearing_mobile,truk_id,delete_flag,create_date,update_date
+    </sql>
+
+    <select id="getInfoByClassisNo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        maintain_vehicle_tube
+        where
+        chassis_no = #{chassisNo}
+        and
+        delete_flag = '0'
+        limit 1;
+    </select>
+    <select id="queryCarVinListByVins" resultType="java.lang.String">
+
+        SELECT
+        chassis_no
+        FROM
+        maintain_vehicle_tube
+        WHERE
+        chassis_no IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        GROUP BY
+        chassis_no
+    </select>
+    <select id="queryMaintainVehicleTubeListByMobile" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        maintain_vehicle_tube
+        where
+        mobile = #{mobile}
+    </select>
+
+
+</mapper>

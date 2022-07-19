@@ -1,0 +1,2 @@
+### 获取服务版本信息
+GET {{base_url}}/dev/getAppInfo

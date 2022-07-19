@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.RescueRoutePointHistoryDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.RescueRoutePointHistory">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="wo_code" jdbcType="VARCHAR" property="woCode" />
+        <result column="user_id" jdbcType="VARCHAR" property="userId" />
+        <result column="mileage" jdbcType="INTEGER" property="mileage" />
+        <result column="duration" jdbcType="INTEGER" property="duration" />
+        <result column="estimate_mileage" jdbcType="INTEGER" property="estimateMileage" />
+        <result column="estimate_duration" jdbcType="INTEGER" property="estimateDuration" />
+        <result column="confirm_mileage" jdbcType="INTEGER" property="confirmMileage" />
+        <result column="is_logout" jdbcType="INTEGER" property="isLogout" />
+        <result column="points" jdbcType="VARCHAR" property="points" />
+        <result column="estimate_points" jdbcType="VARCHAR" property="estimatePoints" />
+        <result column="original_points" jdbcType="VARCHAR" property="originalPoints" />
+        <result column="max_index" jdbcType="INTEGER" property="maxIndex" />
+        <result column="times_rescue_number" jdbcType="INTEGER" property="timesRescueNumber" />
+        <result column="rescue_create_time" jdbcType="TIMESTAMP" property="rescueCreateTime" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, wo_code, user_id, mileage, duration, estimate_mileage, estimate_duration, confirm_mileage,
+    is_logout, points, estimate_points, original_points, max_index, times_rescue_number,
+    rescue_create_time, create_time, update_time
+  </sql>
+
+    <select id="queryHistoryRescueRoutePoint" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from rescue_route_point_history
+        where wo_code = #{woCode}
+        and times_rescue_number = #{timesRescueNumber}
+        LIMIT 1
+    </select>
+    <update id="updateByPrimaryKeySelective" parameterType="com.nut.servicestation.app.domain.RescueRoutePointHistory">
+        update rescue_route_point_history
+        <set>
+            <if test="woCode != null">
+                wo_code = #{woCode,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="mileage != null">
+                mileage = #{mileage,jdbcType=INTEGER},
+            </if>
+            <if test="duration != null">
+                duration = #{duration,jdbcType=INTEGER},
+            </if>
+            <if test="estimateMileage != null">
+                estimate_mileage = #{estimateMileage,jdbcType=INTEGER},
+            </if>
+            <if test="estimateDuration != null">
+                estimate_duration = #{estimateDuration,jdbcType=INTEGER},
+            </if>
+            <if test="confirmMileage != null">
+                confirm_mileage = #{confirmMileage,jdbcType=INTEGER},
+            </if>
+            <if test="isLogout != null">
+                is_logout = #{isLogout,jdbcType=INTEGER},
+            </if>
+            <if test="points != null">
+                points = #{points,jdbcType=VARCHAR},
+            </if>
+            <if test="estimatePoints != null">
+                estimate_points = #{estimatePoints,jdbcType=VARCHAR},
+            </if>
+            <if test="originalPoints != null">
+                original_points = #{originalPoints,jdbcType=VARCHAR},
+            </if>
+            <if test="maxIndex != null">
+                max_index = #{maxIndex,jdbcType=INTEGER},
+            </if>
+            <if test="timesRescueNumber != null">
+                times_rescue_number = #{timesRescueNumber,jdbcType=INTEGER},
+            </if>
+            <if test="rescueCreateTime != null">
+                rescue_create_time = #{rescueCreateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <!--备份一次外出救援轨迹-->
+    <insert id="insertHistory">
+    insert into rescue_route_point_history (wo_code, user_id,
+      mileage, duration, estimate_mileage,
+      estimate_duration, confirm_mileage, is_logout,
+      times_rescue_number, rescue_create_time, create_time, update_time,
+      points, estimate_points, original_points,
+      max_index)
+    values (#{rescueRoutePoint.woCode,jdbcType=VARCHAR}, #{rescueRoutePoint.userId,jdbcType=VARCHAR},
+      #{rescueRoutePoint.mileage,jdbcType=INTEGER}, #{rescueRoutePoint.duration,jdbcType=INTEGER}, #{rescueRoutePoint.estimateMileage,jdbcType=INTEGER},
+      #{rescueRoutePoint.estimateDuration,jdbcType=INTEGER}, #{rescueRoutePoint.confirmMileage,jdbcType=INTEGER}, #{rescueRoutePoint.isLogout,jdbcType=INTEGER},
+      #{timesRescueNumber,jdbcType=INTEGER}, NOW(), #{rescueRoutePoint.createTime,jdbcType=TIMESTAMP}, #{rescueRoutePoint.updateTime,jdbcType=TIMESTAMP},
+      #{rescueRoutePoint.points,jdbcType=LONGVARCHAR}, #{rescueRoutePoint.estimatePoints,jdbcType=LONGVARCHAR}, #{rescueRoutePoint.originalPoints,jdbcType=LONGVARCHAR},
+      #{rescueRoutePoint.maxIndex,jdbcType=LONGVARCHAR})
+  </insert>
+</mapper>

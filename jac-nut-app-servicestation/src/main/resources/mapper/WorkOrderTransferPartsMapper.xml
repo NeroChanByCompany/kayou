@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.WorkOrderTransferPartsDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.WorkOrderTransferParts">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="wo_code" jdbcType="VARCHAR" property="woCode" />
+        <result column="wo_type" jdbcType="INTEGER" property="woType" />
+        <result column="operate_id" jdbcType="VARCHAR" property="operateId" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="parts_no" jdbcType="VARCHAR" property="partsNo" />
+        <result column="parts_name" jdbcType="VARCHAR" property="partsName" />
+        <result column="parts_num" jdbcType="INTEGER" property="partsNum" />
+        <result column="parts_flag" jdbcType="INTEGER" property="partsFlag" />
+        <result column="service_type" jdbcType="INTEGER" property="serviceType" />
+        <result column="inquire_status" jdbcType="INTEGER" property="inquireStatus" />
+        <result column="put_off_till" jdbcType="TIMESTAMP" property="putOffTill" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, wo_code, wo_type, operate_id, status, parts_no, parts_name, parts_num, parts_flag,
+    service_type, inquire_status, put_off_till, create_time, update_time
+  </sql>
+
+    <select id="selectByOperateIdAndStatus" parameterType="com.nut.servicestation.app.domain.WorkOrderTransferParts"
+            resultType="java.lang.Integer">
+    SELECT
+      count(1)
+    FROM
+      work_order_transfer_parts
+    WHERE
+      1 = 1
+    AND wo_code = #{woCode,jdbcType=VARCHAR}
+    AND operate_id = #{operateId,jdbcType=VARCHAR}
+    AND `status` = #{status,jdbcType=INTEGER}
+    AND wo_type = #{woType,jdbcType=INTEGER}
+  </select>
+    <!--调件的服务类型-->
+    <select id="selectServiceTypeByOperateId" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT
+      wor.service_type AS serviceType
+    FROM
+      work_order_operate wor
+    INNER JOIN work_order_transfer_parts tp ON tp.wo_code = wor.wo_code AND tp.operate_id = wor.operate_id AND tp.status = #{status}
+    WHERE
+      wor.wo_code = #{woCode}
+    AND wor.operate_id = #{operateId}
+    ORDER BY wor.create_time DESC
+    LIMIT 1
+  </select>
+    <!-- 根据工单号和operate_id查询未到货确认的调件信息 -->
+    <select id="selectByWoCodeAndOperateId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from work_order_transfer_parts
+        where wo_code = #{woCode,jdbcType=VARCHAR}
+        <if test="operateId != null and operateId != ''">
+            and operate_id = #{operateId,jdbcType=VARCHAR}
+        </if>
+        and status = 0
+    </select>
+    <!-- 批量插入 -->
+    <!-- 重新生成mapper时注意一同修改!!! -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into work_order_transfer_parts (wo_code, wo_type,
+        operate_id, status, parts_no,
+        parts_name, parts_num, parts_flag,
+        inquire_status, put_off_till, create_time,
+        update_time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.woCode,jdbcType=VARCHAR}, #{item.woType,jdbcType=INTEGER},
+            #{item.operateId,jdbcType=VARCHAR}, #{item.status,jdbcType=INTEGER}, #{item.partsNo,jdbcType=VARCHAR},
+            #{item.partsName,jdbcType=VARCHAR}, #{item.partsNum,jdbcType=INTEGER}, #{item.partsFlag,jdbcType=INTEGER},
+            #{item.inquireStatus,jdbcType=INTEGER}, #{item.putOffTill,jdbcType=TIMESTAMP}, #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+</mapper>

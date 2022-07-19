@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.AccessoriesCodeDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.AccessoriesCode">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="wo_code" jdbcType="VARCHAR" property="woCode" />
+        <result column="acce_code" jdbcType="VARCHAR" property="acceCode" />
+        <result column="acce_type" jdbcType="VARCHAR" property="acceType" />
+        <result column="operate_id" jdbcType="VARCHAR" property="operateId" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, wo_code, acce_code, acce_type, operate_id
+  </sql>
+    <delete id="deleteByWoCodeAndOper">
+    delete from accessories_code
+    where wo_code = #{woCode,jdbcType=VARCHAR} and operate_id = #{operateId,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.nut.servicestation.app.domain.AccessoriesCode">
+    insert into accessories_code (id, wo_code, acce_code,
+      acce_type, operate_id)
+    values (#{id,jdbcType=BIGINT}, #{woCode,jdbcType=VARCHAR}, #{acceCode,jdbcType=VARCHAR},
+      #{acceType,jdbcType=VARCHAR}, #{operateId,jdbcType=VARCHAR})
+  </insert>
+    <select id="selectListByWoCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from accessories_code
+        where wo_code = #{woCode,jdbcType=VARCHAR} and operate_id = #{operateId,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

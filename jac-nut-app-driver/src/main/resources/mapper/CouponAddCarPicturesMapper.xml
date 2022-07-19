@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.CouponAddCarPicturesDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.CouponAddCarPicturesEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="carId" column="car_id"/>
+        <result property="code" column="code"/>
+        <result property="number" column="number"/>
+        <result property="machinePrintedCode" column="machine_printed_code"/>
+        <result property="machinePrintedNumber" column="machine_printed_number"/>
+        <result property="issueDate" column="issue_date"/>
+        <result property="machineNumber" column="machine_number"/>
+        <result property="buyerName" column="buyer_name"/>
+        <result property="buyerOrganizationNumber" column="buyer_organization_number"/>
+        <result property="buyerId" column="buyer_id"/>
+        <result property="sellerName" column="seller_name"/>
+        <result property="sellerPhone" column="seller_phone"/>
+        <result property="sellerId" column="seller_id"/>
+        <result property="sellerAccount" column="seller_account"/>
+        <result property="sellerAddress" column="seller_address"/>
+        <result property="sellerBank" column="seller_bank"/>
+        <result property="vehicleType" column="vehicle_type"/>
+        <result property="brandModel" column="brand_model"/>
+        <result property="manufacturingLocation" column="manufacturing_location"/>
+        <result property="qualityCertificate" column="quality_certificate"/>
+        <result property="importCertificate" column="import_certificate"/>
+        <result property="inspectionNumber" column="inspection_number"/>
+        <result property="engineNumber" column="engine_number"/>
+        <result property="vehicleIdentificationNumber" column="vehicle_identification_number"/>
+        <result property="tonnage" column="tonnage"/>
+        <result property="seatingCapacity" column="seating_capacity"/>
+        <result property="taxAuthority" column="tax_authority"/>
+        <result property="taxAuthorityCode" column="tax_authority_code"/>
+        <result property="taxPaymentReceipt" column="tax_payment_receipt"/>
+        <result property="taxRate" column="tax_rate"/>
+        <result property="tax" column="tax"/>
+        <result property="taxExclusivePrice" column="tax_exclusive_price"/>
+        <result property="total" column="total"/>
+        <result property="totalChinese" column="total_chinese"/>
+        <result property="fiscalCode" column="fiscal_code"/>
+        <result property="name" column="name"/>
+        <result property="address" column="address"/>
+        <result property="useCharacter" column="use_character"/>
+        <result property="model" column="model"/>
+        <result property="engineno" column="engineNo"/>
+        <result property="vin" column="vin"/>
+        <result property="registerDate" column="register_date"/>
+        <result property="fileno" column="fileNo"/>
+        <result property="approvedPassengers" column="approved_passengers"/>
+        <result property="grossMass" column="gross_mass"/>
+        <result property="unladenMass" column="unladen_mass"/>
+        <result property="approvedLoad" column="approved_load"/>
+        <result property="dimension" column="dimension"/>
+        <result property="tractionMass" column="traction_mass"/>
+        <result property="remarks" column="remarks"/>
+        <result property="inspectionRecord" column="inspection_record"/>
+        <result property="codeNumber" column="code_number"/>
+        <result property="chassisno" column="chassisNo"/>
+        <result property="identityCard" column="identity_card"/>
+        <result property="isDrive" column="is_drive"/>
+        <result property="isValid" column="is_valid"/>
+        <result property="picturePath" column="picture_path"/>
+        <result property="auditor" column="auditor"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+</mapper>

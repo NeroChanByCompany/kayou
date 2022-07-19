@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.UserMessageRecordDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.UserMessageRecordEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="messageId" column="message_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="pushShowType" column="push_show_type"/>
+        <result property="messageCode" column="message_code"/>
+        <result property="userVisible" column="user_visible"/>
+        <result property="receiverId" column="receiver_id"/>
+        <result property="receiveAppType" column="receive_app_type"/>
+        <result property="senderId" column="sender_id"/>
+        <result property="sendTime" column="send_time"/>
+        <result property="readFlag" column="read_flag"/>
+        <result property="messageExtra" column="message_extra"/>
+        <result property="type" column="type"/>
+        <result property="stype" column="stype"/>
+        <result property="receiveState" column="receive_state"/>
+        <result property="messageType" column="message_type"/>
+        <result property="messageTypeName" column="message_type_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <!-- 查询消息列表 -->
+    <select id="queryMessageList" parameterType="java.util.Map"
+            resultType="com.nut.driver.app.pojo.QueryMessageListPojo">
+        SELECT
+        temp.message_type_name AS typeName,
+        temp.content AS content,
+        temp.send_time AS sendTime,
+        temp.message_type AS messageType
+        FROM
+        (
+        SELECT
+        message_type_name,
+        content,
+        send_time,
+        message_type
+        FROM
+        user_message_record umr
+        WHERE
+        umr.push_show_type = #{pushShowType,jdbcType=INTEGER}
+
+        AND umr.receiver_id = #{receiverId,jdbcType=VARCHAR}
+        AND umr.user_visible = 2
+        AND umr.send_time &lt;= #{sendTime,jdbcType=BIGINT}
+        AND umr.message_type IN
+        <foreach collection="messageTypeList" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=INTEGER}
+        </foreach>
+        ORDER BY
+        umr.send_time DESC
+        ) AS temp
+        ORDER BY
+        temp.send_time DESC
+    </select>
+
+    <!-- 查询所有消息分类的未读消息数量 -->
+    <select id="queryMessageCount" parameterType="java.util.Map"
+            resultType="com.nut.driver.app.pojo.QueryMessageCountPojo">
+        SELECT
+        message_type AS messageType,
+        COUNT(1) AS count
+        FROM
+        user_message_record umr
+        WHERE
+        umr.push_show_type = #{pushShowType,jdbcType=INTEGER}
+        AND umr.receiver_id = #{receiverId,jdbcType=VARCHAR}
+        AND umr.user_visible = 2
+        AND umr.read_flag = 1
+        AND umr.send_time &lt;= #{sendTime,jdbcType=BIGINT}
+        AND umr.message_type IN
+        <foreach collection="messageTypeList" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=INTEGER}
+        </foreach>
+        GROUP BY
+        umr.message_type
+    </select>
+
+    <!-- 查询消息详情列表 -->
+    <select id="queryMessageDetailList" parameterType="java.util.Map"
+            resultType="com.nut.driver.app.dto.QueryMessageDetailListDto">
+        SELECT
+            title AS title,
+            content AS content,
+            message_id AS messageId,
+            read_flag AS readFlag,
+            send_time AS sendTime,
+            message_extra AS messageExtra,
+            message_code AS messageCode,
+            stype AS imageCode,
+            invitation_id as invitationId
+        FROM
+            user_message_record umr
+        WHERE
+            umr.push_show_type = #{pushShowType,jdbcType=INTEGER}
+          AND umr.receiver_id = #{receiverId,jdbcType=VARCHAR}
+          AND umr.user_visible = 2
+          AND umr.send_time &lt;= #{sendTime,jdbcType=BIGINT}
+          AND umr.message_type = #{messageType,jdbcType=INTEGER}
+        ORDER BY
+            umr.id DESC
+    </select>
+
+
+
+
+</mapper>

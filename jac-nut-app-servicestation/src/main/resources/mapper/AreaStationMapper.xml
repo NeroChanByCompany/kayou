@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.AreaStationDao">
+    <select id="queryAreaStation" resultType="com.nut.servicestation.app.pojo.AreaStationPojo">
+        SELECT t.area_id as areaId,
+        t.station_code as stationCode
+        FROM ${DbName}.hy_electronic_station_mapping t
+        where t.type = 1
+        <if test="areaId != null and areaId != ''">
+            and t.area_id = #{areaId, jdbcType=INTEGER}
+            limit 1
+        </if>
+    </select>
+
+
+    <select id="getStationList" resultType="com.nut.servicestation.app.dto.StationDto">
+        select id as id,
+        station_name as name ,
+        address as address
+        from ${DbName}.hy_service_station
+        where STATION_ENABLE = '1'
+        <if test="cityID != null">
+            and city = #{cityID}
+        </if>
+    </select>
+
+    <select id="getStationListById" resultType="com.nut.servicestation.app.dto.StationDto">
+        select id           as id,
+               station_name as name,
+               address      as address
+        from ${DbName}.hy_service_station
+        where id in (
+            select exchange_branch_id
+            from coupon_exchange
+            where info_id = #{infoId,jdbcType=BIGINT}
+        )
+    </select>
+
+</mapper>

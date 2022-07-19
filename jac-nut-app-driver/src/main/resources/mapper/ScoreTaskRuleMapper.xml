@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.ScoreTaskRuleDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.ScoreTaskRuleEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="distId" column="dist_id"/>
+        <result property="scoreType" column="score_type"/>
+        <result property="taskName" column="task_name"/>
+        <result property="taskType" column="task_type"/>
+        <result property="ruleName" column="rule_name"/>
+        <result property="taskExplain" column="task_explain"/>
+        <result property="taskBrief" column="task_brief"/>
+        <result property="addScoreNum" column="add_score_num"/>
+        <result property="addScore" column="add_score"/>
+        <result property="scoreUp" column="score_up"/>
+        <result property="statisType" column="statis_type"/>
+        <result property="availFlag" column="avail_flag"/>
+        <result property="vipFlag" column="vip_flag"/>
+        <result property="operateId" column="operate_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="addFrom" column="add_from"/>
+        <result property="pointDistribution" column="point_distribution"/>
+        <result property="module" column="module"/>
+        <result property="ruleUnique" column="rule_unique"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <select id="inviteIntegral" parameterType="java.lang.String" resultType="java.util.Map">
+        select rule_name as ruelName, add_score as addScore
+        from score_task_rule
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

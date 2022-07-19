@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.ProductDeliveryVehicleInfoDao">
+    <resultMap id="BaseResultMap" type="com.nut.driver.app.entity.ProductDeliveryVehicleInfoEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="delivery_status" jdbcType="INTEGER" property="deliveryStatus"/>
+        <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo"/>
+        <result column="sale_id" jdbcType="BIGINT" property="saleId"/>
+        <result column="dealer_name" jdbcType="VARCHAR" property="dealerName"/>
+        <result column="dealer_code" jdbcType="VARCHAR" property="dealerCode"/>
+        <result column="dealer_landline" jdbcType="VARCHAR" property="dealerLandline"/>
+        <result column="dealer_phone" jdbcType="VARCHAR" property="dealerPhone"/>
+        <result column="dealer_trainer" jdbcType="VARCHAR" property="dealerTrainer"/>
+        <result column="car_id" jdbcType="VARCHAR" property="carId"/>
+        <result column="car_type" jdbcType="VARCHAR" property="carType"/>
+        <result column="vin" jdbcType="VARCHAR" property="vin"/>
+        <result column="manufacturing_date" jdbcType="TIMESTAMP" property="manufacturingDate"/>
+        <result column="sales_date" jdbcType="TIMESTAMP" property="salesDate"/>
+        <result column="delivery_date" jdbcType="TIMESTAMP" property="deliveryDate"/>
+        <result column="mileage" jdbcType="VARCHAR" property="mileage"/>
+        <result column="car_number" jdbcType="VARCHAR" property="carNumber"/>
+        <result column="customer_company" jdbcType="VARCHAR" property="customerCompany"/>
+        <result column="customer_name" jdbcType="VARCHAR" property="customerName"/>
+        <result column="customer_landline" jdbcType="VARCHAR" property="customerLandline"/>
+        <result column="customer_phone" jdbcType="VARCHAR" property="customerPhone"/>
+        <result column="identity_card" jdbcType="VARCHAR" property="identityCard"/>
+        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , delivery_status, invoice_no, sale_id, dealer_name, dealer_code, dealer_landline,
+    dealer_phone, dealer_trainer, car_id, car_type, vin, manufacturing_date, sales_date,
+    delivery_date, mileage, car_number, customer_company, customer_name, customer_landline,
+    customer_phone, identity_card, remarks, create_time, update_time
+    </sql>
+    <select id="queryDeliveryCarListCount" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM product_delivery_vehicle_info p
+        WHERE p.delivery_status &lt;&gt; 2
+          AND p.customer_phone = (
+            SELECT u.phone
+            FROM user u
+            WHERE u.id = #{userId,jdbcType=BIGINT}
+        )
+    </select>
+
+    <select id="queryDeliveryIdByCarIdAndUserId" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT p.id
+        FROM product_delivery_vehicle_info p
+        WHERE p.car_id = #{carId,jdbcType=VARCHAR}
+          AND p.customer_phone = (
+            SELECT u.phone
+            FROM user u
+            WHERE u.id = #{userId,jdbcType=BIGINT}
+        )
+    </select>
+
+
+</mapper>

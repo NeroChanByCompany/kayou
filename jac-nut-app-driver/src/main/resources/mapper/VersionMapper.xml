@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.VersionDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.VersionEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="appCode" column="app_code"/>
+        <result property="title" column="title"/>
+        <result property="type" column="type"/>
+        <result property="explainValue" column="explain_value"/>
+        <result property="applyStatus" column="apply_status"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <select id="queryVersionList" resultType="com.nut.driver.app.pojo.VersionPojo">
+        SELECT
+        CAST(v.id AS CHAR) AS manualId,
+        v.title AS manualTitle,
+        v.type AS manualType,
+        v.explain_value AS manualValue
+        FROM
+        version v
+        WHERE v.apply_status = 1
+        <if test="appCode != null and appCode != ''">
+            AND v.app_code = #{appCode,jdbcType=VARCHAR}
+        </if>
+        ORDER BY
+        v.id DESC
+    </select>
+
+</mapper>

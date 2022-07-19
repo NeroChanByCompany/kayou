@@ -1,0 +1,11 @@
+### 获取服务版本信息
+GET {{base_url}}/locationService/dev/getAppInfo
+
+### 远程调用
+POST {{base_url}}/car/history/location/carHistoryLocation
+{
+  "terminalId": "",
+  "queryDate": "",
+  "index": "",
+  "accessTocken": ""
+}

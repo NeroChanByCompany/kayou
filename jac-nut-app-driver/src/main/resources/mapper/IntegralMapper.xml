@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.IntegralDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.IntegralEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="ucId" column="uc_id"/>
+        <result property="integralCounts" column="integral_counts"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="lastIntegralCounts" column="last_integral_counts"/>
+        <result property="lastIntegralOperatedCounts" column="last_integral_operated_counts"/>
+        <result property="integralState" column="integral_state"/>
+        <result property="lastOperateType" column="last_operate_type"/>
+        <result property="phone" column="phone"/>
+    </resultMap>
+
+    <insert id="createIntegral" parameterType="com.nut.driver.app.entity.Integral">
+        INSERT INTO integral (uc_id, integral_counts, create_time,
+                              last_integral_counts, last_integral_operated_counts, integral_state,
+                              last_operate_type, phone)
+        values (#{ucId,jdbcType=VARCHAR}, #{integralCounts,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP},
+                #{lastIntegralCounts,jdbcType=BIGINT}, #{lastIntegralOperatedCounts,jdbcType=BIGINT},
+                #{integralState,jdbcType=BIGINT}, #{lastOperateType,jdbcType=BIGINT}, #{phone,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="getScoreTaskRule" resultType="com.nut.driver.app.entity.ScoreTaskRule">
+        SELECT point_distribution as pointDistribution,
+               rule_unique        as ruleUnique,
+               add_score          as addScore,
+               avail_flag         as availFlag
+        FROM score_task_rule
+        WHERE id = #{integralState,jdbcType=BIGINT}
+    </select>
+
+    <select id="integralExist" resultType="com.nut.driver.app.entity.Integral" parameterType="java.lang.String">
+        select id                               id,
+               uc_id                         as ucId,
+               integral_counts               as integralCounts,
+               create_time                   as createTime,
+               update_time                   as updateTime,
+               last_integral_counts          as lastIntegralCounts,
+               last_integral_operated_counts as lastIntegralOperatedCounts,
+               integral_state                as integralState,
+               last_operate_type             as lastOperateType,
+               update_time                   as updateTime
+        FROM integral
+        where uc_id = #{ucId,jdbcType=VARCHAR} order by update_time desc limit 1
+    </select>
+
+    <select id="queryPhoneByUcId" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT phone phone
+        FROM USER
+        WHERE uc_id = #{ucId,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateIntegralCounts" parameterType="com.nut.driver.app.entity.Integral">
+        UPDATE integral
+        SET integral_counts= #{integralCounts,jdbcType=BIGINT},
+            UPDATE_TIME= #{updateTime,jdbcType=TIMESTAMP},
+            last_integral_counts = #{lastIntegralCounts,jdbcType=BIGINT},
+            last_integral_operated_counts= #{lastIntegralOperatedCounts,jdbcType=BIGINT},
+            last_operate_type= #{lastOperateType,jdbcType=BIGINT}
+        WHERE uc_id = #{ucId,jdbcType=VARCHAR}
+
+    </update>
+
+    <update id="updateAddIntegralCounts" parameterType="com.nut.driver.app.entity.Integral">
+        UPDATE integral
+        SET integral_counts= integral_counts + #{integralCounts,jdbcType=BIGINT},
+            UPDATE_TIME= #{updateTime,jdbcType=TIMESTAMP},
+            last_integral_counts = #{lastIntegralCounts,jdbcType=BIGINT},
+            last_integral_operated_counts= #{lastIntegralOperatedCounts,jdbcType=BIGINT},
+            last_operate_type= #{lastOperateType,jdbcType=BIGINT}
+        WHERE uc_id = #{ucId,jdbcType=VARCHAR}
+
+    </update>
+
+    <update id="updateSubIntegralCounts" parameterType="com.nut.driver.app.entity.Integral">
+        UPDATE integral
+        SET integral_counts= integral_counts - #{integralCounts,jdbcType=BIGINT},
+            UPDATE_TIME= #{updateTime,jdbcType=TIMESTAMP},
+            last_integral_counts = #{lastIntegralCounts,jdbcType=BIGINT},
+            last_integral_operated_counts= #{lastIntegralOperatedCounts,jdbcType=BIGINT},
+            last_operate_type= #{lastOperateType,jdbcType=BIGINT}
+        WHERE uc_id = #{ucId,jdbcType=VARCHAR}
+
+    </update>
+
+    <update id="FreezeStatus">
+        update integral
+        set integral_state = 1
+        where uc_id = #{ucId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="unfreezeStatus">
+        update integral
+        set integral_state = 0
+        where uc_id = #{ucId,jdbcType=VARCHAR}
+    </update>
+
+
+</mapper>

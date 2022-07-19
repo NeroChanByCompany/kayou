@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.tripanalysis.app.dao.CarDao">
+    <resultMap id="BaseResultMap" type="com.nut.tripanalysis.app.entity.CarEntity">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="car_vin" jdbcType="VARCHAR" property="carVin" />
+        <result column="car_brand" jdbcType="VARCHAR" property="carBrand" />
+        <result column="car_series" jdbcType="VARCHAR" property="carSeries" />
+        <result column="car_series_name" jdbcType="VARCHAR" property="carSeriesName" />
+        <result column="car_model" jdbcType="VARCHAR" property="carModel" />
+        <result column="car_model_code" jdbcType="VARCHAR" property="carModelCode" />
+        <result column="car_model_name" jdbcType="VARCHAR" property="carModelName" />
+        <result column="engine" jdbcType="VARCHAR" property="engine" />
+        <result column="is_vip" jdbcType="CHAR" property="isVip" />
+        <result column="owner_id" jdbcType="VARCHAR" property="ownerId" />
+        <result column="invoice_photo" jdbcType="VARCHAR" property="invoicePhoto" />
+        <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo" />
+        <result column="identity_card" jdbcType="VARCHAR" property="identityCard" />
+        <result column="organization" jdbcType="VARCHAR" property="organization" />
+        <result column="car_number" jdbcType="VARCHAR" property="carNumber" />
+        <result column="terminal_id" jdbcType="VARCHAR" property="terminalId" />
+        <result column="auto_terminal" jdbcType="VARCHAR" property="autoTerminal" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="sales_date" jdbcType="TIMESTAMP" property="salesDate" />
+        <result column="T_ID" jdbcType="BIGINT" property="tId" />
+        <result column="MB_SALES_STATUS" jdbcType="INTEGER" property="mbSalesStatus" />
+        <result column="MB_SALES_DATE" jdbcType="TIMESTAMP" property="mbSalesDate" />
+        <result column="SALES_STATUS" jdbcType="INTEGER" property="salesStatus" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, car_vin, car_brand, car_series, car_series_name, car_model, car_model_code, car_model_name,
+    engine, is_vip, owner_id, invoice_photo, invoice_no, identity_card, organization,
+    car_number, terminal_id, auto_terminal, create_time, update_time, sales_date, T_ID,
+    MB_SALES_STATUS, MB_SALES_DATE, SALES_STATUS
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from car
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByTerminalId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from car
+        where auto_terminal = #{autoTerminal,jdbcType=VARCHAR}
+    </select>
+    <select id="queryRankCarsByUserId" parameterType="java.lang.Long" resultType="com.nut.tripanalysis.app.pojo.RankCarPojo">
+    SELECT fcm.car_id AS carId,
+      case WHEN  ISNULL(c.car_number) OR c.car_number = '' THEN c.car_vin ELSE c.car_number END carNumber
+    FROM flt_fleet_car_mapping fcm
+    LEFT JOIN flt_fleet_user_mapping fum ON fcm.team_id = fum.team_id
+    LEFT JOIN car c ON fcm.car_id = c.id
+    WHERE fum.user_id = #{userId,jdbcType=BIGINT}
+    AND fum.role IN (0, 1)
+    UNION
+    SELECT cdm.car_id AS carId,
+      case WHEN  ISNULL(c.car_number) OR c.car_number = '' THEN c.car_vin ELSE c.car_number END carNumber
+    FROM flt_car_driver_mapping cdm
+    LEFT JOIN car c ON cdm.car_id = c.id
+    WHERE cdm.user_id = #{userId,jdbcType=BIGINT}
+    UNION
+    SELECT com.car_id AS carId,
+      case WHEN  ISNULL(c.car_number) OR c.car_number = '' THEN c.car_vin ELSE c.car_number END carNumber
+    FROM flt_car_owner_mapping com
+    LEFT JOIN car c ON com.car_id = c.id
+    WHERE com.user_id = #{userId,jdbcType=BIGINT}
+  </select>
+    <select id="queryCountByCarModel" parameterType="java.util.List" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        car
+        WHERE
+        car_model IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

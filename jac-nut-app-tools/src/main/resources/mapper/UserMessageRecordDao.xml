@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.tools.app.mapper.UserMessageRecordDao">
+    <insert id="insert" parameterType="com.nut.tools.app.entity.MessageRecordEntity">
+        insert into user_message_record (id, message_id, title,
+                                         content, push_show_type, message_code,
+                                         user_visible, receiver_id, receive_app_type,
+                                         sender_id, send_time, read_flag,
+                                         message_extra, type, stype, receive_state,
+                                         create_time, update_time)
+        values (#{id,jdbcType=BIGINT}, #{messageId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
+                #{content,jdbcType=VARCHAR}, #{pushShowType,jdbcType=INTEGER}, #{messageCode,jdbcType=INTEGER},
+                #{userVisible,jdbcType=INTEGER}, #{receiverId,jdbcType=VARCHAR}, #{receiveAppType,jdbcType=INTEGER},
+                #{senderId,jdbcType=VARCHAR}, #{sendTime,jdbcType=BIGINT}, #{readFlag,jdbcType=INTEGER},
+                #{messageExtra,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{stype,jdbcType=INTEGER},
+                #{item.receiveState,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <!--查询未读消息数量-->
+    <select id="queryReadMesCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM user_message_record
+        WHERE receiver_id = #{receiverId}
+          AND read_flag = 1
+    </select>
+
+    <insert id="userMessageRecordBatchInsert" parameterType="java.util.List">
+        insert into user_message_record (message_id, title,
+        content, push_show_type, message_code,
+        user_visible, receiver_id, receive_app_type,
+        sender_id, send_time, read_flag,
+        message_extra, type, stype,receive_state,
+        message_type, message_type_name,
+        create_time, update_time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.messageId,jdbcType=VARCHAR}, #{item.title,jdbcType=VARCHAR},
+            #{item.content,jdbcType=VARCHAR}, #{item.pushShowType,jdbcType=INTEGER},
+            #{item.messageCode,jdbcType=INTEGER},
+            #{item.userVisible,jdbcType=INTEGER}, #{item.receiverId,jdbcType=VARCHAR},
+            #{item.receiveAppType,jdbcType=INTEGER},
+            #{item.senderId,jdbcType=VARCHAR}, #{item.sendTime,jdbcType=BIGINT}, #{item.readFlag,jdbcType=INTEGER},
+            #{item.messageExtra,jdbcType=VARCHAR}, #{item.type,jdbcType=INTEGER}, #{item.stype,jdbcType=INTEGER},
+            #{item.receiveState,jdbcType=INTEGER}, #{item.messageType,jdbcType=INTEGER},
+            #{item.messageTypeName,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+</mapper>

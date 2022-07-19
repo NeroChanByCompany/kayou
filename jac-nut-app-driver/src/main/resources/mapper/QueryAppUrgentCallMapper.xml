@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.QueryAppUrgentCallDao">
+  <select id="selectByTypeAndName" parameterType="java.util.Map"
+          resultType="com.nut.driver.app.dto.QueryAppUrgentCallDto">
+    SELECT
+      id AS telId,
+      telephone AS tel,
+      `name` AS name,
+      imgpath AS imgpath
+    FROM service_call_mgt
+    WHERE 1 = 1
+    <if test="name != null and name != ''">
+      AND `name` LIKE CONCAT('%', #{name, jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="type != null">
+      AND `type` = #{type, jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <insert id="insert">
+    INSERT INTO `real_time_condition`(`id`, `scm_id`,`upload_time`,`create_time`, `apply_no`, `user_id`)
+    VALUES (uuid(), #{scmId}, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), #{phone}, #{userId});
+  </insert>
+</mapper>

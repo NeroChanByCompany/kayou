@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.WorkOrderDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.WorkOrderEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="woCode" column="wo_code"/>
+        <result property="woStatus" column="wo_status"/>
+        <result property="woType" column="wo_type"/>
+        <result property="protocolMark" column="protocol_mark"/>
+        <result property="timeCreate" column="time_create"/>
+        <result property="timeAccept" column="time_accept"/>
+        <result property="timeDepart" column="time_depart"/>
+        <result property="timeArriveExpected" column="time_arrive_expected"/>
+        <result property="timeReceive" column="time_receive"/>
+        <result property="timeInspectBegin" column="time_inspect_begin"/>
+        <result property="timeInspected" column="time_inspected"/>
+        <result property="timeRepairPhoto" column="time_repair_photo"/>
+        <result property="timeClose" column="time_close"/>
+        <result property="timeApplyrefuse" column="time_applyRefuse"/>
+        <result property="timeApplymodify" column="time_applyModify"/>
+        <result property="timeApplyclose" column="time_applyClose"/>
+        <result property="assignTo" column="assign_to"/>
+        <result property="refuseType" column="refuse_type"/>
+        <result property="refuseReason" column="refuse_reason"/>
+        <result property="refuseTimes" column="refuse_times"/>
+        <result property="closeType" column="close_type"/>
+        <result property="closeReason" column="close_reason"/>
+        <result property="closeTimes" column="close_times"/>
+        <result property="chassisNum" column="chassis_num"/>
+        <result property="stationId" column="station_id"/>
+        <result property="stationCode" column="station_code"/>
+        <result property="stationName" column="station_name"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="appoStationId" column="appo_station_id"/>
+        <result property="appoArriveTime" column="appo_arrive_time"/>
+        <result property="appoType" column="appo_type"/>
+        <result property="appoUserId" column="appo_user_id"/>
+        <result property="appoUserName" column="appo_user_name"/>
+        <result property="appoUserPhone" column="appo_user_phone"/>
+        <result property="sendToRepairName" column="send_to_repair_name"/>
+        <result property="sendToRepairPhone" column="send_to_repair_phone"/>
+        <result property="carLon" column="car_lon"/>
+        <result property="carLat" column="car_lat"/>
+        <result property="carLocation" column="car_location"/>
+        <result property="carDistance" column="car_distance"/>
+        <result property="carStationDistance" column="car_station_distance"/>
+        <result property="manCarDistance" column="man_car_distance"/>
+        <result property="manStationDistance" column="man_station_distance"/>
+        <result property="appStationLimit" column="app_station_limit"/>
+        <result property="appCarLimit" column="app_car_limit"/>
+        <result property="tboxConnectStatus" column="tbox_connect_status"/>
+        <result property="tboxRepairRecord" column="tbox_repair_record"/>
+        <result property="tboxRepairAlert" column="tbox_repair_alert"/>
+        <result property="repairItem" column="repair_item"/>
+        <result property="maintainItem" column="maintain_item"/>
+        <result property="registeredPhone" column="registered_phone"/>
+        <result property="userComment" column="user_comment"/>
+        <result property="mileage" column="mileage"/>
+        <result property="customerLevel" column="customer_level"/>
+        <result property="modifyReason" column="modify_reason"/>
+        <result property="modifyTimes" column="modify_times"/>
+        <result property="rescueStaffName" column="rescue_staff_name"/>
+        <result property="rescueStaffPhone" column="rescue_staff_phone"/>
+        <result property="rescueStaffNum" column="rescue_staff_num"/>
+        <result property="rescueCarDevice" column="rescue_car_device"/>
+        <result property="secondRescueCarDevice" column="second_rescue_car_device"/>
+        <result property="isAbnormalReceive" column="is_abnormal_receive"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="remindTimes" column="remind_times"/>
+        <result property="lastRemindTime" column="last_remind_time"/>
+        <result property="cancelReason" column="cancel_reason"/>
+        <result property="isEmergency" column="is_emergency"/>
+        <result property="breakStatus" column="break_status"/>
+        <result property="loadDescription" column="load_description"/>
+        <result property="timesRescueNumber" column="times_rescue_number"/>
+        <result property="rescueIsTransferring" column="rescue_is_transferring"/>
+        <result property="rescueType" column="rescue_type"/>
+        <result property="pointCompleteness" column="point_completeness"/>
+        <result property="pointCompletenessTwo" column="point_completeness_two"/>
+        <result property="estimateTime" column="estimate_time"/>
+        <result property="estimateFee" column="estimate_fee"/>
+        <result property="billSubStatus" column="bill_sub_status"/>
+        <result property="billReject" column="bill_reject"/>
+        <result property="rejectionReason" column="rejection_reason"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="serviceType1" column="service_type1"/>
+        <result property="serviceType" column="service_type"/>
+        <result property="checkStatus" column="check_status"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        , wo_code, wo_status, wo_type, protocol_mark,rejection_reason, time_create, time_accept, time_depart, time_arrive_expected,
+    time_receive, time_inspect_begin, time_inspected, time_close, time_applyRefuse, time_applyModify,
+    time_applyClose, assign_to, refuse_type, refuse_reason, refuse_times, close_type,
+    close_reason, chassis_num, station_id, station_code, station_name, area_code, appo_station_id,
+    appo_arrive_time, appo_type, appo_user_id, appo_user_name, appo_user_phone, send_to_repair_name,
+    send_to_repair_phone, car_lon, car_lat, car_location, car_distance, repair_item,
+    maintain_item, registered_phone, user_comment, mileage, customer_level, modify_reason,
+    rescue_staff_name, rescue_staff_phone, rescue_staff_num, is_abnormal_receive, device_id,
+    operator_id, remind_times, last_remind_time, cancel_reason, is_emergency, break_status,
+    load_description, times_rescue_number, rescue_is_transferring, create_time, update_time
+    </sql>
+
+    <select id="queryOtwOrderNum" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM work_order wo
+        WHERE wo.appo_user_id = #{userId, jdbcType=BIGINT}
+          AND wo.wo_status NOT IN (#{closeInspect,jdbcType=INTEGER}, #{closeRepair,jdbcType=INTEGER},
+                                   #{closeRefused,jdbcType=INTEGER}, #{workDone,jdbcType=INTEGER},
+                                   #{cancelOrder,jdbcType=INTEGER}, #{takeoff,jdbcType=INTEGER},
+                                   #{recieve,jdbcType=INTEGER}, #{applyTakeOff,jdbcType=INTEGER});
+    </select>
+
+    <!-- 通过底盘号查询车辆最近一条创建的工单 -->
+    <select id="queryLatelyWorkOrderByVin" parameterType="java.util.List"
+            resultType="com.nut.driver.app.pojo.WorkOrderInfoPojo">
+        SELECT
+        temp.area_code AS areaCode,
+        temp.create_time AS createTime,
+        temp.wo_code AS woCode,
+        temp.chassis_num AS carVin
+        FROM
+        (
+        SELECT
+        wo.area_code,
+        wo.create_time,
+        wo.wo_code,
+        wo.chassis_num
+        FROM
+        work_order wo
+        WHERE
+        wo.chassis_num IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        ORDER BY wo.create_time DESC
+        ) AS temp
+        GROUP BY temp.chassis_num
+    </select>
+
+    <insert id="insert" parameterType="com.nut.driver.app.entity.WorkOrderEntity">
+        insert into work_order (id, wo_code, wo_status,
+                                wo_type, protocol_mark, rejection_reason, time_create, time_accept,
+                                time_depart, time_arrive_expected, time_receive,
+                                time_inspect_begin, time_inspected, time_close,
+                                time_applyRefuse, time_applyModify, time_applyClose,
+                                assign_to, refuse_type, refuse_reason,
+                                refuse_times, close_type, close_reason,
+                                chassis_num, station_id, station_code,
+                                station_name, area_code, appo_station_id,
+                                appo_arrive_time, appo_type, appo_user_id,
+                                appo_user_name, appo_user_phone, send_to_repair_name,
+                                send_to_repair_phone, car_lon, car_lat,
+                                car_location, car_distance, repair_item,
+                                maintain_item, registered_phone, user_comment,
+                                mileage, customer_level, modify_reason,
+                                rescue_staff_name, rescue_staff_phone, rescue_staff_num,
+                                is_abnormal_receive, device_id, operator_id,
+                                remind_times, last_remind_time, cancel_reason,
+                                is_emergency, break_status, load_description,
+                                times_rescue_number, rescue_is_transferring, rescue_type,
+                                create_time, update_time)
+        values (#{id,jdbcType=BIGINT}, #{woCode,jdbcType=VARCHAR}, #{woStatus,jdbcType=INTEGER},
+                #{woType,jdbcType=INTEGER}, #{protocolMark,jdbcType=INTEGER}, #{rejectionReason,jdbcType=VARCHAR},
+                #{timeCreate,jdbcType=TIMESTAMP}, #{timeAccept,jdbcType=TIMESTAMP},
+                #{timeDepart,jdbcType=TIMESTAMP}, #{timeArriveExpected,jdbcType=TIMESTAMP},
+                #{timeReceive,jdbcType=TIMESTAMP},
+                #{timeInspectBegin,jdbcType=TIMESTAMP}, #{timeInspected,jdbcType=TIMESTAMP},
+                #{timeClose,jdbcType=TIMESTAMP},
+                #{timeApplyrefuse,jdbcType=TIMESTAMP}, #{timeApplymodify,jdbcType=TIMESTAMP},
+                #{timeApplyclose,jdbcType=TIMESTAMP},
+                #{assignTo,jdbcType=VARCHAR}, #{refuseType,jdbcType=INTEGER}, #{refuseReason,jdbcType=VARCHAR},
+                #{refuseTimes,jdbcType=INTEGER}, #{closeType,jdbcType=INTEGER}, #{closeReason,jdbcType=VARCHAR},
+                #{chassisNum,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, #{stationCode,jdbcType=VARCHAR},
+                #{stationName,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR}, #{appoStationId,jdbcType=VARCHAR},
+                #{appoArriveTime,jdbcType=TIMESTAMP}, #{appoType,jdbcType=INTEGER}, #{appoUserId,jdbcType=BIGINT},
+                #{appoUserName,jdbcType=VARCHAR}, #{appoUserPhone,jdbcType=VARCHAR},
+                #{sendToRepairName,jdbcType=VARCHAR},
+                #{sendToRepairPhone,jdbcType=VARCHAR}, #{carLon,jdbcType=VARCHAR}, #{carLat,jdbcType=VARCHAR},
+                #{carLocation,jdbcType=VARCHAR}, #{carDistance,jdbcType=VARCHAR}, #{repairItem,jdbcType=VARCHAR},
+                #{maintainItem,jdbcType=VARCHAR}, #{registeredPhone,jdbcType=VARCHAR}, #{userComment,jdbcType=VARCHAR},
+                #{mileage,jdbcType=VARCHAR}, #{customerLevel,jdbcType=INTEGER}, #{modifyReason,jdbcType=VARCHAR},
+                #{rescueStaffName,jdbcType=VARCHAR}, #{rescueStaffPhone,jdbcType=VARCHAR},
+                #{rescueStaffNum,jdbcType=INTEGER},
+                #{isAbnormalReceive,jdbcType=INTEGER}, #{deviceId,jdbcType=VARCHAR}, #{operatorId,jdbcType=VARCHAR},
+                #{remindTimes,jdbcType=INTEGER}, #{lastRemindTime,jdbcType=TIMESTAMP}, #{cancelReason,jdbcType=VARCHAR},
+                #{isEmergency,jdbcType=INTEGER}, #{breakStatus,jdbcType=INTEGER}, #{loadDescription,jdbcType=VARCHAR},
+                #{timesRescueNumber,jdbcType=INTEGER}, #{rescueIsTransferring,jdbcType=INTEGER},
+                #{rescueType,jdbcType=INTEGER},
+                #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <insert id="insertRelationWorkOrderUser" parameterType="com.nut.driver.app.domain.RelationWorkOrderUser">
+        insert into relation_work_order_user (uc_id, wo_code, phone,
+                                              app_type, work_state, create_time)
+        values (#{ucId,jdbcType=VARCHAR}, #{woCode,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+                #{appType,jdbcType=VARCHAR}, #{workState,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <select id="queryWorkOrderByWoCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from work_order
+        where wo_code = #{woCode,jdbcType=VARCHAR}
+        limit 1;
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.nut.driver.app.entity.WorkOrderEntity">
+        update work_order
+        <set>
+            <if test="woCode != null">
+                wo_code = #{woCode,jdbcType=VARCHAR},
+            </if>
+            <if test="woStatus != null">
+                wo_status = #{woStatus,jdbcType=INTEGER},
+            </if>
+            <if test="woType != null">
+                wo_type = #{woType,jdbcType=INTEGER},
+            </if>
+            <if test="protocolMark != null">
+                protocol_mark = #{protocolMark,jdbcType=INTEGER},
+            </if>
+            <if test="rejectionReason != null">
+                rejection_reason = #{rejectionReason,jdbcType=VARCHAR},
+            </if>
+            <if test="timeCreate != null">
+                time_create = #{timeCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="timeAccept != null">
+                time_accept = #{timeAccept,jdbcType=TIMESTAMP},
+            </if>
+            <if test="timeDepart != null">
+                time_depart = #{timeDepart,jdbcType=TIMESTAMP},
+            </if>
+            <if test="timeArriveExpected != null">
+                time_arrive_expected = #{timeArriveExpected,jdbcType=TIMESTAMP},
+            </if>
+            <if test="timeReceive != null">
+                time_receive = #{timeReceive,jdbcType=TIMESTAMP},
+            </if>
+            <if test="timeInspectBegin != null">
+                time_inspect_begin = #{timeInspectBegin,jdbcType=TIMESTAMP},
+            </if>
+            <if test="timeInspected != null">
+                time_inspected = #{timeInspected,jdbcType=TIMESTAMP},
+            </if>
+            <if test="timeClose != null">
+                time_close = #{timeClose,jdbcType=TIMESTAMP},
+            </if>
+            <if test="timeApplyrefuse != null">
+                time_applyRefuse = #{timeApplyrefuse,jdbcType=TIMESTAMP},
+            </if>
+            <if test="timeApplymodify != null">
+                time_applyModify = #{timeApplymodify,jdbcType=TIMESTAMP},
+            </if>
+            <if test="timeApplyclose != null">
+                time_applyClose = #{timeApplyclose,jdbcType=TIMESTAMP},
+            </if>
+            <if test="assignTo != null">
+                assign_to = #{assignTo,jdbcType=VARCHAR},
+            </if>
+            <if test="refuseType != null">
+                refuse_type = #{refuseType,jdbcType=INTEGER},
+            </if>
+            <if test="refuseReason != null">
+                refuse_reason = #{refuseReason,jdbcType=VARCHAR},
+            </if>
+            <if test="refuseTimes != null">
+                refuse_times = #{refuseTimes,jdbcType=INTEGER},
+            </if>
+            <if test="closeType != null">
+                close_type = #{closeType,jdbcType=INTEGER},
+            </if>
+            <if test="closeReason != null">
+                close_reason = #{closeReason,jdbcType=VARCHAR},
+            </if>
+            <if test="chassisNum != null">
+                chassis_num = #{chassisNum,jdbcType=VARCHAR},
+            </if>
+            <if test="stationId != null">
+                station_id = #{stationId,jdbcType=VARCHAR},
+            </if>
+            <if test="stationCode != null">
+                station_code = #{stationCode,jdbcType=VARCHAR},
+            </if>
+            <if test="stationName != null">
+                station_name = #{stationName,jdbcType=VARCHAR},
+            </if>
+            <if test="areaCode != null">
+                area_code = #{areaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="appoStationId != null">
+                appo_station_id = #{appoStationId,jdbcType=VARCHAR},
+            </if>
+            <if test="appoArriveTime != null">
+                appo_arrive_time = #{appoArriveTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="appoType != null">
+                appo_type = #{appoType,jdbcType=INTEGER},
+            </if>
+            <if test="appoUserId != null">
+                appo_user_id = #{appoUserId,jdbcType=BIGINT},
+            </if>
+            <if test="appoUserName != null">
+                appo_user_name = #{appoUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="appoUserPhone != null">
+                appo_user_phone = #{appoUserPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="sendToRepairName != null">
+                send_to_repair_name = #{sendToRepairName,jdbcType=VARCHAR},
+            </if>
+            <if test="sendToRepairPhone != null">
+                send_to_repair_phone = #{sendToRepairPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="carLon != null">
+                car_lon = #{carLon,jdbcType=VARCHAR},
+            </if>
+            <if test="carLat != null">
+                car_lat = #{carLat,jdbcType=VARCHAR},
+            </if>
+            <if test="carLocation != null">
+                car_location = #{carLocation,jdbcType=VARCHAR},
+            </if>
+            <if test="carDistance != null">
+                car_distance = #{carDistance,jdbcType=VARCHAR},
+            </if>
+            <if test="repairItem != null">
+                repair_item = #{repairItem,jdbcType=VARCHAR},
+            </if>
+            <if test="maintainItem != null">
+                maintain_item = #{maintainItem,jdbcType=VARCHAR},
+            </if>
+            <if test="registeredPhone != null">
+                registered_phone = #{registeredPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="userComment != null">
+                user_comment = #{userComment,jdbcType=VARCHAR},
+            </if>
+            <if test="mileage != null">
+                mileage = #{mileage,jdbcType=VARCHAR},
+            </if>
+            <if test="customerLevel != null">
+                customer_level = #{customerLevel,jdbcType=INTEGER},
+            </if>
+            <if test="modifyReason != null">
+                modify_reason = #{modifyReason,jdbcType=VARCHAR},
+            </if>
+            <if test="rescueStaffName != null">
+                rescue_staff_name = #{rescueStaffName,jdbcType=VARCHAR},
+            </if>
+            <if test="rescueStaffPhone != null">
+                rescue_staff_phone = #{rescueStaffPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="rescueStaffNum != null">
+                rescue_staff_num = #{rescueStaffNum,jdbcType=INTEGER},
+            </if>
+            <if test="isAbnormalReceive != null">
+                is_abnormal_receive = #{isAbnormalReceive,jdbcType=INTEGER},
+            </if>
+            <if test="deviceId != null">
+                device_id = #{deviceId,jdbcType=VARCHAR},
+            </if>
+            <if test="operatorId != null">
+                operator_id = #{operatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="remindTimes != null">
+                remind_times = #{remindTimes,jdbcType=INTEGER},
+            </if>
+            <if test="lastRemindTime != null">
+                last_remind_time = #{lastRemindTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cancelReason != null">
+                cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+            </if>
+            <if test="isEmergency != null">
+                is_emergency = #{isEmergency,jdbcType=INTEGER},
+            </if>
+            <if test="breakStatus != null">
+                break_status = #{breakStatus,jdbcType=INTEGER},
+            </if>
+            <if test="loadDescription != null">
+                load_description = #{loadDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="timesRescueNumber != null">
+                times_rescue_number = #{timesRescueNumber,jdbcType=INTEGER},
+            </if>
+            <if test="rescueIsTransferring != null">
+                rescue_is_transferring = #{rescueIsTransferring,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="queryEvaluateNum" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM work_order_evaluate woe
+        WHERE woe.wo_code = #{woCode, jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryWorkOrderDetail" parameterType="java.lang.String"
+            resultType="com.nut.driver.app.pojo.MyOrderDetailPojo">
+        SELECT wo.wo_code                                            AS woCode,
+               wo.car_location                                       AS carLocation,
+               wo.car_lon                                            AS carLon,
+               wo.car_lat                                            AS carLat,
+               wo.wo_status                                          AS woStatus,
+               wo.station_id                                         AS stationId,
+               wo.station_name                                       AS stationName,
+               wo.appo_user_id                                       AS appoUserId,
+               wo.appo_user_name                                     AS name,
+               wo.appo_user_phone                                    AS phone,
+               date_format(wo.create_time, '%Y-%m-%d %H:%i:%s')      AS createTime,
+               date_format(wo.appo_arrive_time, '%Y-%m-%d %H:%i:%s') AS orderTime,
+               concat(wo.wo_type, '')                                AS woType,
+               wo.user_comment                                       AS feedback,
+               wo.repair_item                                        AS repairItem,
+               wo.maintain_item                                      AS maintenanceItem,
+               c.car_vin                                             AS vin,
+               c.car_number                                          AS carNumber,
+               CONCAT(mi.driver_type_name, mi.car_type_name)         AS carType,
+               wo.refuse_reason                                      AS refuseReason,
+               wo.close_reason                                       AS closeReason,
+               wo.cancel_reason                                      AS cancelReason,
+               IF(evaluate.id IS NOT NULL, 2, 1)                     AS rateStatus,
+               wo.send_to_repair_phone                               AS sendToRepairPhone,
+               wo.rejection_reason                                   as rejectRemarks
+        FROM work_order wo
+                 LEFT JOIN work_order_evaluate evaluate ON wo.wo_code = evaluate.wo_code
+                 LEFT JOIN car c ON wo.chassis_num = c.car_vin
+                 LEFT JOIN model_info mi ON mi.model_id = c.car_model
+        WHERE wo.wo_code = #{wo_code, jdbcType=VARCHAR} LIMIT 1
+    </select>
+
+    <select id="queryWorkOrderList" resultType="com.nut.driver.app.dto.MyOrdersDto">
+        SELECT
+        wo.wo_code AS woCode,
+        wo.wo_type AS woType,
+        wo.chassis_num AS vin,
+        c.car_number AS carNumber,
+        wo.station_id AS stationId,
+        wo.station_name AS stationName,
+        date_format(wo.create_time,'%Y-%m-%d %H:%i:%s') AS orderTime,
+        CONCAT(IFNULL(wo.repair_item, ''), ' ', IFNULL(wo.maintain_item, '')) AS item,
+        wo.wo_status AS woStatus
+        FROM
+        work_order wo
+        LEFT JOIN car c ON c.car_vin = wo.chassis_num
+        <where>
+            ((wo.appo_user_id IS NOT NULL AND wo.appo_user_id = #{autoIncreaseId, jdbcType=BIGINT})
+            OR wo.appo_user_phone = #{phone,jdbcType=VARCHAR}
+            OR wo.send_to_repair_phone = #{phone,jdbcType=VARCHAR}
+            <if test="chassisNumList != null and chassisNumList.size() != 0">
+                OR wo.chassis_num IN
+                <foreach item="item" index="index" collection="chassisNumList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            )
+            <if test="woStatus != 0">
+                and wo.wo_status = #{woStatus, jdbcType=INTEGER}
+            </if>
+        </where>
+        ORDER BY wo.create_time DESC
+    </select>
+
+    <select id="queryEvaluateNumORauditNum" resultType="java.lang.Long">
+        SELECT
+        count(wo.wo_code)
+        FROM
+        work_order wo
+        LEFT JOIN car c ON c.car_vin = wo.chassis_num
+        <where>
+            (
+            (wo.appo_user_id IS NOT NULL AND wo.appo_user_id = #{autoIncreaseId, jdbcType=BIGINT})
+            OR wo.appo_user_phone = #{phone,jdbcType=VARCHAR}
+            OR wo.send_to_repair_phone = #{phone,jdbcType=VARCHAR}
+            <if test="chassisNumList != null and chassisNumList.size() != 0">
+                OR wo.chassis_num IN
+                <foreach item="item" index="index" collection="chassisNumList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            )
+            <if test="woStatus != 0">
+                and wo.wo_status = #{woStatus, jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+    <select id="queryWorkOrderByStatus" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from work_order
+        where (wo_status = #{status,jdbcType=VARCHAR}
+        and appo_user_id is not null) OR ( wo_status = #{status,jdbcType=VARCHAR}  and appo_type IN (1,3))
+    </select>
+
+</mapper>

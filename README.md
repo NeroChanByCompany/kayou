@@ -1,0 +1,9 @@
+# 模块说明
+1. jac-nut-app-gateway：江淮轻卡车联网-APP服务-网关服务
+2. jac-nut-app-common：江淮轻卡车联网-APP服务-公共模块
+3. jac-nut-app-driver：江淮轻卡车联网-APP服务-用户+车队服务
+4. jac-nut-app-locationservice：江淮轻卡车联网-APP服务-大数据服务调用服务
+5. jac-nut-app-servicestation：江淮轻卡车联网-APP服务-车队服务
+6. jac-nut-app-tools：江淮轻卡车联网-APP服务-信息服务
+7. jac-nut-app-tripanalysis：江淮轻卡车联网-APP服务-行程服务
+8. jac-nut-app-truckingteam：江淮轻卡车联网-APP服务-油耗服务

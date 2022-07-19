@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.ActivityDao">
+
+    <resultMap id="BaseResultMap" type="com.nut.driver.app.entity.ActivityEntity">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="active_name" jdbcType="VARCHAR" property="activeName" />
+        <result column="active_code" jdbcType="VARCHAR" property="activeCode" />
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+    </resultMap>
+
+
+    <!--目前使用1-2 后续切换为枚举值-->
+    <select id="checkList" resultMap="BaseResultMap">
+        select
+            id,
+            active_name ,
+            active_code ,
+            start_time ,
+            end_time ,
+            remark,
+            create_time createTime,
+            ( case  when now() &gt;= start_time and now() &lt;= end_time then
+                        '${@com.nut.driver.app.enums.ActivityEnum@OPEN.getCode}' else
+                        '${@com.nut.driver.app.enums.ActivityEnum@SHUT_DOWN.getCode}' end) type
+        from activity order by createTime desc
+    </select>
+
+
+</mapper>

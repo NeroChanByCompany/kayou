@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.ActionPictureSetDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.ActionPictureSetEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="actionCode" column="action_code"/>
+        <result property="actionName" column="action_name"/>
+        <result property="pictureUrl" column="picture_url"/>
+        <result property="order" column="order"/>
+        <result property="inVersion" column="in_version"/>
+        <result property="outVersion" column="out_version"/>
+        <result property="describe" column="describe"/>
+        <result property="fileSize" column="file_size"/>
+        <result property="type" column="type"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="careteTime" column="carete_time"/>
+    </resultMap>
+
+    <select id="getSetPictureInfo" parameterType="java.lang.String"
+            resultType="com.nut.driver.app.dto.ActionPictureSetDTO">
+        SELECT bi.id          id,
+               bi.action_code actionCode,
+               bi.action_name actionName,
+               bi.picture_url pictureUrl,
+               bi.order,
+               bi.in_version  inVersion,
+               bi.out_version outVersion,
+               bi.describe,
+               bi.file_size   fileSize,
+               bi.flag flag
+        FROM app_version bi
+        WHERE bi.action_code = #{actionCode,jdbcType=VARCHAR}
+          and bi.type = #{type,jdbcType=VARCHAR}
+        ORDER BY bi.in_version desc limit 1
+    </select>
+
+
+</mapper>

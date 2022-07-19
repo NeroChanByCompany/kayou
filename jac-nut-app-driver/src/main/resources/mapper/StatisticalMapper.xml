@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.StatisticalDao">
+    <select id="queryStatisticalByFleetIds" resultType="com.nut.driver.app.pojo.FltStatisticalPojo">
+        SELECT
+            ca.car_id AS carId,
+            date_format(ca.statis_date, '%Y%m%d') AS statisDate,
+            ca.mileage AS mileage,
+            ca.oilwear AS oilwear,
+            ca.run_oil AS runOil,
+            ca.idling_oil AS idlingOil,
+            ca.time_total AS timeTotal,
+            ca.idle_time AS idleTime,
+            ca.speed_sum AS speedSum,
+            ca.speed_count AS speedCount,
+            ca.overspeed_cnt AS overSpeedCnt,
+            ca.rapid_acceleration_cnt AS raCnt,
+            ca.rapid_deceleration_cnt AS rdCnt,
+            ca.sharp_turn_cnt AS sharpTurnCnt,
+            ca.idle_timeout_cnt AS idleTimeoutCnt,
+            ca.cold_run_cnt AS coldRunCnt,
+            ca.night_run_cnt AS nightRunCnt,
+            ca.low_gr_high_spd_cnt AS lowGrHighSpdCnt,
+            ca.full_throttle_cnt AS fullThrottleCnt,
+            ca.rough_throttle_cnt AS roughThrottleCnt,
+            ca.neutral_gear_coast_cnt AS neutralGearCoastCnt,
+            ca.stall_coast_cnt AS stallCoastCnt
+        FROM
+        car_analyse ca
+        WHERE
+        ca.statis_date &gt;=#{startTime,jdbcType=DATE}
+        AND ca.statis_date &lt;= #{endTime,jdbcType=DATE}
+        AND ca.team_id IN
+        <foreach item="item" index="index" collection="fleetIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY carId,statisDate
+    </select>
+    <select id="queryOwnerCarsStatistical" resultType="com.nut.driver.app.pojo.FltStatisticalPojo">
+        SELECT ca.car_id AS carId,
+               date_format(ca.statis_date, '%Y%m%d') AS statisDate,
+               ca.mileage AS mileage,
+               ca.oilwear AS oilwear,
+               ca.run_oil AS runOil,
+               ca.idling_oil AS idlingOil,
+               ca.time_total AS timeTotal,
+               ca.idle_time AS idleTime,
+               ca.speed_sum AS speedSum,
+               ca.speed_count AS speedCount,
+               ca.overspeed_cnt AS overSpeedCnt,
+               ca.rapid_acceleration_cnt AS raCnt,
+               ca.rapid_deceleration_cnt AS rdCnt,
+               ca.sharp_turn_cnt AS sharpTurnCnt,
+               ca.idle_timeout_cnt AS idleTimeoutCnt,
+               ca.cold_run_cnt AS coldRunCnt,
+               ca.night_run_cnt AS nightRunCnt,
+               ca.low_gr_high_spd_cnt AS lowGrHighSpdCnt,
+               ca.full_throttle_cnt AS fullThrottleCnt,
+               ca.rough_throttle_cnt AS roughThrottleCnt,
+               ca.neutral_gear_coast_cnt AS neutralGearCoastCnt,
+               ca.stall_coast_cnt AS stallCoastCnt
+          FROM car_analyse ca
+         WHERE ca.statis_date <![CDATA[ >= ]]> #{startTime,jdbcType=DATE}
+           AND ca.statis_date <![CDATA[ <= ]]> #{endTime,jdbcType=DATE}
+           AND ca.team_id = 0
+           AND ca.car_id IN
+           <foreach item="item" index="index" collection="carIds" open="(" separator="," close=")">
+             #{item}
+           </foreach>
+    </select>
+    <select id="queryFleetAndCars" resultType="com.nut.driver.app.pojo.FltStatisticalFleetPojo">
+        SELECT
+            ffum.team_id AS teamId,
+            ff.NAME AS teamName,
+            GROUP_CONCAT(DISTINCT c.auto_terminal) AS autoTerminals
+        FROM
+            flt_fleet_user_mapping ffum
+        LEFT JOIN flt_fleet ff ON ffum.team_id = ff.id
+        LEFT JOIN flt_fleet_car_mapping ffcm ON ffum.team_id = ffcm.team_id
+        LEFT JOIN car c ON c.id = ffcm.car_id
+        WHERE
+            ffum.user_id = #{userId,jdbcType=BIGINT}
+        <if test="teamName != null">
+            AND ff.`name` LIKE CONCAT('%', #{teamName,jdbcType=VARCHAR},'%')
+        </if>
+        GROUP BY
+         ffum.team_id
+    </select>
+    <select id="queryFleetCreatorByTeamId" resultType="com.nut.driver.app.pojo.FltStatisticalFleetPojo">
+        SELECT
+            ffum.team_id AS teamId,
+            u.NAME AS creator
+        FROM
+            flt_fleet ff
+        LEFT JOIN flt_fleet_user_mapping ffum ON ffum.team_id = ff.id
+        LEFT JOIN user u ON ffum.user_id = u.id
+        WHERE
+            ffum.role = 0
+        AND ff.id IN
+        <foreach item="item" index="index" collection="fleetIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="queryStatisticalByTeamId" resultType="com.nut.driver.app.pojo.FltStatisticalFleetDataPojo">
+        SELECT
+            ca.team_id AS teamId,
+            SUM(ca.mileage) AS mileage,
+            SUM(ca.oilwear) AS oilwear,
+            SUM(ca.run_oil) AS runOil,
+            SUM(ca.idling_oil) AS idlingOil,
+            SUM(ca.time_total) AS timeTotal,
+            SUM(ca.idle_time) AS idleTime,
+            SUM(ca.speed_sum) AS speedSum,
+            SUM(ca.speed_count) AS speedCount,
+            SUM(ca.overspeed_cnt) AS overSpeedCnt,
+            SUM(ca.rapid_acceleration_cnt) AS raCnt,
+            SUM(ca.rapid_deceleration_cnt) AS rdCnt,
+            SUM(ca.sharp_turn_cnt) AS sharpTurnCnt,
+            SUM(ca.idle_timeout_cnt) AS idleTimeoutCnt,
+            SUM(ca.cold_run_cnt) AS coldRunCnt,
+            SUM(ca.night_run_cnt) AS nightRunCnt,
+            SUM(ca.low_gr_high_spd_cnt) AS lowGrHighSpdCnt,
+            SUM(ca.full_throttle_cnt) AS fullThrottleCnt,
+            SUM(ca.rough_throttle_cnt) AS roughThrottleCnt,
+            SUM(ca.neutral_gear_coast_cnt) AS neutralGearCoastCnt,
+            SUM(ca.stall_coast_cnt) AS stallCoastCnt
+        FROM
+            car_analyse ca
+        WHERE
+            ca.statis_date >= #{startTime,jdbcType=DATE}
+        AND ca.statis_date &lt;= #{endTime,jdbcType=DATE}
+        AND ca.team_id IN
+        <foreach item="item" index="index" collection="fleetIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY ca.team_id
+    </select>
+
+    <select id="queryTeamName" resultType="com.nut.driver.app.pojo.FleetInfoPojo">
+        select ti.id as teamId,
+               ti.name as name
+          from flt_fleet ti
+         WHERE ti.id in
+         <foreach item="item" index="index" collection="fleetIds" open="(" separator="," close=")">
+           #{item}
+         </foreach>
+    </select>
+    <select id="queryFleetAndCarsByTeamId" resultType="com.nut.driver.app.pojo.FltStatisticalFleetPojo">
+        SELECT
+        ffum.team_id AS teamId,
+        ff.NAME AS teamName,
+        GROUP_CONCAT(DISTINCT c.auto_terminal) AS autoTerminals
+        FROM
+        flt_fleet_user_mapping ffum
+        LEFT JOIN flt_fleet ff ON ffum.team_id = ff.id
+        LEFT JOIN flt_fleet_car_mapping ffcm ON ffum.team_id = ffcm.team_id
+        LEFT JOIN car c ON c.id = ffcm.car_id
+        WHERE
+        ffum.team_id = #{teamId}
+        <if test="teamName != null">
+            AND ff.`name` LIKE CONCAT('%', #{teamName,jdbcType=VARCHAR},'%')
+        </if>
+        GROUP BY
+        ffum.team_id
+    </select>
+    <select id="querLineOwnerCarsStatistical" resultType="com.nut.driver.app.pojo.FltStatisticalPojo">
+        SELECT ca.car_id AS carId,
+        date_format(ca.statis_date, '%Y%m%d') AS statisDate,
+        ca.mileage AS mileage,
+        ca.oilwear AS oilwear,
+        ca.run_oil AS runOil,
+        ca.idling_oil AS idlingOil,
+        ca.time_total AS timeTotal,
+        ca.idle_time AS idleTime,
+        ca.speed_sum AS speedSum,
+        ca.speed_count AS speedCount,
+        ca.overspeed_cnt AS overSpeedCnt,
+        ca.rapid_acceleration_cnt AS raCnt,
+        ca.rapid_deceleration_cnt AS rdCnt,
+        ca.sharp_turn_cnt AS sharpTurnCnt,
+        ca.idle_timeout_cnt AS idleTimeoutCnt,
+        ca.cold_run_cnt AS coldRunCnt,
+        ca.night_run_cnt AS nightRunCnt,
+        ca.low_gr_high_spd_cnt AS lowGrHighSpdCnt,
+        ca.full_throttle_cnt AS fullThrottleCnt,
+        ca.rough_throttle_cnt AS roughThrottleCnt,
+        ca.neutral_gear_coast_cnt AS neutralGearCoastCnt,
+        ca.stall_coast_cnt AS stallCoastCnt
+        FROM car_analyse ca
+        WHERE ca.statis_date <![CDATA[ >= ]]> #{startTime,jdbcType=DATE}
+        AND ca.statis_date <![CDATA[ <= ]]> #{endTime,jdbcType=DATE}
+        AND ca.car_id IN
+        <foreach item="item" index="index" collection="carIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jac.app.job.mapper.UserMessageRecordMapper">
+    <insert id="insertSelective" parameterType="com.jac.app.job.entity.UserMessageRecordEntity">
+        insert into user_message_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="messageId != null">
+                message_id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="pushShowType != null">
+                push_show_type,
+            </if>
+            <if test="messageCode != null">
+                message_code,
+            </if>
+            <if test="userVisible != null">
+                user_visible,
+            </if>
+            <if test="receiverId != null">
+                receiver_id,
+            </if>
+            <if test="receiveAppType != null">
+                receive_app_type,
+            </if>
+            <if test="senderId != null">
+                sender_id,
+            </if>
+            <if test="sendTime != null">
+                send_time,
+            </if>
+            <if test="readFlag != null">
+                read_flag,
+            </if>
+            <if test="messageExtra != null">
+                message_extra,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="stype != null">
+                stype,
+            </if>
+            <if test="receiveState != null">
+                receive_state,
+            </if>
+            <if test="messageType != null">
+                message_type,
+            </if>
+            <if test="messageTypeName != null">
+                message_type_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="messageId != null">
+                #{messageId,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="pushShowType != null">
+                #{pushShowType,jdbcType=INTEGER},
+            </if>
+            <if test="messageCode != null">
+                #{messageCode,jdbcType=INTEGER},
+            </if>
+            <if test="userVisible != null">
+                #{userVisible,jdbcType=INTEGER},
+            </if>
+            <if test="receiverId != null">
+                #{receiverId,jdbcType=VARCHAR},
+            </if>
+            <if test="receiveAppType != null">
+                #{receiveAppType,jdbcType=INTEGER},
+            </if>
+            <if test="senderId != null">
+                #{senderId,jdbcType=VARCHAR},
+            </if>
+            <if test="sendTime != null">
+                #{sendTime,jdbcType=BIGINT},
+            </if>
+            <if test="readFlag != null">
+                #{readFlag,jdbcType=INTEGER},
+            </if>
+            <if test="messageExtra != null">
+                #{messageExtra,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="stype != null">
+                #{stype,jdbcType=INTEGER},
+            </if>
+            <if test="receiveState != null">
+                #{receiveState,jdbcType=INTEGER},
+            </if>
+            <if test="messageType != null">
+                #{messageType,jdbcType=INTEGER},
+            </if>
+            <if test="messageTypeName != null">
+                #{messageTypeName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+</mapper>

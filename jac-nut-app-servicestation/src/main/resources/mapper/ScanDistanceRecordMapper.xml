@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.ScanDistanceRecordDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.ScanDistanceRecord">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="wo_code" jdbcType="VARCHAR" property="woCode" />
+        <result column="app_lon" jdbcType="VARCHAR" property="appLon" />
+        <result column="app_lat" jdbcType="VARCHAR" property="appLat" />
+        <result column="car_lon" jdbcType="VARCHAR" property="carLon" />
+        <result column="car_lat" jdbcType="VARCHAR" property="carLat" />
+        <result column="station_lon" jdbcType="VARCHAR" property="stationLon" />
+        <result column="station_lat" jdbcType="VARCHAR" property="stationLat" />
+        <result column="app_station_distance" jdbcType="DOUBLE" property="appStationDistance" />
+        <result column="app_car_distance" jdbcType="DOUBLE" property="appCarDistance" />
+        <result column="scan_time" jdbcType="TIMESTAMP" property="scanTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, wo_code, app_lon, app_lat, car_lon, car_lat, station_lon, station_lat, app_station_distance,
+    app_car_distance, scan_time
+  </sql>
+
+    <insert id="insert" parameterType="com.nut.servicestation.app.domain.ScanDistanceRecord">
+    insert into scan_distance_record (id, wo_code, app_lon,
+      app_lat, car_lon, car_lat,
+      station_lon, station_lat, app_station_distance,
+      app_car_distance, scan_time)
+    values (#{id,jdbcType=BIGINT}, #{woCode,jdbcType=VARCHAR}, #{appLon,jdbcType=VARCHAR},
+      #{appLat,jdbcType=VARCHAR}, #{carLon,jdbcType=VARCHAR}, #{carLat,jdbcType=VARCHAR},
+      #{stationLon,jdbcType=VARCHAR}, #{stationLat,jdbcType=VARCHAR}, #{appStationDistance,jdbcType=DOUBLE},
+      #{appCarDistance,jdbcType=DOUBLE}, #{scanTime,jdbcType=TIMESTAMP})
+  </insert>
+
+</mapper>

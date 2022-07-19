@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.SimCardPlaDao">
+
+    <select id="getUserCar" resultType="com.nut.driver.app.dto.SimCardPlaDto">
+        SELECT
+            SUBSTR(a.car_vin,-8,8) as chassisNumber,
+            a.car_number AS carNumber,
+            a.terminal_id as  terminalId,
+            a.auto_terminal as autoTerminal,
+            b.id as userId,
+            b.phone as userPhone
+
+        FROM
+            car a,
+            USER b,
+            flt_car_owner_mapping c
+        WHERE
+            a.id = c.car_id
+            and a.auto_terminal is not null
+            AND b.id = c.user_id
+            AND b.uc_id = #{userId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getOrderList" resultType="com.nut.driver.app.vo.SimOrderVo">
+
+          SELECT
+              c.auto_terminal as simNumber,
+              a.real_cost as realCost,
+              a.pa_name as paName,
+              SUBSTR(c.car_vin,-8,8) as chassisNumber,
+              c.car_number AS carNumber,
+              a.create_time as createTime,
+              a.order_status as orderStatus,
+              a.pac_flow as pacFlow,
+              a.order_number as orderNumber
+          FROM
+              tm_order a,
+              flt_car_owner_mapping b,
+              car c
+          where
+              a.uc_id =#{userId,jdbcType=VARCHAR}
+              and a.del_flag = 0
+              and a.user_id=b.user_id
+              and a.sim_num = c.auto_terminal
+              and b.car_id=c.id
+              and a.order_status != '2000'
+          order by
+              a.create_time desc
+    </select>
+
+</mapper>

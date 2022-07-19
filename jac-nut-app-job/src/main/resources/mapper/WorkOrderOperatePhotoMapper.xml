@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jac.app.job.mapper.WorkOrderOperatePhotoMapper">
+    <select id="queryWoCalculationPhotosByWoCode" parameterType="java.lang.String"
+            resultType="com.jac.app.job.dto.WoCalculationPhotosDto">
+        SELECT
+            woop.operate_id AS operateId,
+            woop.type AS type,
+            woop.url AS url
+        FROM
+            work_order_operate_photo woop
+        WHERE woop.wo_code = #{woCode,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

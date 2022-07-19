@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.AppointmentItemsDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.AppointmentItems">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="item_name" jdbcType="VARCHAR" property="itemName" />
+        <result column="item_type" jdbcType="VARCHAR" property="itemType" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, item_name, item_type, create_time, create_user, update_time, update_user
+  </sql>
+    <select id="selectAllItems" resultType="com.nut.servicestation.app.domain.AppointmentItems">
+    SELECT
+    id,
+    item_name AS itemName,
+    item_type AS itemType
+    FROM
+    appointment_items
+  </select>
+</mapper>

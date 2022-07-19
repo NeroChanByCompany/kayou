@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.WorkOrderEvaluateDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.WorkOrderEvaluateEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="woCode" column="wo_code"/>
+        <result property="stationId" column="station_id"/>
+        <result property="wholeStar" column="whole_star"/>
+        <result property="reviewLabel" column="review_label"/>
+        <result property="otherLabel" column="other_label"/>
+        <result property="cost" column="cost"/>
+        <result property="comeAgain" column="come_again"/>
+        <result property="discontent" column="discontent"/>
+        <result property="content" column="content"/>
+        <result property="userId" column="user_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="evaluateType" column="evaluate_type"/>
+    </resultMap>
+
+    <select id="queryStationEvaluates" resultType="com.nut.driver.app.pojo.StationEvaluatesPojo">
+        SELECT u.uc_id                                       AS driverId,
+               wo.wo_code                                    AS woCode,
+               u.name                                        AS userName,
+               CONCAT(mi.driver_type_name, mi.car_type_name) AS carType,
+               evaluate.whole_star                           AS rate,
+               evaluate.create_time AS date,
+      evaluate.content AS content
+        FROM
+            work_order_evaluate evaluate
+            INNER JOIN ${DbName}.hy_service_station station
+        ON evaluate.station_id = station.id
+            LEFT JOIN user u ON evaluate.user_id = u.id
+            LEFT JOIN work_order wo ON evaluate.wo_code = wo.wo_code
+            LEFT JOIN car c ON wo.chassis_num = c.car_vin
+            LEFT JOIN model_info mi ON mi.model_id = c.car_model
+        WHERE
+            station.STATION_ENABLE = 1
+          AND station.DEL_FLAG = 0
+          AND evaluate.station_id = #{stationId, jdbcType=BIGINT}
+        ORDER BY evaluate.create_time DESC, evaluate.id DESC
+    </select>
+
+    <insert id="insertSelective" parameterType="com.nut.driver.app.entity.WorkOrderEvaluateEntity">
+        insert into work_order_evaluate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="woCode != null">
+                wo_code,
+            </if>
+            <if test="stationId != null">
+                station_id,
+            </if>
+            <if test="wholeStar != null">
+                whole_star,
+            </if>
+            <if test="reviewLabel != null">
+                review_label,
+            </if>
+            <if test="otherLabel != null">
+                other_label,
+            </if>
+            <if test="cost != null">
+                cost,
+            </if>
+            <if test="comeAgain != null">
+                come_again,
+            </if>
+            <if test="discontent != null">
+                discontent,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="evaluateType != null">
+                evaluate_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="woCode != null">
+                #{woCode,jdbcType=VARCHAR},
+            </if>
+            <if test="stationId != null">
+                #{stationId,jdbcType=BIGINT},
+            </if>
+            <if test="wholeStar != null">
+                #{wholeStar,jdbcType=INTEGER},
+            </if>
+            <if test="reviewLabel != null">
+                #{reviewLabel,jdbcType=VARCHAR},
+            </if>
+            <if test="otherLabel != null">
+                #{otherLabel,jdbcType=VARCHAR},
+            </if>
+            <if test="cost != null">
+                #{cost,jdbcType=VARCHAR},
+            </if>
+            <if test="comeAgain != null">
+                #{comeAgain,jdbcType=INTEGER},
+            </if>
+            <if test="discontent != null">
+                #{discontent,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="evaluateType != null">
+                #{evaluateType,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+
+</mapper>

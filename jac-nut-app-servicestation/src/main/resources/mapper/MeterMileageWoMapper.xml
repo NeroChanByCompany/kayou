@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.MeterMileageWoDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.MeterMileageWo">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="wo_code" jdbcType="VARCHAR" property="woCode" />
+        <result column="chassis_num" jdbcType="VARCHAR" property="chassisNum" />
+        <result column="car_model_base" jdbcType="VARCHAR" property="carModelBase" />
+        <result column="time_receive" jdbcType="TIMESTAMP" property="timeReceive" />
+        <result column="receive_mileage" jdbcType="DOUBLE" property="receiveMileage" />
+        <result column="time_close" jdbcType="TIMESTAMP" property="timeClose" />
+        <result column="endrepair_mileage" jdbcType="DOUBLE" property="endrepairMileage" />
+        <result column="replace_status" jdbcType="INTEGER" property="replaceStatus" />
+        <result column="time_update_status" jdbcType="TIMESTAMP" property="timeUpdateStatus" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, wo_code, chassis_num, car_model_base, time_receive, receive_mileage, time_close,
+    endrepair_mileage, replace_status, time_update_status, create_time
+  </sql>
+    <select id="queryByWoCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from meter_mileage_wo
+        where wo_code = #{woCode,jdbcType=VARCHAR}
+        limit 1
+    </select>
+    <update id="updateByPrimaryKeySelective" parameterType="com.nut.servicestation.app.domain.MeterMileageWo">
+        update meter_mileage_wo
+        <set>
+            <if test="woCode != null">
+                wo_code = #{woCode,jdbcType=VARCHAR},
+            </if>
+            <if test="chassisNum != null">
+                chassis_num = #{chassisNum,jdbcType=VARCHAR},
+            </if>
+            <if test="carModelBase != null">
+                car_model_base = #{carModelBase,jdbcType=VARCHAR},
+            </if>
+            <if test="timeReceive != null">
+                time_receive = #{timeReceive,jdbcType=TIMESTAMP},
+            </if>
+            <if test="receiveMileage != null">
+                receive_mileage = #{receiveMileage,jdbcType=DOUBLE},
+            </if>
+            <if test="timeClose != null">
+                time_close = #{timeClose,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endrepairMileage != null">
+                endrepair_mileage = #{endrepairMileage,jdbcType=DOUBLE},
+            </if>
+            <if test="replaceStatus != null">
+                replace_status = #{replaceStatus,jdbcType=INTEGER},
+            </if>
+            <if test="timeUpdateStatus != null">
+                time_update_status = #{timeUpdateStatus,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <insert id="insertSelective" parameterType="com.nut.servicestation.app.domain.MeterMileageWo">
+        insert into meter_mileage_wo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="woCode != null">
+                wo_code,
+            </if>
+            <if test="chassisNum != null">
+                chassis_num,
+            </if>
+            <if test="carModelBase != null">
+                car_model_base,
+            </if>
+            <if test="timeReceive != null">
+                time_receive,
+            </if>
+            <if test="receiveMileage != null">
+                receive_mileage,
+            </if>
+            <if test="timeClose != null">
+                time_close,
+            </if>
+            <if test="endrepairMileage != null">
+                endrepair_mileage,
+            </if>
+            <if test="replaceStatus != null">
+                replace_status,
+            </if>
+            <if test="timeUpdateStatus != null">
+                time_update_status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="woCode != null">
+                #{woCode,jdbcType=VARCHAR},
+            </if>
+            <if test="chassisNum != null">
+                #{chassisNum,jdbcType=VARCHAR},
+            </if>
+            <if test="carModelBase != null">
+                #{carModelBase,jdbcType=VARCHAR},
+            </if>
+            <if test="timeReceive != null">
+                #{timeReceive,jdbcType=TIMESTAMP},
+            </if>
+            <if test="receiveMileage != null">
+                #{receiveMileage,jdbcType=DOUBLE},
+            </if>
+            <if test="timeClose != null">
+                #{timeClose,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endrepairMileage != null">
+                #{endrepairMileage,jdbcType=DOUBLE},
+            </if>
+            <if test="replaceStatus != null">
+                #{replaceStatus,jdbcType=INTEGER},
+            </if>
+            <if test="timeUpdateStatus != null">
+                #{timeUpdateStatus,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+</mapper>

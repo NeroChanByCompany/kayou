@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.tripanalysis.app.dao.ModelInfoDao">
+    <resultMap id="BaseResultMap" type="com.nut.tripanalysis.app.entity.ModelInfoEntity">
+        <id column="model_id" jdbcType="BIGINT" property="modelId" />
+        <result column="serise_id" jdbcType="BIGINT" property="seriseId" />
+        <result column="model_name" jdbcType="VARCHAR" property="modelName" />
+        <result column="gear_box" jdbcType="VARCHAR" property="gearBox" />
+        <result column="engine" jdbcType="VARCHAR" property="engine" />
+        <result column="rear_axle_ratio" jdbcType="VARCHAR" property="rearAxleRatio" />
+        <result column="tire_model" jdbcType="VARCHAR" property="tireModel" />
+        <result column="avg_oil_wear" jdbcType="REAL" property="avgOilWear" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="emission_code" jdbcType="VARCHAR" property="emissionCode" />
+        <result column="publish_code" jdbcType="VARCHAR" property="publishCode" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    model_id, serise_id, model_name, gear_box, engine, rear_axle_ratio, tire_model, avg_oil_wear,
+    create_time, emission_code, publish_code
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from model_info
+        where model_id = #{modelId,jdbcType=BIGINT}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.SmsListDao">
+
+    <select id="isBlackList" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*)
+        from sms_blacklist
+        where phone_prefix LIKE CONCAT( #{phonePrefix, jdbcType=VARCHAR}, '%')
+    </select>
+
+    <select id="isWhiteList" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*)
+        from sms_whitelist
+        where phone = #{phone, jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertIllegalUser" parameterType="java.util.Map">
+        insert into illegal_user (phone, create_time)
+        values (#{phone,jdbcType = VARCHAR}, #{date})
+    </insert>
+
+
+    <select id="phoneList" resultType="java.lang.String">
+        select phone_prefix
+        from sms_blacklist
+    </select>
+
+</mapper>

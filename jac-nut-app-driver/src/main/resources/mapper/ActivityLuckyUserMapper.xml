@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.ActivityLuckyUserDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.ActivityLuckyUserEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="activeCode" column="active_code"/>
+        <result property="phone" column="phone"/>
+        <result property="awardCode" column="award_code"/>
+        <result property="receiveName" column="receive_name"/>
+        <result property="receivePhone" column="receive_phone"/>
+        <result property="receiveAddress" column="receive_address"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="appType" column="app_type"/>
+    </resultMap>
+
+    <select id="countByPhoneAndAppType" resultType="java.lang.Integer">
+        select count(1)
+        from activity_lucky_user
+        where phone = #{phone} and app_type = #{appType} and active_code='20210405'
+    </select>
+
+
+</mapper>

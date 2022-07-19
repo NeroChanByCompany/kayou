@@ -1,0 +1,76 @@
+#端口号
+server:
+  port: 9999
+#服务名称
+spring:
+  application:
+    name: jac-nut-app-job
+  profiles:
+    active: dev
+  redis:
+    host: 192.168.31.248
+    port: 6379
+    password:
+    timeout: 1000
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+#eureka配置
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.31.248:7000/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+#feign\u63A5\u53E3\u8D85\u65F6\u8BBE\u7F6E
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+  #\u5168\u5C40\u914D\u7F6E\uFF0Cfeign\u8C03\u7528\u5176\u4ED6\u5FAE\u670D\u52A1\u8D85\u65F6\u8BBE\u7F6E\uFF0C\u9ED8\u8BA4\u4E3A1\u79D2
+ribbon:
+  ConnectTimeout: 5000
+  ReadTimeout: 5000
+#mybatis-plus配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  mapper-locations: classpath*:mapper/*
+  #日志输出级别
+  global-config:
+    field-strategy: 1
+    db-config:
+      id-type: AUTO
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+logging:
+  level:
+    com.baomidou.mybatisplus: DEBUG
+    com.jac.app.job.mapper: DEBUG
+    com.jac.app.job.client.fallback: DEBUG
+
+
+nut:
+  monitor:
+    profile: jac-test
+management:
+  server:
+    port: 21409
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      base-path: /
+  metrics:
+    export:
+      prometheus:
+        enabled: true

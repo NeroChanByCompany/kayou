@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.CarDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.CarEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="carVin" column="car_vin"/>
+        <result property="carBrand" column="car_brand"/>
+        <result property="carSeries" column="car_series"/>
+        <result property="carSeriesName" column="car_series_name"/>
+        <result property="carModel" column="car_model"/>
+        <result property="carModelCode" column="car_model_code"/>
+        <result property="carModelBase" column="car_model_base"/>
+        <result property="carModelName" column="car_model_name"/>
+        <result property="engine" column="engine"/>
+        <result property="engineNo" column="engine_no"/>
+        <result property="isVip" column="is_vip"/>
+        <result property="ownerId" column="owner_id"/>
+        <result property="invoicePhoto" column="invoice_photo"/>
+        <result property="invoiceNo" column="invoice_no"/>
+        <result property="identityCard" column="identity_card"/>
+        <result property="organization" column="organization"/>
+        <result property="addFlag" column="add_flag"/>
+        <result property="carNumber" column="car_number"/>
+        <result property="terminalId" column="terminal_id"/>
+        <result property="autoTerminal" column="auto_terminal"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="salesDate" column="sales_date"/>
+        <result property="tId" column="T_ID"/>
+        <result property="mbSalesStatus" column="MB_SALES_STATUS"/>
+        <result property="mbSalesDate" column="MB_SALES_DATE"/>
+        <result property="salesStatus" column="SALES_STATUS"/>
+        <result property="tboxType" column="tbox_type"/>
+        <result property="isBind" column="is_bind"/>
+        <result property="fuel" column="fuel"/>
+        <result property="ps" column="ps"/>
+        <result property="emissionCode" column="emission_code"/>
+        <result property="emissionName" column="emission_name"/>
+        <result property="definedType" column="defined_type"/>
+        <result property="isDefined" column="is_defined"/>
+        <result property="frontAxleFactoryOne" column="front_axle_factory_one"/>
+        <result property="frontAxleTypeOne" column="front_axle_type_one"/>
+        <result property="rearAxleFactoryOne" column="rear_axle_factory_one"/>
+        <result property="rearAxleTypeOne" column="rear_axle_type_one"/>
+        <result property="frontAxleFactoryTwo" column="front_axle_factory_two"/>
+        <result property="frontAxleTypeTwo" column="front_axle_type_two"/>
+        <result property="rearAxleFactoryTwo" column="rear_axle_factory_two"/>
+        <result property="rearAxleTypeTwo" column="rear_axle_type_two"/>
+        <result property="vfactory" column="vfactory"/>
+        <result property="ishowwater" column="ishowwater"/>
+        <result property="dmsSyncTime" column="dms_sync_time"/>
+        <result property="remark" column="remark"/>
+        <result property="dataSource" column="data_source"/>
+        <result property="clwflag" column="clwflag"/>
+        <result property="extInfoOk" column="ext_info_ok"/>
+        <result property="vehiclecode" column="vehicleCode"/>
+        <result property="vehicletype" column="vehicleType"/>
+    </resultMap>
+    <resultMap id="BaseResultMap2" type="com.nut.driver.app.domain.Car">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="car_vin" jdbcType="VARCHAR" property="carVin"/>
+        <result column="car_brand" jdbcType="VARCHAR" property="carBrand"/>
+        <result column="car_series" jdbcType="VARCHAR" property="carSeries"/>
+        <result column="car_series_name" jdbcType="VARCHAR" property="carSeriesName"/>
+        <result column="car_model" jdbcType="VARCHAR" property="carModel"/>
+        <result column="car_model_code" jdbcType="VARCHAR" property="carModelCode"/>
+        <result column="car_model_base" jdbcType="VARCHAR" property="carModelBase"/>
+        <result column="car_model_name" jdbcType="VARCHAR" property="carModelName"/>
+        <result column="engine" jdbcType="VARCHAR" property="engine"/>
+        <result column="engine_no" jdbcType="VARCHAR" property="engineNo"/>
+        <result column="is_vip" jdbcType="CHAR" property="isVip"/>
+        <result column="owner_id" jdbcType="VARCHAR" property="ownerId"/>
+        <result column="invoice_photo" jdbcType="VARCHAR" property="invoicePhoto"/>
+        <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo"/>
+        <result column="identity_card" jdbcType="VARCHAR" property="identityCard"/>
+        <result column="organization" jdbcType="VARCHAR" property="organization"/>
+        <result column="car_number" jdbcType="VARCHAR" property="carNumber"/>
+        <result column="terminal_id" jdbcType="VARCHAR" property="terminalId"/>
+        <result column="auto_terminal" jdbcType="VARCHAR" property="autoTerminal"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="sales_date" jdbcType="TIMESTAMP" property="salesDate"/>
+        <result column="T_ID" jdbcType="BIGINT" property="tId"/>
+        <result column="MB_SALES_STATUS" jdbcType="INTEGER" property="mbSalesStatus"/>
+        <result column="MB_SALES_DATE" jdbcType="TIMESTAMP" property="mbSalesDate"/>
+        <result column="SALES_STATUS" jdbcType="INTEGER" property="salesStatus"/>
+        <result column="tbox_type" jdbcType="INTEGER" property="tboxType"/>
+        <result column="is_bind" jdbcType="VARCHAR" property="isBind"/>
+        <result column="ext_info_ok" jdbcType="INTEGER" property="extInfoOk"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , car_vin, car_brand, car_series, car_series_name, car_model, car_model_code, car_model_base,
+    car_model_name, engine, engine_no, is_vip, owner_id, invoice_photo, invoice_no, identity_card,
+    organization, car_number, terminal_id, auto_terminal, create_time, update_time, sales_date,
+    T_ID, MB_SALES_STATUS, MB_SALES_DATE, SALES_STATUS, tbox_type, is_bind, ext_info_ok
+    </sql>
+    <!-- 根据用户ID查询，所有车队内，与此用户相关的车（创建人、管理员、绑定司机、车主） -->
+    <select id="selectUserRelatedCar" resultType="com.nut.driver.app.pojo.CarRolePojo">
+        SELECT fcm.car_id  AS carId,
+               fum.team_id AS teamId,
+               fum.role    AS role
+        FROM flt_fleet_car_mapping fcm
+                 LEFT JOIN flt_fleet_user_mapping fum ON fcm.team_id = fum.team_id
+        WHERE fum.user_id = #{userId,jdbcType=BIGINT}
+          AND fum.role IN (0, 1)
+        UNION
+        SELECT cdm.car_id  AS carId,
+               cdm.team_id AS teamId,
+               2           AS role -- 司机
+        FROM flt_car_driver_mapping cdm
+        WHERE cdm.user_id = #{userId,jdbcType=BIGINT}
+        UNION
+        SELECT com.car_id AS carId,
+               null       AS teamId,
+               9          AS role -- 车主
+        FROM flt_car_owner_mapping com
+        WHERE com.user_id = #{userId,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据车辆ID列表查询车辆信息 -->
+    <select id="selectByCarIdIn" parameterType="java.util.List"
+            resultType="com.nut.driver.app.pojo.CarInfoPojo">
+        SELECT id AS carId,
+        car_number AS carNumber,
+        car_vin AS carVin,
+        auto_terminal AS autoTerminal,
+        ext_info_ok as extInfoOk
+        FROM car
+        WHERE id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryCarVinAndPhone" parameterType="java.lang.String"
+            resultType="com.nut.driver.app.pojo.UserInfoPojo">
+        SELECT u.phone    AS phone,
+               c.car_vin  AS carVin,
+               car_number AS carNo
+        FROM user u,
+             car c
+        WHERE u.id = #{userId}
+          AND c.id = #{carId}
+    </select>
+    <select id="queryCarVinListCarsByCarIds" resultType="java.lang.String">
+        SELECT
+        car_vin
+        FROM
+        car
+        WHERE
+        1=1
+        <if test="list !=null and list.size() > 0">
+            and id in
+            <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="queryPhyCarsByUserId" resultType="com.nut.driver.app.pojo.PhyExaPojo">
+        SELECT fcm.car_id      AS carId,
+               c.auto_terminal as terminalId,
+               case WHEN ISNULL(c.car_number) OR c.car_number = '' THEN left (c.car_vin, 8) ELSE c.car_number END carNumber,
+            c.car_vin carVin,
+            substring_index(c.car_model_base, '-', 1) code
+        FROM flt_fleet_car_mapping fcm
+            LEFT JOIN flt_fleet_user_mapping fum
+        ON fcm.team_id = fum.team_id
+            LEFT JOIN car c ON fcm.car_id = c.id
+        WHERE fum.user_id = #{userId,jdbcType=BIGINT}
+          AND fum.role IN (0
+            , 1)
+        UNION
+        SELECT cdm.car_id      AS carId,
+               c.auto_terminal as terminalId,
+               case WHEN ISNULL(c.car_number) OR c.car_number = '' THEN left (c.car_vin, 8) ELSE c.car_number END carNumber,
+            c.car_vin carVin,
+            substring_index(c.car_model_base, '-', 1) code
+        FROM flt_car_driver_mapping cdm
+            LEFT JOIN car c
+        ON cdm.car_id = c.id
+        WHERE cdm.user_id = #{userId,jdbcType=BIGINT}
+        UNION
+        SELECT com.car_id      AS carId,
+               c.auto_terminal as terminalId,
+               case WHEN ISNULL(c.car_number) OR c.car_number = '' THEN left (c.car_vin, 8) ELSE c.car_number END carNumber,
+            c.car_vin carVin,
+            substring_index(c.car_model_base, '-', 1) code
+        FROM flt_car_owner_mapping com
+            LEFT JOIN car c
+        ON com.car_id = c.id
+        WHERE com.user_id = #{userId,jdbcType=BIGINT}
+
+    </select>
+    <select id="selectByVin" resultType="com.nut.driver.app.entity.CarEntity">
+        select
+        <include refid="Base_Column_List"/>
+        from car
+        where car_vin LIKE CONCAT('%', #{carVin, jdbcType=VARCHAR}, '%')
+        limit 1
+    </select>
+    <select id="queryAutoTerminalByCarId" resultType="java.lang.String">
+
+        SELECT auto_terminal AS autoTerminal
+        FROM CAR
+        WHERE ID = #{carId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByChassisNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from car
+        where car_vin LIKE CONCAT('%', #{chassisNumber, jdbcType=VARCHAR})
+        limit 1
+    </select>
+    <select id="selectByChassisNumber2" parameterType="java.lang.String" resultMap="BaseResultMap2">
+        select
+        <include refid="Base_Column_List"/>
+        from car
+        where car_vin LIKE CONCAT('%', #{chassisNumber, jdbcType=VARCHAR})
+        limit 1
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from car
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <update id="updateByPrimaryKeySelective" parameterType="com.nut.driver.app.domain.Car">
+        update car
+        <set>
+            <if test="carVin != null">
+                car_vin = #{carVin,jdbcType=VARCHAR},
+            </if>
+            <if test="carBrand != null">
+                car_brand = #{carBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="carSeries != null">
+                car_series = #{carSeries,jdbcType=VARCHAR},
+            </if>
+            <if test="carSeriesName != null">
+                car_series_name = #{carSeriesName,jdbcType=VARCHAR},
+            </if>
+            <if test="carModel != null">
+                car_model = #{carModel,jdbcType=VARCHAR},
+            </if>
+            <if test="carModelCode != null">
+                car_model_code = #{carModelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="carModelBase != null">
+                car_model_base = #{carModelBase,jdbcType=VARCHAR},
+            </if>
+            <if test="carModelName != null">
+                car_model_name = #{carModelName,jdbcType=VARCHAR},
+            </if>
+            <if test="engine != null">
+                engine = #{engine,jdbcType=VARCHAR},
+            </if>
+            <if test="engineNo != null">
+                engine_no = #{engineNo,jdbcType=VARCHAR},
+            </if>
+            <if test="isVip != null">
+                is_vip = #{isVip,jdbcType=CHAR},
+            </if>
+            <if test="ownerId != null">
+                owner_id = #{ownerId,jdbcType=VARCHAR},
+            </if>
+            <if test="invoicePhoto != null">
+                invoice_photo = #{invoicePhoto,jdbcType=VARCHAR},
+            </if>
+            <if test="invoiceNo != null">
+                invoice_no = #{invoiceNo,jdbcType=VARCHAR},
+            </if>
+            <if test="identityCard != null">
+                identity_card = #{identityCard,jdbcType=VARCHAR},
+            </if>
+            <if test="organization != null">
+                organization = #{organization,jdbcType=VARCHAR},
+            </if>
+            <if test="carNumber != null">
+                car_number = #{carNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="terminalId != null">
+                terminal_id = #{terminalId,jdbcType=VARCHAR},
+            </if>
+            <if test="autoTerminal != null">
+                auto_terminal = #{autoTerminal,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="salesDate != null">
+                sales_date = #{salesDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tId != null">
+                T_ID = #{tId,jdbcType=BIGINT},
+            </if>
+            <if test="mbSalesStatus != null">
+                MB_SALES_STATUS = #{mbSalesStatus,jdbcType=INTEGER},
+            </if>
+            <if test="mbSalesDate != null">
+                MB_SALES_DATE = #{mbSalesDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="salesStatus != null">
+                SALES_STATUS = #{salesStatus,jdbcType=INTEGER},
+            </if>
+            <if test="tboxType != null">
+                tbox_type = #{tboxType,jdbcType=INTEGER},
+            </if>
+            <if test="isBind != null">
+                is_bind = #{isBind,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateTspCarNumber">
+        update ${DbName}.hy_car
+        set CAR_CPH = #{carNumber}
+        where CHASSIS_NUM = #{chassisNum}
+    </update>
+    <update id="updateExtInfoOk">
+        update car
+        set ext_info_ok = 1
+        where id = #{carId}
+    </update>
+    <insert id="insertCarBinding" parameterType="java.util.HashMap">
+        INSERT INTO car_integral_relation (car_vin)
+        values (#{carVin,jdbcType=VARCHAR})
+    </insert>
+    <select id="queryCarBinding" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1)
+        from car_integral_relation
+        where car_vin = #{carVin,jdbcType=VARCHAR}
+    </select>
+    <select id="getVinByCarId" resultType="java.lang.String">
+        SELECT car_vin AS carVin
+        from car c
+        where c.id = #{carId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryCarNumberByCarVinList" parameterType="java.util.Set"
+            resultType="com.nut.driver.app.domain.Car">
+        SELECT
+        id,
+        car_vin AS carVin,
+        car_number AS carNumber,
+        MB_SALES_DATE as salesDate,
+        MB_SALES_STATUS as mbSalesStatus
+        FROM
+        car
+        WHERE 1=1
+        <if test="collection !=null and collection.size() > 0">
+            and car_vin in
+            <foreach item="item" index="index" collection="collection" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="findMappingDateByCarId" parameterType="java.lang.String" resultType="java.util.Date">
+        select create_time
+        from (
+                 SELECT create_time
+                 from flt_car_owner_mapping
+                 where car_id = #{carId, jdbcType=VARCHAR}
+                   and create_time is not null
+                 UNION
+                 SELECT create_time
+                 from flt_car_driver_mapping
+                 where car_id = #{carId, jdbcType=VARCHAR}
+                   and create_time is not null
+                 UNION
+                 SELECT create_time
+                 from flt_fleet_car_mapping
+                 where car_id = #{carId, jdbcType=VARCHAR}
+                   and create_time is not null
+             ) as a
+        order by create_time asc
+    </select>
+
+
+    <select id="carOfNumber" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1)
+        from car
+        where MB_SALES_DATE >= #{maintenanceTime}
+          and car_vin like CONCAT('%', #{carVin, jdbcType=VARCHAR}, '%')
+    </select>
+    <select id="getUserCarNum" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT count(1)
+        FROM (
+                 SELECT fcm.car_id AS carId
+                 FROM flt_fleet_car_mapping fcm
+                          LEFT JOIN flt_fleet_user_mapping fum ON fcm.team_id = fum.team_id
+                 WHERE fum.user_id = #{userId,jdbcType=BIGINT}
+                   AND fum.role IN (0, 1)
+                 UNION
+                 SELECT cdm.car_id AS carId
+                 FROM flt_car_driver_mapping cdm
+                 WHERE cdm.user_id = #{userId,jdbcType=BIGINT}
+                 UNION
+                 SELECT com.car_id AS carId
+                 FROM flt_car_owner_mapping com
+                 WHERE com.user_id = #{userId,jdbcType=BIGINT}
+             ) AS a
+    </select>
+    <select id="queryUserRelatedCarsByCarIds" parameterType="java.util.List"
+            resultType="com.nut.driver.app.pojo.FltStatisticalPojo">
+        SELECT
+        id AS carId,
+        car_number AS carNum,
+        car_vin AS carVin,
+        auto_terminal AS autoTerminal
+        FROM car
+        WHERE id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="queryAllCarIdByUserId" parameterType="java.lang.Long" resultType="java.lang.String">
+        SELECT DISTINCT cm.car_id
+        FROM flt_fleet_car_mapping cm
+                 INNER JOIN flt_fleet_user_mapping um ON um.team_id = cm.team_id
+        WHERE um.user_id = #{userId,jdbcType=BIGINT}
+    </select>
+
+    <select id="findBrandNameById" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT brand_name
+        from brand_info
+        where brand_id = #{brandId}
+    </select>
+
+    <select id="queryMonitorCarsByUserId" resultType="com.nut.driver.app.pojo.RealTimeCarListPojo">
+        SELECT fcm.car_id AS carId,
+        case WHEN ISNULL(c.car_number) OR c.car_number = '' THEN c.car_vin ELSE c.car_number END carCode,
+        c.car_vin AS vin
+        FROM flt_fleet_car_mapping fcm
+        LEFT JOIN flt_fleet_user_mapping fum ON fcm.team_id = fum.team_id
+        LEFT JOIN car c ON fcm.car_id = c.id
+        WHERE
+        <choose>
+            <when test="teamId != null and teamId != ''">
+                fum.team_id = #{teamId,jdbcType=BIGINT}
+            </when>
+            <otherwise>
+                fum.user_id = #{userId,jdbcType=BIGINT}
+            </otherwise>
+        </choose>
+        AND fum.role IN (0, 1)
+        UNION
+        SELECT cdm.car_id AS carId,
+        case WHEN ISNULL(c.car_number) OR c.car_number = '' THEN c.car_vin ELSE c.car_number END carCode,
+        c.car_vin AS vin
+        FROM flt_car_driver_mapping cdm
+        LEFT JOIN car c ON cdm.car_id = c.id
+        WHERE
+        <choose>
+            <when test="teamId != null and teamId != ''">
+                cdm.team_id = #{teamId,jdbcType=BIGINT}
+            </when>
+            <otherwise>
+                cdm.user_id = #{userId,jdbcType=BIGINT}
+            </otherwise>
+        </choose>
+        <if test="teamId == null or teamId == ''">
+            UNION
+            SELECT com.car_id AS carId,
+            case WHEN ISNULL(c.car_number) OR c.car_number = '' THEN c.car_vin ELSE c.car_number END carCode,
+            c.car_vin AS vin
+            FROM flt_car_owner_mapping com
+            LEFT JOIN car c ON com.car_id = c.id
+            WHERE com.user_id = #{userId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <!-- 根据车辆ID查询，所有车队内，与此车相关的人（创建人、管理员、绑定司机、车主） -->
+    <select id="selectCarRelatedUserByCarId" resultType="com.nut.driver.app.pojo.CarRolePojo">
+        SELECT fum.user_id AS userId,
+               fum.team_id AS teamId,
+               fum.role    AS role
+        FROM flt_fleet_user_mapping fum
+                 LEFT JOIN flt_fleet_car_mapping fcm ON fum.team_id = fcm.team_id
+        WHERE fcm.car_id = #{carId,jdbcType=VARCHAR}
+          AND fum.role IN (0, 1)
+        UNION
+        SELECT cdm.user_id AS userId,
+               cdm.team_id AS teamId,
+               2           AS role -- 司机
+        FROM flt_car_driver_mapping cdm
+        WHERE cdm.car_id = #{carId,jdbcType=VARCHAR}
+        UNION
+        SELECT com.user_id AS userId,
+               null        AS teamId,
+               9           AS role -- 车主
+        FROM flt_car_owner_mapping com
+        WHERE com.car_id = #{carId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryCarParm" parameterType="com.nut.driver.app.form.QueryCarParmForm"
+            resultType="com.nut.driver.app.dto.CarParmDto">
+        SELECT c.id               as carId,
+               mi.simple_name     as seriseName,
+               mi.car_type_name   as carTypeName,
+               c.car_vin          as vin,
+               mi.gear_box        as gearBoxModel,
+               mi.engine          as engineModel,
+               mi.rear_axle_ratio as rearxleAratio,
+               mi.tire_model      as tireModel
+        FROM car c
+                 LEFT JOIN model_info mi ON mi.model_id = c.car_model
+        WHERE c.id = #{carId,jdbcType=VARCHAR} LIMIT 1
+    </select>
+
+    <select id="queryTripCarsByCarIds" parameterType="java.lang.Long"
+            resultType="com.nut.driver.app.dto.TripCarListDto">
+        SELECT c.id            AS carId,
+               CASE
+                   WHEN ISNULL(c.car_number)
+                       OR c.car_number = '' THEN
+                       c.car_vin
+                   ELSE
+                       c.car_number
+                   END            carNumber,
+               c.car_vin       AS vin,
+               c.auto_terminal AS autoTerminal
+        FROM (
+                 SELECT fcm.car_id
+                 FROM flt_fleet_car_mapping fcm
+                          LEFT JOIN flt_fleet_user_mapping fum ON fcm.team_id = fum.team_id
+                 WHERE fum.user_id = #{userId,jdbcType=BIGINT}
+                   AND fum.role IN (0, 1)
+                 UNION
+                 SELECT cdm.car_id AS carId
+                 FROM flt_car_driver_mapping cdm
+                 WHERE cdm.user_id = #{userId,jdbcType=BIGINT}
+                 UNION
+                 SELECT com.car_id AS carId
+                 FROM flt_car_owner_mapping com
+                 WHERE com.user_id = #{userId,jdbcType=BIGINT}
+             ) a
+                 LEFT JOIN car c ON a.car_id = c.id
+    </select>
+
+    <select id="queryTripCarsByCarIds2" parameterType="java.lang.Long"
+            resultType="com.nut.driver.app.entity.ColdCarsEntity">
+        SELECT c.id            AS carId,
+               CASE
+                   WHEN ISNULL(c.car_number)
+                       OR c.car_number = '' THEN
+                       c.car_vin
+                   ELSE
+                       c.car_number
+                   END            carNumber,
+               c.car_vin       AS vin
+        FROM (
+                 SELECT fcm.car_id
+                 FROM flt_fleet_car_mapping fcm
+                          LEFT JOIN flt_fleet_user_mapping fum ON fcm.team_id = fum.team_id
+                 WHERE fum.user_id = #{userId,jdbcType=BIGINT}
+                   AND fum.role IN (0, 1)
+                 UNION
+                 SELECT cdm.car_id AS carId
+                 FROM flt_car_driver_mapping cdm
+                 WHERE cdm.user_id = #{userId,jdbcType=BIGINT}
+                 UNION
+                 SELECT com.car_id AS carId
+                 FROM flt_car_owner_mapping com
+                 WHERE com.user_id = #{userId,jdbcType=BIGINT}
+             ) a
+                 LEFT JOIN car c ON a.car_id = c.id
+    </select>
+
+    <select id="queryModelCodeByVin" resultType="java.lang.String">
+        select substring_index(car_model_code,'-',1) from car
+        <where>
+            <if test="carIdList != null and carIdList.size() > 0">
+                id in
+                <foreach item="item" index="index" collection="carIdList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+    <select id="queryCarSales" resultType="java.util.Date">
+        select MB_SALES_DATE
+        from car
+        where car_vin = #{carVin}
+    </select>
+    <select id="selectPhyByVin" resultType="com.nut.driver.app.pojo.PhyExaPojo">
+        SELECT c.id AS carId,
+        c.auto_terminal as terminalId,
+        case WHEN ISNULL(c.car_number) OR c.car_number = '' THEN left(c.car_vin, 8) ELSE c.car_number END carNumber,
+        c.car_vin carVin,
+        substring_index(c.car_model_base, '-', 1) code
+        from car c
+        <where>
+            <if test="carVin != null and carVin != ''">
+                c.car_vin = #{carVin}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectTerminalIdByCarVin" parameterType="java.lang.String" resultType="java.lang.String">
+        select auto_terminal
+        from car
+        where car_vin like CONCAT('%', #{carVin, jdbcType=VARCHAR}, '%')
+    </select>
+
+    <!-- 根据通信号（即：sim卡号）查询车辆信息-->
+    <select id="getByAutoTerminal" parameterType="java.lang.String" resultType="com.nut.driver.app.entity.CarEntity">
+        select car_number
+        from car
+        where auto_terminal =  #{autoTerminal, jdbcType=VARCHAR}
+        limit 1
+    </select>
+
+    <select id="selectCar" resultType="com.nut.driver.app.entity.CarEntity">
+        select * from car where id = #{carId}
+    </select>
+
+</mapper>

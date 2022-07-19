@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.CarMessageRecordDao">
+
+    <sql id="Base_Column_List">
+        id
+        , user_id, message_type, type, stype, app_type, create_time
+    </sql>
+
+    <!-- 查询报警通知列表 -->
+    <select id="queryAlarmNoticeList" parameterType="java.util.Map"
+            resultType="com.nut.driver.app.pojo.QueryAlarmNoticeListPojo">
+        SELECT
+        car.id AS carId,
+        car.car_number AS carNumber,
+        RIGHT(car.car_vin, 8) AS chassisNum,
+        cmr1.content AS content,
+        cmr1.send_time AS sendTime
+        FROM
+        car
+        INNER JOIN car_message_record cmr1 ON car.id = cmr1.car_id
+        AND cmr1.receive_app_type = #{receiveAppType,jdbcType=INTEGER}
+        AND cmr1.user_visible = 2
+        AND cmr1.car_id IN
+        <foreach collection="carIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        LEFT JOIN car_message_record cmr2 ON cmr1.car_id = cmr2.car_id
+        AND cmr2.receive_app_type = #{receiveAppType,jdbcType=INTEGER}
+        AND cmr2.user_visible = 2
+        AND cmr2.send_time > cmr1.send_time
+        WHERE
+        cmr2.send_time IS NULL
+        ORDER BY
+        cmr1.send_time DESC
+    </select>
+
+    <!-- 查询报警通知总数和已读数量 -->
+    <select id="queryAlarmNoticeCount" parameterType="java.util.Map"
+            resultType="com.nut.driver.app.pojo.QueryAlarmNoticeCountPojo">
+        SELECT
+        cmr.car_id AS carId,
+        COUNT(cmr.id) AS totalCount,
+        COUNT(cmrr.message_id) AS readCount
+        FROM
+        car_message_record cmr
+        LEFT JOIN car_message_read_record cmrr ON cmr.id = cmrr.message_id
+        AND cmrr.user_id = #{userId,jdbcType=BIGINT}
+        WHERE
+        cmr.receive_app_type = #{receiveAppType,jdbcType=INTEGER}
+        AND cmr.user_visible = 2
+        AND cmr.car_id IN
+        <foreach collection="carIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        GROUP BY
+        cmr.car_id
+    </select>
+
+    <!-- 查询报警通知详情列表 -->
+    <select id="queryAlarmNoticeDetailList" parameterType="java.util.Map"
+            resultType="com.nut.driver.app.dto.QueryAlarmNoticeDetailListDto">
+        SELECT cmr.message_type_name AS title,
+               cmr.content           AS content,
+               cmr.send_time         AS sendTime,
+               cmr.message_extra     AS messageExtra,
+               cmr.message_code      AS messageCode,
+               cmr.stype             AS imageCode
+        FROM car_message_record cmr
+        WHERE cmr.receive_app_type = #{receiveAppType,jdbcType=INTEGER}
+          AND cmr.user_visible = 2
+          AND cmr.car_id = #{carId,jdbcType=VARCHAR}
+        ORDER BY cmr.send_time DESC
+    </select>
+
+    <select id="queryMessageByUserIdAndAppType"
+            resultType="com.nut.driver.app.dto.QueryMessageAndAlarmNoticeReceiveSetDto">
+        SELECT message_type as messageType, 0 as receiveState
+        FROM user_message_receive_set
+        WHERE app_type = #{appType}
+          AND user_id = #{userId}
+    </select>
+
+    <!--删除设置-->
+    <delete id="deleteByMessageType" parameterType="com.nut.driver.app.domain.UserMessageReceiveSet">
+        delete
+        from user_message_receive_set
+        where message_type = #{messageType,jdbcType=INTEGER}
+          AND user_id = #{userId,jdbcType=VARCHAR}
+          AND app_type = #{appType,jdbcType=INTEGER}
+    </delete>
+
+    <select id="queryMessage" parameterType="com.nut.driver.app.domain.UserMessageReceiveSet"
+            resultType="com.nut.driver.app.domain.UserMessageReceiveSet">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        user_message_receive_set umrs
+        WHERE
+        message_type = #{messageType,jdbcType=INTEGER}
+        AND umrs.user_id = #{userId,jdbcType=VARCHAR} limit 1
+    </select>
+
+    <insert id="insert" parameterType="com.nut.driver.app.domain.UserMessageReceiveSet">
+        insert into user_message_receive_set (id, user_id, message_type,
+                                              type, stype, app_type,
+                                              create_time)
+        values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{messageType,jdbcType=INTEGER},
+                #{type,jdbcType=INTEGER}, #{stype,jdbcType=INTEGER}, #{appType,jdbcType=INTEGER},
+                #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <insert id="addUnreadMessage" parameterType="com.nut.driver.app.domain.UserMessageRecord">
+
+        insert into user_message_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="messageId != null">
+                message_id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="pushShowType != null">
+                push_show_type,
+            </if>
+            <if test="messageCode != null">
+                message_code,
+            </if>
+            <if test="userVisible != null">
+                user_visible,
+            </if>
+            <if test="receiverId != null">
+                receiver_id,
+            </if>
+            <if test="receiveAppType != null">
+                receive_app_type,
+            </if>
+            <if test="senderId != null">
+                sender_id,
+            </if>
+            <if test="sendTime != null">
+                send_time,
+            </if>
+            <if test="readFlag != null">
+                read_flag,
+            </if>
+            <if test="messageExtra != null">
+                message_extra,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="stype != null">
+                stype,
+            </if>
+            <if test="receiveState != null">
+                receive_state,
+            </if>
+            <if test="messageType != null">
+                message_type,
+            </if>
+            <if test="messageTypeName != null">
+                message_type_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="invitationId != null">
+                invitation_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="messageId != null">
+                #{messageId,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="pushShowType != null">
+                #{pushShowType,jdbcType=INTEGER},
+            </if>
+            <if test="messageCode != null">
+                #{messageCode,jdbcType=INTEGER},
+            </if>
+            <if test="userVisible != null">
+                #{userVisible,jdbcType=INTEGER},
+            </if>
+            <if test="receiverId != null">
+                #{receiverId,jdbcType=VARCHAR},
+            </if>
+            <if test="receiveAppType != null">
+                #{receiveAppType,jdbcType=INTEGER},
+            </if>
+            <if test="senderId != null">
+                #{senderId,jdbcType=VARCHAR},
+            </if>
+            <if test="sendTime != null">
+                #{sendTime,jdbcType=BIGINT},
+            </if>
+            <if test="readFlag != null">
+                #{readFlag,jdbcType=INTEGER},
+            </if>
+            <if test="messageExtra != null">
+                #{messageExtra,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="stype != null">
+                #{stype,jdbcType=INTEGER},
+            </if>
+            <if test="receiveState != null">
+                #{receiveState,jdbcType=INTEGER},
+            </if>
+            <if test="messageType != null">
+                #{messageType,jdbcType=INTEGER},
+            </if>
+            <if test="messageTypeName != null">
+                #{messageTypeName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="invitationId != null">
+                #{invitationId},
+            </if>
+        </trim>
+    </insert>
+
+
+</mapper>

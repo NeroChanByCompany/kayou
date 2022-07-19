@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.tripanalysis.app.dao.CarAnalyseDao">
+    <resultMap id="BaseResultMap" type="com.nut.tripanalysis.app.entity.CarAnalyseEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="car_id" jdbcType="VARCHAR" property="carId"/>
+        <result column="car_num" jdbcType="VARCHAR" property="carNum"/>
+        <result column="statis_date" jdbcType="DATE" property="statisDate"/>
+        <result column="mileage" jdbcType="REAL" property="mileage"/>
+        <result column="oilwear" jdbcType="REAL" property="oilwear"/>
+        <result column="oilwear_avg" jdbcType="REAL" property="oilwearAvg"/>
+        <result column="mileage_total" jdbcType="REAL" property="mileageTotal"/>
+        <result column="oilwear_total" jdbcType="REAL" property="oilwearTotal"/>
+        <result column="oilwear_avg_total" jdbcType="REAL" property="oilwearAvgTotal"/>
+        <result column="speed_avg" jdbcType="REAL" property="speedAvg"/>
+        <result column="is_active" jdbcType="INTEGER" property="isActive"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="time_total" jdbcType="BIGINT" property="timeTotal"/>
+        <result column="idle_time" jdbcType="BIGINT" property="idleTime"/>
+        <result column="team_id" jdbcType="BIGINT" property="teamId"/>
+        <result column="speed_sum" jdbcType="BIGINT" property="speedSum"/>
+        <result column="speed_count" jdbcType="INTEGER" property="speedCount"/>
+        <result column="statis_timestamp" jdbcType="BIGINT" property="statisTimestamp"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, car_id, car_num, statis_date, mileage, oilwear, oilwear_avg, mileage_total, oilwear_total,
+    oilwear_avg_total, speed_avg, is_active, create_time, time_total, idle_time, team_id, speed_sum,
+    speed_count, statis_timestamp
+  </sql>
+    <select id="getAvgOilForRanking" resultType="java.lang.Double">
+    <![CDATA[
+      SELECT
+        round( SUM(oilwear)/sum(mileage)*100,2)
+      FROM
+        car_analyse
+      WHERE
+        car_id = #{carId,jdbcType=VARCHAR}
+      AND statis_timestamp >= #{beginTime,jdbcType=BIGINT}
+      AND statis_timestamp <= #{endTime,jdbcType=BIGINT}
+    ]]>
+  </select>
+
+
+</mapper>

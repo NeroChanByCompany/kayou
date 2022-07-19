@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.locationservice.app.dao.ExportCarInfoFileDao">
+
+  <select id="getSystemType" parameterType="java.lang.String" resultType="com.nut.locationservice.app.pojo.QuerySystemTypePojo">
+    SELECT DISTINCT f.system_source systemSource,f.system_type systemType FROM ${DatabaseName}.hy_car_fault f
+  </select>
+
+  <select id="queryFaultSummaryList" parameterType="java.util.Map" resultType="com.nut.locationservice.app.pojo.QueryFaultSummaryPojo">
+    SELECT
+                car.CAR_ID AS id,
+                car.CAR_CPH AS plateNum,
+                car.CHASSIS_NUM AS chassisNum,
+                car.STRUCTURE_NUM AS structureNum,
+                car.prod_code AS prodCode,
+                team.T_NAME as tName,
+                car.CAR_TYPE as carType,
+                CASE WHEN car.car_terminal_id IS NOT NULL AND car.car_terminal_id > 0 THEN  ter.T_CODE ELSE NULL END AS fkTerCode,
+                CASE WHEN car.car_terminal IS NOT NULL AND car.car_terminal > 0 THEN ter.T_CODE ELSE NULL END AS bdTerCode,
+                IFNULL(ter.t_auto_communication_id,	ter.t_communication_id) AS commId,
+                detail.ENGINE_TYPE AS eType,
+                detail.ENGINE_TYPE_REAR AS engineNumber,
+                detail.MB_SALES_STATUS as aakstatus,
+                business.business_name AS businessName,
+                business.LINK_TELPONE AS linkTelpone
+            FROM
+                ${DatabaseName}.hy_car car
+                INNER JOIN ${DatabaseName}.hy_car_detail detail ON car.CAR_ID = detail.CAR_ID
+                INNER JOIN ${DatabaseName}.hy_terminal ter ON ter.T_ID = car.car_terminal
+        INNER JOIN ${DatabaseName}.hy_team team ON car.CAR_TEAM_ID = team.T_ID
+        LEFT JOIN ${DatabaseName}.hy_business business ON business.cid = detail.CAR_OWNER
+        inner join export_car_info cf on cf.car_vin = car.CHASSIS_NUM
+    WHERE car.del_flag = 0
+         and team.del_flag = 0
+         AND car.CAR_TERMINAL > 0
+  </select>
+
+  <select id="getSymbolCode" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+      a.prod_code as prodCode,
+      b.tbox_symbol_code as tBoxSymbolCode
+    FROM
+      ${DatabaseName}.hy_car_symbol a
+      LEFT JOIN ${DatabaseName}.hy_symbol_dict b
+        ON a.value_code = b.symbol_code
+    where a.prod_code = #{prodCode}
+      and b.tbox_symbol_code = #{tboxSymbolCode}
+    limit 1
+  </select>
+
+    <select id="getCarFaultList" resultType="com.nut.locationservice.app.pojo.QueryCarFaultPojo">
+        SELECT
+        f.system_source systemSource,
+        f.system_type systemType,
+        f.type_model typeModel,
+        f.fault_des faultDes,
+        f.spn spn,
+        f.fmi fmi,
+        f.fault_solutions as faultSolutions,
+        f.symbol_code as symbolCode
+        FROM ${DatabaseName}.hy_car_fault f
+    </select>
+
+    <select id="queryBasicDataList" resultType="com.nut.locationservice.app.dto.BaseData">
+        SELECT
+            IFNULL(t.DATA_ID, 0) as id,
+            t.DATA_CODE as code,
+            t.DATA_VALUE as value
+        FROM ${DatabaseName}.hy_basicdata t
+        WHERE t.DATA_TYPE = #{type}
+        <if test="type != null and type == 55">
+            and t.DATA_VALUE not in('金融公司')
+        </if>
+    </select>
+
+    <insert id="insertExportCarFile" parameterType="java.util.Map">
+      insert into export_car_file (proc_date, file_name, file_size, full_path, create_time, file_type)
+      values (#{procDate}, #{fileName}, #{fileSize}, #{fullPath}, NOW(), #{fileType})
+    </insert>
+
+    <select id="queryCarList" resultType="com.nut.locationservice.app.pojo.CarInfoPojo">
+        select
+          c.car_vin as vin,
+          c.terminal_id as terminalId
+        from
+          export_car_info c
+    </select>
+
+    <select id="queryCommonCar" resultType="com.nut.locationservice.app.pojo.QueryCommonCarPojo">
+        SELECT
+          IFNULL ( ter.T_AUTO_COMMUNICATION_ID, ter.T_COMMUNICATION_ID ) AS commId,
+          detail.ENGINE_TYPE engineType,
+          car.OIL_CAPACITY oilCapacity,
+          detail.fuel
+        FROM
+          ${DatabaseName}.hy_car car
+          INNER JOIN ${DatabaseName}.hy_terminal ter ON ter.T_ID =
+            IF (
+                CAR_TERMINAL_ID IS NOT NULL
+                AND CAR_TERMINAL_ID > 0,
+                CAR_TERMINAL_ID,
+                CAR_TERMINAL
+            )
+          INNER JOIN ${DatabaseName}.hy_car_detail detail
+            ON car.CAR_ID = detail.CAR_ID
+        WHERE car.DEL_FLAG = 0
+          AND car.CHASSIS_NUM = #{vin}
+        limit 1
+    </select>
+
+</mapper>

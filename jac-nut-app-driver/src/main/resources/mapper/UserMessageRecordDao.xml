@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.QueryBrandListDao">
+    <select id="queryBrandListSql"
+            parameterType="java.lang.String"
+            resultType="com.nut.driver.app.dto.BrandInfoDto">
+        SELECT
+        brand_id AS brandId,brand_name AS brandName
+        FROM
+        brand_info
+        ORDER BY  brand_id
+    </select>
+
+    <select id="selectBrandInfoById" parameterType="java.lang.Long"
+            resultType="com.nut.driver.app.dto.BrandInfoDto">
+        SELECT
+        brand_id AS brandId,brand_name AS brandName
+        FROM
+        brand_info
+        where  brand_id = #{brandId}
+    </select>
+</mapper>

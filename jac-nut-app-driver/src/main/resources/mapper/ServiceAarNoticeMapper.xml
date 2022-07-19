@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.ServiceAarNoticeDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.ServiceAarNoticeEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="noticeCode" column="notice_code"/>
+        <result property="noticeName" column="notice_name"/>
+        <result property="noticeType" column="notice_type"/>
+        <result property="endDt" column="end_dt"/>
+        <result property="chkService" column="chk_service"/>
+        <result property="checkVeh" column="check_veh"/>
+        <result property="identNum" column="ident_num"/>
+        <result property="stationName" column="station_name"/>
+        <result property="orgId" column="org_id"/>
+        <result property="chassisNoFinal" column="chassis_no_final"/>
+        <result property="chassisNo" column="chassis_no"/>
+        <result property="vehicleModel" column="vehicle_model"/>
+        <result property="caNum" column="ca_num"/>
+        <result property="alNum" column="al_num"/>
+        <result property="effectiveFlag" column="effective_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="countProtocolVin" resultType="java.lang.Long">
+        SELECT
+        count(1)
+        FROM service_aar_notice a
+        WHERE
+        a.notice_type in
+        <foreach collection="queryNoticeTypeList" item="item" index="index" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        AND a.chassis_no_final= #{vin,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

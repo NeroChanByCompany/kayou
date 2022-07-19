@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.WoInfoDao">
+
+    <!-- 服务站+工单状态list查询工单信息 -->
+    <select id="queryWoByStationAndStatusIn" parameterType="java.util.Map"
+            resultType="com.nut.servicestation.app.pojo.CountWoPojo">
+        SELECT
+        wo.wo_status AS woStatus,
+        wo.wo_type AS woType,
+        wo.assign_to AS assignTo,
+        wo.station_id AS stationId
+        FROM
+        `work_order` wo
+        WHERE 1 = 1
+        AND wo.station_id = #{stationId,jdbcType=VARCHAR}
+        AND wo.wo_status IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="woCodeList != ''">
+            AND wo.wo_code not IN
+            <foreach item="item" index="index" collection="woCodeList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 车辆VIN 查询 该车所有工单号-->
+    <select id="queryAllCodeByVin" parameterType="java.lang.String"
+            resultType="java.lang.String">
+        select wo.wo_code As woCode
+        from work_order wo
+        where wo_type = 1
+          and wo.chassis_num = #{chassisNum,jdbcType=VARCHAR}
+    </select>
+    <!-- 车辆VIN 查询 该车尚未维修完成的工单号-->
+    <select id="queryCodeByVin" parameterType="java.lang.String"
+            resultType="java.lang.String">
+        select wo.wo_code As woCode
+        from work_order wo
+        where wo_type = 1
+          and wo.chassis_num like CONCAT('%', #{chassisNum, jdbcType=VARCHAR}, '%')
+          and wo.wo_status in (100, 140, 220, 230)
+    </select>
+    <!-- 工单号 查询 工单详情 -->
+    <select id="queryWoInfoByWoCode" parameterType="java.lang.String"
+            resultType="com.nut.servicestation.app.pojo.WoInfoPojo">
+        SELECT wo.wo_code                                              AS woCode               -- 工单号
+             , cc.car_number                                           AS carNumber            -- 车牌号
+             , hss.station_name                                        AS appoStationName      -- 预约服务站名称
+             , DATE_FORMAT(wo.appo_arrive_time, '%Y-%m-%d %H:%i:%s')   AS appoArriveTime       -- 预约到站时间
+             , wo.appo_type                                            AS appoType             -- 预约方式
+             , wo.wo_type                                              AS woType               -- 工单类型
+             , wo.wo_status                                            AS woStatus             -- 工单状态
+             , DATE_FORMAT(wo.time_create, '%Y-%m-%d %H:%i:%s')        AS timeCreate           -- 建单时间
+             , DATE_FORMAT(wo.time_inspect_begin, '%Y-%m-%d %H:%i:%s') AS timeInspectBegin     -- 开始检查时间
+             , wo.appo_user_name                                       AS appoUserName         -- 用户姓名
+             , wo.appo_user_phone                                      AS appoUserPhone        -- 用户电话
+             , wo.car_lon                                              AS carLon               -- 车辆经度
+             , wo.car_lat                                              AS carLat               -- 车辆纬度
+             , wo.car_location                                         AS carLocation          -- 车辆位置
+             , wo.car_distance                                         AS carDistance          -- 车与服务站距离
+             , wo.repair_item                                          AS repairItem           -- 维修项目
+             , wo.maintain_item                                        AS maintainItem         -- 保养项目
+             , wo.operator_id                                          AS operatorId           -- 创建人ID
+             , su.name                                                 AS operatorName         -- 创建人名称
+             , wo.user_comment                                         AS userComment          -- 用户反馈
+             , FROM_UNIXTIME(hcd.MB_SALES_DATE, '%Y-%m-%d %H:%i:%s')   AS carSaleDate          -- 购车日期
+             , wo.mileage                                              AS mileage              -- 行驶里程
+             , wo.chassis_num                                          AS chassisNum           -- 底盘号
+             -- 公告车型
+             , mi.engine                                               AS engineType           -- 发动机类型
+             , hcd.ENGINE_TYPE_REAR                                    AS engineModel          -- 发动机型号
+             -- 故障码
+             , mi.simple_name                                          AS seriseName           -- 整车平台
+             , wo.station_id                                           AS stationId            -- 服务站ID
+             , wo.station_code                                         AS stationCode          -- 服务站编码
+             , hss.longitude                                           AS stationLon           -- 服务站经度（需要除法）
+             , hss.latitude                                            AS stationLat           -- 服务站纬度（需要除法）
+             , wo.area_code                                            AS areaCode             -- 服务站省市编码
+             , wo.send_to_repair_name                                  AS shipperName          -- 送修人姓名
+             , wo.send_to_repair_phone                                 AS shipperPhone         -- 送修人电话
+             , wo.registered_phone                                     AS registeredPhone      -- 注册手机号
+             , wo.is_emergency                                         AS isEmergency
+             , wo.break_status                                         AS breakStatus
+             , wo.load_description                                     AS loadDescription
+             , wo.refuse_times                                         AS refuseTimes
+             , wo.modify_times                                         AS modifyTimes
+             , wo.close_times                                          AS closeTimes
+             , cc.id                                                   AS carId                -- 车辆ID
+             , wo.assign_to                                            AS assignTo             -- 被指派人ID
+             , wo.rescue_staff_name                                    AS rescueStaffName      -- 外出人数
+             , wo.rescue_staff_phone                                   AS rescueStaffPhone     -- 外出人员电话
+             , wo.rescue_staff_num                                     AS rescueStaffNum       -- 外出人数
+             , wo.rescue_car_device                                    AS rescueCarDevice      -- 救援车辆GPS设备号
+             , mark.marker_id                                          AS nonServiceMarkAct    -- 非维修车辆标记-标记账号
+             , DATE_FORMAT(mark.create_time, '%Y-%m-%d %H:%i')         AS nonServiceMarkTime   -- 非维修车辆标记-标记时间
+             , wo.rescue_is_transferring                               AS rescueIsTransferring -- 外出救援用是否调件中
+             , wo.rescue_type                                          AS rescueType           -- 外出类型
+             , IFNULL(wo.protocol_mark, 1)                             AS protocolMark
+             , IFNULL(wo.bill_sub_status, 1)                           AS billSubStatus
+             , bill_reject                                             AS billReject
+             , wo.estimate_time                                        as estimateTime
+             , wo.estimate_fee                                         as estimateFee
+        FROM work_order wo
+                 LEFT JOIN car cc ON cc.car_vin = wo.chassis_num
+                 LEFT JOIN model_info mi ON mi.model_id = cc.car_model
+                 LEFT JOIN ${hyDbName}.hy_service_station hss ON hss.id = wo.station_id
+                 LEFT JOIN `system_user` su ON su.id = wo.operator_id
+                 LEFT JOIN ${hyDbName}.hy_car_detail hcd ON hcd.CAR_ID = cc.id
+                 LEFT JOIN car_station_stay_mark mark ON wo.station_code = mark.station_code
+            AND cc.id = mark.car_id
+            AND TIMESTAMPDIFF(SECOND, mark.create_time, wo.create_time) > 0
+            <![CDATA[ AND TIMESTAMPDIFF(SECOND, mark.create_time, wo.create_time) <= 43200 ]]>
+        WHERE 1 = 1
+          AND wo.wo_code = #{woCode,jdbcType=VARCHAR}
+    </select>
+    <!-- 车辆ID 查询 公告 -->
+    <select id="queryGgByCarId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT hy.gg
+        FROM car cc
+                 LEFT JOIN model_info m ON cc.car_model = m.model_id
+                 LEFT JOIN ${hyDbName}.hy_car_param hy ON m.model_name = hy.cxm
+        WHERE 1 = 1
+          AND cc.id = #{carId,jdbcType=VARCHAR} LIMIT 1
+    </select>
+    <!-- 查询最新一次的S级故障 -->
+    <select id="queryLatestSFault" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT GROUP_CONCAT(fin.fault_code SEPARATOR ',')
+        FROM fault_info_new fin
+        WHERE 1 = 1
+          AND fin.car_id = #{carId,jdbcType=VARCHAR}
+          AND fin.fault_level = 'S'
+          AND fin.fault_time =
+              (SELECT MAX(f.fault_time) FROM fault_info_new f WHERE f.car_id = #{carId,jdbcType=VARCHAR})
+    </select>
+    <!-- 工单号 查询 工单流程 -->
+    <select id="queryWoProcessByWoCode" parameterType="java.util.Map"
+            resultType="com.nut.servicestation.app.pojo.WoProcessPojo">
+        SELECT
+        wop.operate_code AS operateCode,
+        wop.operate_id AS operateId,
+        wop.title AS title,
+        wop.text_json AS textJson,
+        wop.text_json_tb AS textJsonTBoss,
+        DATE_FORMAT(wop.create_time, '%Y-%m-%d %H:%i') AS createTime,
+        wop.times_rescue_number AS timesRescueNumber
+        FROM
+        work_order_operate wop
+        WHERE
+        1 = 1
+        AND wop.wo_code = #{woCode,jdbcType=VARCHAR}
+        AND wop.hidden_flg != 1
+        <if test="isFromTboss == null or isFromTboss != true">
+            AND wop.is_hidden_to_app != 1
+        </if>
+        ORDER BY wop.create_time
+    </select>
+    <!-- 工单状态+操作唯一标识list查询图片信息 -->
+    <select id="queryWoPhotoByWoCodeAndOperateIn" parameterType="java.util.Map"
+            resultType="com.nut.servicestation.app.pojo.WoProcessPojo">
+        SELECT
+        wp.operate_id AS operateId,
+        wp.url AS url
+        FROM
+        work_order_operate_photo wp
+        WHERE
+        wp.wo_code = #{woCode,jdbcType=VARCHAR}
+        AND wp.operate_id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="queryStationById" resultType="java.lang.Long">
+        select STATION_ID
+        from ${databaseName}.hy_account_station has,${databaseName}.hy_account ha
+        <where>
+            <if test="userId != null">
+                ha.ACCOUNT_NAME = #{userId}
+            </if>
+            and ha.ACCOUNT_ID = has.ACCOUNT_ID
+        </where>
+    </select>
+    <select id="queryWorkOrderStation" resultType="com.nut.servicestation.app.pojo.WoInfoPojo">
+        SELECT wo.wo_code                                              AS woCode
+             , cc.car_number                                           AS carNumber
+             , ws.station_name                                         AS appoStationName
+             , DATE_FORMAT(wo.appo_arrive_time, '%Y-%m-%d %H:%i:%s')   AS appoArriveTime
+             , wo.appo_type                                            AS appoType
+             , wo.wo_type                                              AS woType
+             , wo.wo_status                                            AS woStatus
+             , DATE_FORMAT(wo.time_create, '%Y-%m-%d %H:%i:%s')        AS timeCreate
+             , DATE_FORMAT(wo.time_inspect_begin, '%Y-%m-%d %H:%i:%s') AS timeInspectBegin
+             , wo.appo_user_name                                       AS appoUserName
+             , wo.appo_user_phone                                      AS appoUserPhone
+             , wo.car_lon                                              AS carLon
+             , wo.car_lat                                              AS carLat
+             , wo.car_location                                         AS carLocation
+             , wo.car_distance                                         AS carDistance
+             , wo.repair_item                                          AS repairItem
+             , wo.maintain_item                                        AS maintainItem
+             , wo.operator_id                                          AS operatorId
+             , su.name                                                 AS operatorName
+             , wo.user_comment                                         AS userComment
+             , FROM_UNIXTIME(hcd.MB_SALES_DATE, '%Y-%m-%d %H:%i:%s')   AS carSaleDate
+             , wo.mileage                                              AS mileage
+             , wo.chassis_num                                          AS chassisNum
+             , mi.engine                                               AS engineType
+             , hcd.ENGINE_TYPE_REAR                                    AS engineModel
+             , mi.simple_name                                          AS seriseName
+             , ws.station_id                                           AS stationId
+             , ws.station_code                                         AS stationCode
+             , hss.longitude                                           AS stationLon
+             , hss.latitude                                            AS stationLat
+             , wo.area_code                                            AS areaCode
+             , wo.send_to_repair_name                                  AS shipperName
+             , wo.send_to_repair_phone                                 AS shipperPhone
+             , wo.registered_phone                                     AS registeredPhone
+             , wo.is_emergency                                         AS isEmergency
+             , wo.break_status                                         AS breakStatus
+             , wo.load_description                                     AS loadDescription
+             , wo.refuse_times                                         AS refuseTimes
+             , wo.modify_times                                         AS modifyTimes
+             , wo.close_times                                          AS closeTimes
+             , cc.id                                                   AS carId
+             , wo.assign_to                                            AS assignTo
+             , wo.rescue_staff_name                                    AS rescueStaffName
+             , wo.rescue_staff_phone                                   AS rescueStaffPhone
+             , wo.rescue_staff_num                                     AS rescueStaffNum
+             , wo.rescue_car_device                                    AS rescueCarDevice
+             , mark.marker_id                                          AS nonServiceMarkAct
+             , DATE_FORMAT(mark.create_time, '%Y-%m-%d %H:%i')         AS nonServiceMarkTime
+             , wo.rescue_is_transferring                               AS rescueIsTransferring
+             , wo.rescue_type                                          AS rescueType
+             , IFNULL(wo.protocol_mark, 1)                             AS protocolMark
+             , IFNULL(wo.bill_sub_status, 1)                           AS billSubStatus
+             , bill_reject                                             AS billReject
+             , wo.estimate_time                                        as estimateTime
+             , wo.estimate_fee                                         as estimateFee
+        FROM work_order_station ws,
+             work_order wo
+                 LEFT JOIN car cc ON cc.car_vin = wo.chassis_num
+                 LEFT JOIN model_info mi ON mi.model_id = cc.car_model
+                 LEFT JOIN ${databaseName}.hy_service_station hss ON hss.id = wo.station_id
+                 LEFT JOIN `system_user` su ON su.id = wo.operator_id
+                 LEFT JOIN ${databaseName}.hy_car_detail hcd ON hcd.CAR_ID = cc.id
+                 LEFT JOIN car_station_stay_mark mark ON wo.station_code = mark.station_code
+                 AND cc.id = mark.car_id
+                 AND TIMESTAMPDIFF(SECOND, mark.create_time, wo.create_time) > 0
+            <![CDATA[ AND TIMESTAMPDIFF(SECOND, mark.create_time, wo.create_time) <= 43200 ]]>
+        WHERE 1 = 1
+          AND ws.wo_code = #{woCode}
+          and ws.station_id = #{stationId}
+          and ws.wo_bind = 0
+          and ws.wo_code = wo.wo_code
+    </select>
+    <select id="queryWorkOrderStationCount" resultType="java.lang.Long">
+        select count(1)
+        from work_order_station
+        <where>
+            station_id = #{stationId}
+            and wo_bind = 0
+        </where>
+    </select>
+
+    <select id="queryWorkOrderText" resultType="java.lang.String">
+        select content from system_config where type = 1
+    </select>
+</mapper>

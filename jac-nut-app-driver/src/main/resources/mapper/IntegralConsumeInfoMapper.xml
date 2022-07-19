@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.IntegralConsumeInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.IntegralConsumeInfoEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="credits" column="credits"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="appKey" column="app_key"/>
+        <result property="timestamp" column="timestamp"/>
+        <result property="description" column="description"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="clwOrderNum" column="clw_order_num"/>
+        <result property="type" column="type"/>
+        <result property="facePrice" column="face_price"/>
+        <result property="actualPrice" column="actual_price"/>
+        <result property="ip" column="ip"/>
+        <result property="qq" column="qq"/>
+        <result property="phone" column="phone"/>
+        <result property="alipay" column="alipay"/>
+        <result property="waitAudit" column="wait_audit"/>
+        <result property="params" column="params"/>
+        <result property="sign" column="sign"/>
+        <result property="isSuccess" column="is_success"/>
+        <result property="errorMessage" column="error_message"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+    <insert id="insertIntegralAlterRecord" parameterType="com.nut.driver.app.entity.IntegralAlterRecordEntity">
+        insert into integral_alter_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="uid != null">
+                uid,
+            </if>
+            <if test="credits != null">
+                credits,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="integralItem != null">
+                integral_item,
+            </if>
+            <if test="integralResource != null">
+                integral_resource,
+            </if>
+            <if test="orderNum != null">
+                order_num,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="uid != null">
+                #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="credits != null">
+                #{credits,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="integralItem != null">
+                #{integralItem,jdbcType=VARCHAR},
+            </if>
+            <if test="integralResource != null">
+                #{integralResource,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNum != null">
+                #{orderNum,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.WorkOrderOperateDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.WorkOrderOperate">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="wo_code" jdbcType="VARCHAR" property="woCode" />
+        <result column="operate_code" jdbcType="INTEGER" property="operateCode" />
+        <result column="operate_id" jdbcType="VARCHAR" property="operateId" />
+        <result column="is_hidden_to_app" jdbcType="INTEGER" property="isHiddenToApp" />
+        <result column="service_type" jdbcType="INTEGER" property="serviceType" />
+        <result column="deal_type" jdbcType="INTEGER" property="dealType" />
+        <result column="charge_type" jdbcType="INTEGER" property="chargeType" />
+        <result column="pay_type" jdbcType="INTEGER" property="payType" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="photo_num" jdbcType="INTEGER" property="photoNum" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="text_json" jdbcType="VARCHAR" property="textJson" />
+        <result column="text_json_tb" jdbcType="VARCHAR" property="textJsonTb" />
+        <result column="hidden_flg" jdbcType="INTEGER" property="hiddenFlg" />
+        <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+        <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+        <result column="user_id" jdbcType="VARCHAR" property="userId" />
+        <result column="times_rescue_number" jdbcType="INTEGER" property="timesRescueNumber" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, wo_code, operate_code, operate_id, is_hidden_to_app, service_type, deal_type,
+    charge_type, pay_type, description, photo_num, title, text_json, text_json_tb, hidden_flg,
+    longitude, latitude, user_id, times_rescue_number, create_time, update_time
+  </sql>
+
+    <!--查询操作唯一标识 唯一性-->
+    <select id="selectByOperateId" parameterType="com.nut.servicestation.app.domain.WorkOrderOperate"
+            resultType="java.lang.Integer">
+        select
+        COUNT(1)
+        from
+        work_order_operate
+        where
+        wo_code = #{woCode}
+        AND operate_id = #{operateId}
+        <if test="operateCode != null and operateCode != ''">
+            AND operate_code = #{operateCode}
+        </if>
+    </select>
+    <insert id="insertSelective" parameterType="com.nut.servicestation.app.domain.WorkOrderOperate">
+        insert into work_order_operate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="woCode != null">
+                wo_code,
+            </if>
+            <if test="operateCode != null">
+                operate_code,
+            </if>
+            <if test="operateId != null">
+                operate_id,
+            </if>
+            <if test="isHiddenToApp != null">
+                is_hidden_to_app,
+            </if>
+            <if test="serviceType != null">
+                service_type,
+            </if>
+            <if test="dealType != null">
+                deal_type,
+            </if>
+            <if test="chargeType != null">
+                charge_type,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="photoNum != null">
+                photo_num,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="textJson != null">
+                text_json,
+            </if>
+            <if test="textJsonTb != null">
+                text_json_tb,
+            </if>
+            <if test="hiddenFlg != null">
+                hidden_flg,
+            </if>
+            <if test="longitude != null">
+                longitude,
+            </if>
+            <if test="latitude != null">
+                latitude,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="timesRescueNumber != null">
+                times_rescue_number,
+            </if>
+            <if test="finishedStatus != null">
+                finished_status,
+            </if>
+            <if test="subTwiceMark != null">
+                sub_twice_mark,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="woCode != null">
+                #{woCode,jdbcType=VARCHAR},
+            </if>
+            <if test="operateCode != null">
+                #{operateCode,jdbcType=INTEGER},
+            </if>
+            <if test="operateId != null">
+                #{operateId,jdbcType=VARCHAR},
+            </if>
+            <if test="isHiddenToApp != null">
+                #{isHiddenToApp,jdbcType=INTEGER},
+            </if>
+            <if test="serviceType != null">
+                #{serviceType,jdbcType=INTEGER},
+            </if>
+            <if test="dealType != null">
+                #{dealType,jdbcType=INTEGER},
+            </if>
+            <if test="chargeType != null">
+                #{chargeType,jdbcType=INTEGER},
+            </if>
+            <if test="payType != null">
+                #{payType,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="photoNum != null">
+                #{photoNum,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="textJson != null">
+                #{textJson,jdbcType=VARCHAR},
+            </if>
+            <if test="textJsonTb != null">
+                #{textJsonTb,jdbcType=VARCHAR},
+            </if>
+            <if test="hiddenFlg != null">
+                #{hiddenFlg,jdbcType=INTEGER},
+            </if>
+            <if test="longitude != null">
+                #{longitude,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude != null">
+                #{latitude,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="timesRescueNumber != null">
+                #{timesRescueNumber,jdbcType=INTEGER},
+            </if>
+            <if test="finishedStatus != null">
+                #{finishedStatus,jdbcType=INTEGER},
+            </if>
+            <if test="subTwiceMark != null">
+                #{subTwiceMark,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <!--查询维修项（查询所有多次外出救援的维修项）-->
+    <select id="selectByWoCode" parameterType="java.util.Map"
+            resultType="com.nut.servicestation.app.dto.RepairRecordsDto">
+    select
+      wor.operate_id AS operateId,
+      wor.deal_type AS dealType,
+      wor.service_type AS serviceType,
+      wor.charge_type AS chargeType,
+      wor.pay_type AS payType,
+      IFNULL(wor.service_type, wor.charge_type) AS type1,
+      IFNULL(wor.deal_type, wor.pay_type) AS type2,
+      wor.description AS description,
+      CASE WHEN tp.id IS NULL THEN '0' ELSE '1' END transferParts,
+      IFNULL(wor.finished_status, 1) AS finishedStatus,
+      IFNULL(wor.sub_twice_mark, 0) AS subTwiceMark
+    from
+      work_order_operate wor
+    LEFT JOIN work_order_transfer_parts tp ON tp.wo_code = wor.wo_code AND tp.operate_id = wor.operate_id AND tp.status = #{status}
+    where
+      1 = 1
+      AND wor.wo_code = #{woCode,jdbcType=VARCHAR}
+      AND wor.operate_code = #{operateCode,jdbcType=INTEGER}
+    GROUP BY wor.operate_id
+    ORDER BY finishedStatus, wor.id
+  </select>
+    <select id="queryRepairHistory"
+            parameterType="com.nut.servicestation.app.form.RepairHistoryForm"
+            resultType="com.nut.servicestation.app.dto.RepairHistoryDto">
+    SELECT
+      a.service_type AS serviceType,
+      a.charge_type AS chargeType,
+      a.deal_type AS dealType,
+      a.pay_type AS payType,
+      a.description AS description,
+      DATE_FORMAT(a.create_time, '%Y-%m-%d') AS repairTime,
+      wo.mileage AS mileage
+    FROM
+      work_order_operate a
+    INNER JOIN work_order wo ON wo.wo_code = a.wo_code
+    WHERE
+      a.operate_code = #{operateCode,jdbcType=INTEGER}
+    AND wo.chassis_num = #{chassisNum,jdbcType=VARCHAR}
+    and wo.wo_status >= #{woStatus,jdbcType=INTEGER}
+    ORDER BY a.create_time DESC
+  </select>
+    <!--查询操作唯一标识 唯一性-->
+    <select id="selectByOperateIdAndFinished" parameterType="com.nut.servicestation.app.domain.WorkOrderOperate"
+            resultType="java.lang.Integer">
+        select
+        COUNT(1)
+        from
+        work_order_operate
+        where
+        wo_code = #{woCode}
+        AND operate_id = #{operateId} AND finished_status != 0
+        <if test="operateCode != null and operateCode != ''">
+            AND operate_code = #{operateCode}
+        </if>
+    </select>
+    <delete id="delFirstCommitOperate" parameterType="com.nut.servicestation.app.domain.WorkOrderOperate">
+    delete from work_order_operate
+    where wo_code = #{woCode,jdbcType=VARCHAR} and operate_id = #{operateId,jdbcType=VARCHAR} and finished_status = 0
+  </delete>
+    <select id="selectRepairRecordDetail" parameterType="java.util.Map"
+            resultType="com.nut.servicestation.app.pojo.RepairRecordDetailPojo">
+    SELECT
+        wor.deal_type AS dealType,
+        wor.service_type AS serviceType,
+        wor.charge_type AS chargeType,
+        wor.pay_type AS payType,
+        wor.description AS faultDescribe,
+        CASE
+            WHEN EXISTS (
+                SELECT 1 FROM work_order_transfer_parts tp
+                WHERE tp.wo_code = wor.wo_code AND tp.operate_id = wor.operate_id AND tp.status = #{status}) THEN '1'
+            ELSE '0'
+        END transferParts,
+        wp.url,
+        wp.type AS photoType
+    FROM
+        work_order_operate wor
+    LEFT JOIN work_order_operate_photo wp ON wp.operate_id = wor.operate_id AND wp.wo_code = wor.wo_code
+    WHERE
+        wor.wo_code = #{woCode}
+    AND wor.operate_id = #{operateId}
+    AND wor.operate_code = #{operateCode}
+    ORDER BY
+        wp.type ASC
+  </select>
+    <!-- 查询维修记录对应的图片 -->
+    <select id="selectRepairPhotoByWoCode" parameterType="java.lang.String"
+            resultType="com.nut.servicestation.app.pojo.WoRepairPhotoPojo">
+    SELECT
+      wop.id AS id,
+      wop.operate_id AS operateId,
+      wop.service_type AS serviceType,
+      wop.deal_type AS dealType,
+      wop.charge_type AS chargeType,
+      wop.pay_type AS payType,
+      wop.photo_num AS photoNum,
+      IFNULL(wop.finished_status, 1) AS finishedStatus,
+      wp.type AS type,
+      wp.timestamp AS timestamp
+    FROM
+      work_order_operate wop
+    LEFT JOIN work_order_operate_photo wp ON wp.wo_code = wop.wo_code AND wp.operate_id = wop.operate_id
+    WHERE
+      1 = 1
+    AND wop.wo_code = #{woCode,jdbcType=VARCHAR}
+    -- 912:维修
+    AND wop.operate_code = 912
+  </select>
+    <!-- 获取维修图片数量 -->
+    <select id="selectRepairPhotoNumByWoCode" parameterType="com.nut.servicestation.app.domain.WorkOrderOperate" resultType="java.lang.Integer">
+    SELECT
+    sum(photo_num)
+    FROM
+    work_order_operate
+    WHERE
+    1 = 1
+    AND wo_code = #{woCode,jdbcType=VARCHAR}
+    -- 912:维修
+    AND operate_code = 912
+  </select>
+    <!-- 查询检查记录对应的图片（处理方式固定-1） -->
+    <select id="selectInspectPhotoByWoCode" parameterType="java.lang.String"
+            resultType="com.nut.servicestation.app.pojo.WoRepairPhotoPojo">
+    SELECT
+      wop.id AS id,
+      wop.operate_id AS operateId,
+      NULL AS serviceType,
+      NULL AS dealType,
+      NULL AS chargeType,
+      NULL AS payType,
+      wop.photo_num AS photoNum,
+      wp.type AS type,
+      wp.timestamp AS timestamp
+    FROM
+      work_order_operate wop
+    LEFT JOIN work_order_operate_photo wp ON wp.wo_code = wop.wo_code AND wp.operate_id = wop.operate_id
+    WHERE
+      1 = 1
+    AND wop.wo_code = #{woCode,jdbcType=VARCHAR}
+    -- 911:检查
+    AND wop.operate_code = 911
+  </select>
+    <!-- 获取检查图片数量 -->
+    <select id="selectInspectPhotoNumByWoCode" parameterType="com.nut.servicestation.app.domain.WorkOrderOperate" resultType="java.lang.Integer">
+    SELECT
+    sum(photo_num)
+    FROM
+    work_order_operate
+    WHERE
+    1 = 1
+    AND wo_code = #{woCode,jdbcType=VARCHAR}
+    -- 911:检查
+    AND operate_code = 911
+  </select>
+    <!-- 更新记录为可见 -->
+    <update id="updateRecordVisible" parameterType="java.util.List">
+        UPDATE work_order_operate SET hidden_flg = 0 WHERE id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    <!--更新操作记录外出救援次数-->
+    <update id="updateTimesRescueNumber"
+            parameterType="com.nut.servicestation.app.domain.WorkOrderOperate">
+    update work_order_operate
+    set times_rescue_number = #{timesRescueNumber,jdbcType=INTEGER},
+    hidden_flg = (CASE operate_code WHEN #{operateCode,jdbcType=INTEGER} THEN 0 ELSE hidden_flg END)
+    where
+      wo_code = #{woCode,jdbcType=VARCHAR}
+    and times_rescue_number is null
+  </update>
+    <!-- 获取维修图片数量 byoper -->
+    <select id="selectRepairPhotoNumByWoCodeAndOperateId" resultType="java.lang.Integer">
+    SELECT
+    sum(photo_num)
+    FROM
+    work_order_operate
+    WHERE
+    1 = 1
+    AND wo_code = #{woCode,jdbcType=VARCHAR}
+    and operate_id = #{operateId,jdbcType=VARCHAR}
+    AND operate_code = 912
+  </select>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.InviteDao">
+
+    <insert id="insertMessage">
+        insert into invite_related (inviter_id, register_id, inviter_phone, register_phone, create_time,
+                                    inviter_id_second, inviter_phone_second)
+        values (#{inviterId,jdbcType=VARCHAR}, #{registerId,jdbcType=VARCHAR},
+                #{inviterPhone,jdbcType=VARCHAR}, #{registerPhone,jdbcType=VARCHAR}, #{createTime},
+                #{inviterIdSecond,jdbcType=VARCHAR}, #{inviterPhoneSecond,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="invite2invite" parameterType="java.lang.String" resultType="java.lang.String">
+        select inviter_id
+        from invite_related
+        where register_id = #{registerId,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

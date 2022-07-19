@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.ServiceStationDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.ServiceStationEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="stationName" column="station_name"/>
+        <result property="nameForshort" column="name_forshort"/>
+        <result property="address" column="address"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="radius" column="radius"/>
+        <result property="povince" column="povince"/>
+        <result property="city" column="city"/>
+        <result property="serviceManager" column="service_manager"/>
+        <result property="phone" column="phone"/>
+        <result property="fax" column="fax"/>
+        <result property="messages" column="messages"/>
+        <result property="teamId" column="team_id"/>
+        <result property="strandedMaxTime" column="stranded_max_time"/>
+        <result property="starLevel" column="star_level"/>
+        <result property="picture" column="picture"/>
+        <result property="serviceType" column="SERVICE_Type"/>
+        <result property="serviceContent" column="SERVICE_CONTENT"/>
+        <result property="partsContent" column="PARTS_CONTENT"/>
+        <result property="serviceRadius" column="service_radius"/>
+        <result property="serviceCode" column="service_code"/>
+        <result property="toolContent" column="tool_content"/>
+        <result property="stationType" column="station_type"/>
+        <result property="creatDate" column="creat_Date"/>
+        <result property="accountId" column="account_id"/>
+        <result property="fixedTelephone" column="fixed_telephone"/>
+        <result property="mbProvinceId" column="mb_province_id"/>
+        <result property="mbCityId" column="mb_city_id"/>
+        <result property="agencyCode" column="agency_code"/>
+        <result property="directoryFlg" column="directory_flg"/>
+        <result property="effctive" column="effctive"/>
+    </resultMap>
+
+    <select id="queryServiceStationInfo" parameterType="java.util.Map"
+            resultType="com.nut.driver.app.pojo.ServiceStationInfoPojo">
+        SELECT GROUP_concat(DISTINCT ha.ACCOUNT_NAME)     AS userId,
+               ss.station_name                            AS stationName,
+               CAST(ss.`longitude` / 1000000 AS CHAR(20)) AS longitude,
+               CAST(ss.`latitude` / 1000000 AS CHAR(20))  AS latitude,
+               ss.povince                                 AS povince,
+               ss.service_code                            AS serviceCode,
+               IFNULL(ss.scope_service, 3)                AS scopeService
+        FROM ${DbName}.hy_account_station hs
+                 INNER JOIN ${DbName}.hy_account ha ON ha.ACCOUNT_ID = hs.ACCOUNT_ID
+                 INNER JOIN ${DbName}.hy_service_station ss ON ss.id = hs.STATION_ID
+        WHERE ss.id = #{stationId, jdbcType=VARCHAR}
+          AND ha.ACCOUNT_TYPE = 3
+          AND ha.JOB_TYPE = #{jobType}
+          AND ss.STATION_ENABLE = 1
+          AND ss.DEL_FLAG = 0
+    </select>
+
+    <select id="getStationList" resultType="com.nut.driver.app.pojo.StationListPojo">
+        SELECT
+        CONCAT(ss.id, '') AS id,
+        ss.station_name AS name,
+        ss.star_level AS level,
+        ss.picture,
+        <choose>
+            <when test="null != paramMap.lon and '' != paramMap.lon and null != paramMap.lat and '' != paramMap.lat">
+                getDistanceByLong (#{paramMap.lat}, #{paramMap.lon}, ss.latitude, ss.longitude) AS distance,
+            </when>
+            <otherwise>
+                IFNULL(getDistanceByLong (
+                NULL,
+                NULL,
+                ss.latitude,
+                ss.longitude
+                ),'--') AS distance,
+            </otherwise>
+        </choose>
+        ss.address AS address,
+        ss.longitude AS longitude,
+        ss.latitude AS latitude,
+        ss.picture AS photo,
+        IFNULL(ss.scope_service, 3) AS scopeService,
+        ss.phone AS telephone
+        FROM
+        ${DbName}.hy_service_station ss
+        WHERE
+        ss.STATION_ENABLE = 1 AND ss.DEL_FLAG = 0
+        AND (ss.secondary IS NULL OR ss.secondary != 'Y')
+        AND ss.longitude IS NOT NULL AND ss.latitude IS NOT NULL
+        <if test="paramMap.distance != null and paramMap.distance != '' ">
+            AND getDistanceByLong (#{paramMap.lat}, #{paramMap.lon}, ss.latitude, ss.longitude) <![CDATA[<]]>
+            #{paramMap.distance}
+        </if>
+        <if test="paramMap.id != null and paramMap.id != '' ">
+            AND (ss.povince = #{paramMap.id,jdbcType=VARCHAR} OR ss.city = #{paramMap.id,jdbcType=VARCHAR})
+        </if>
+        <if test='paramMap.level != null and paramMap.level != "" and paramMap.level != 0'>
+            and (ss.star_level >= #{paramMap.level})
+        </if>
+        <if test='paramMap.centralFlag != null and paramMap.centralFlag != ""'>
+            <if test="paramMap.centralFlag == '1'.toString()">
+                AND ss.central_flag = 1
+            </if>
+        </if>
+        <if test="paramMap.keyWord != null and paramMap.keyWord != '' ">
+            AND ss.station_name LIKE CONCAT('%', #{paramMap.keyWord,jdbcType=VARCHAR}, '%')
+        </if>
+        ORDER BY
+        <choose>
+            <when test="paramMap.sortType != null and paramMap.sortType == 1 ">
+                ss.star_level desc, distance
+            </when>
+            <otherwise>
+                distance, ss.star_level desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getServiceStationDetail" parameterType="java.util.Map"
+            resultType="com.nut.driver.app.pojo.ServiceStationDetailPojo">
+        SELECT ss.station_name             AS `name`,
+               ss.address,
+               ss.phone,
+               ss.longitude                AS lon,
+               ss.latitude                 AS lat,
+               ss.star_level               AS `level`,
+               ss.remark                   AS introduce,
+               ss.picture                  AS photo,
+               IFNULL(ss.scope_service, 3) AS scopeService,
+               ss.central_flag
+        FROM ${DbName}.hy_service_station ss
+        WHERE ss.id = #{stationId, jdbcType=VARCHAR}
+          AND ss.STATION_ENABLE = 1
+          AND ss.DEL_FLAG = 0 LIMIT 1
+    </select>
+
+
+</mapper>

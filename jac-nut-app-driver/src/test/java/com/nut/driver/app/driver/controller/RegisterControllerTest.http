@@ -1,0 +1,15 @@
+### 注册
+POST {{base_url}}/register
+Content-Type: application/json
+
+{
+  "phone": "13128030321",
+  "name": "测试账号zxj",
+  "password": "Aa123456",
+  "confirmPassword": "Aa123456",
+  "smsCode": "",
+  "type": "1",
+  "deviceId": "123",
+  "deviceType": "1",
+  "appType": "0"
+}

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.MaintainItemInfoDao">
+    <resultMap id="BaseResultMap" type="com.nut.driver.app.entity.MaintainItemInfoEntity">
+        <id column="maintain_item_id" jdbcType="INTEGER" property="maintainItemId"/>
+        <result column="maintain_item_name" jdbcType="VARCHAR" property="maintainItemName"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        maintain_item_id
+        , maintain_item_name, create_user, update_user, create_time, update_time
+    </sql>
+
+    <select id="queryMaintainItemName" resultType="java.lang.String">
+        select maintain_item_name
+        from maintain_item_info
+        where maintain_item_id in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        order by maintain_item_id desc
+    </select>
+    <select id="selectByPrimaryKey" resultType="com.nut.driver.app.entity.MaintainItemInfoEntity">
+        select
+        <include refid="Base_Column_List"/>
+        from maintain_item_info
+        where maintain_item_id = #{maintainItemId,jdbcType=INTEGER}
+    </select>
+    <select id="queryMaintainItemListForPage" resultType="com.nut.driver.app.dto.MaintainItemListoDTO">
+        SELECT
+        m.maintain_item_name as maintainItemName,
+        m.maintain_item_id as maintainItemId
+        FROM
+        maintain_item_info m
+        WHERE 1=1
+        <if test="maintainItemName != null">
+            AND m.maintain_item_name LIKE CONCAT('%', #{maintainItemName, jdbcType=VARCHAR},'%')
+        </if>
+        ORDER BY m.maintain_item_id DESC
+    </select>
+    <select id="queryMaintainItemList" resultType="com.nut.driver.app.entity.MaintainItemInfoEntity">
+        select maintain_item_id,maintain_item_name
+        from maintain_item_info
+        where maintain_item_id in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        order by maintain_item_id desc
+    </select>
+</mapper>

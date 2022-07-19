@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.SignDao">
+
+    <select id="selectSignNumber" resultType="com.nut.driver.app.pojo.SignPojo">
+        select day,month,year
+        from sign_record
+        where year =#{year,jdbcType=BIGINT}
+          and month =#{month,jdbcType=BIGINT}
+          and uc_id=#{ucId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectContinueTime" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select continue_time
+        from sign_number
+        where uc_id = #{ucId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectLastTime" parameterType="java.lang.String" resultType="java.lang.String">
+        select last_time
+        from sign_number
+        where uc_id = #{ucId,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertToNumber">
+        insert ignore into sign_number (uc_id, continue_time,last_time)
+        values (#{ucId,jdbcType=VARCHAR}, #{continueTime,jdbcType=BIGINT},#{lastTime})
+    </insert>
+
+
+
+    <select id="selectIdInNumber" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select id
+        from sign_number
+        where uc_id = #{ucId,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateToNumber" >
+        update sign_number
+        set continue_time = #{continueTime,jdbcType=BIGINT},last_time=#{lastTime}
+        where uc_id = #{ucId,jdbcType=VARCHAR}
+    </update>
+
+    <insert id="inserToRecord">
+        insert ignore into sign_record (year, month, day, uc_id,insert_time)
+        values (#{year,jdbcType=BIGINT}, #{month,jdbcType=BIGINT}, #{day,jdbcType=BIGINT}, #{ucId,jdbcType=VARCHAR},#{lastTime})
+    </insert>
+
+    <select id="selectByDate" resultType="java.lang.Integer">
+        select count(1)
+        from sign_record
+        where year =#{year,jdbcType=BIGINT}
+          and month =#{month,jdbcType=BIGINT}
+          and day=#{day,jdbcType=BIGINT}
+          and uc_id=#{ucId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectToNow" resultType="java.lang.Integer">
+        select id from sign_number where to_days(last_time) = to_days(now()) and uc_id = #{ucId} limit 1;
+    </select>
+
+</mapper>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.CouponUserMappingDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.CouponUserMappingEntity" id="BaseResultMap">
+        <result property="cumId" column="cum_id"/>
+        <result property="infoId" column="info_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="cumNumber" column="cum_number"/>
+        <result property="cumStatus" column="cum_status"/>
+        <result property="giveBranchId" column="give_branch_id"/>
+        <result property="giveBranchType" column="give_branch_type"/>
+        <result property="cumGiveTime" column="cum_give_time"/>
+        <result property="cumExchangeTime" column="cum_exchange_time"/>
+        <result property="exchangeBranchId" column="exchange_branch_id"/>
+        <result property="exchangeBranchType" column="exchange_branch_type"/>
+        <result property="cumApprovalTime" column="cum_approval_time"/>
+        <result property="cumApprovalStatus" column="cum_approval_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="cumVin" column="cum_vin"/>
+        <result property="carCouponsVin" column="car_coupons_vin"/>
+        <result property="cumCompleteTime" column="cum_complete_time"/>
+        <result property="rejectContent" column="reject_content"/>
+        <result property="scoreId" column="score_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="newRegStatus" column="new_reg_status"/>
+        <result property="newRegPhone" column="new_reg_phone"/>
+        <result property="infoValid" column="info_valid"/>
+        <result property="infoValidStartDate" column="info_valid_start_date"/>
+        <result property="infoValidEndDate" column="info_valid_end_date"/>
+        <result property="infoValidDay" column="info_valid_day"/>
+    </resultMap>
+
+    <select id="queryBindNewRegPhoneCoupon" parameterType="java.util.Map"
+            resultType="com.nut.driver.app.domain.CouponNewRegPhone">
+        SELECT cum.cum_id AS cumId
+        FROM `user` u
+                 INNER JOIN coupon_unregistuser cu ON u.phone = cu.user_phone
+                 INNER JOIN coupon_user_mapping cum ON cum.new_reg_phone = cu.user_phone
+            AND cum.new_reg_status = '1'
+        where u.id = #{userId, jdbcType=BIGINT}
+    </select>
+
+    <update id="updateBindNewRegPhoneCoupon" parameterType="java.util.Map">
+        UPDATE coupon_user_mapping
+        SET user_id = #{userId, jdbcType=BIGINT},
+            new_reg_status = NULL
+        where cum_id = #{cumId, jdbcType=BIGINT}
+    </update>
+    <select id="selectCarBind" parameterType="java.lang.String" resultType="int">
+    select count(*)
+    from coupon_car_bind
+    where car_vin = #{vin, jdbcType=VARCHAR}
+  </select>
+    <insert id="insertIntoCouponCarBind" parameterType="java.util.Map">
+    insert into coupon_car_bind (car_vin, create_time)
+    values
+    (#{vin, jdbcType=VARCHAR}, #{createTime, jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.nut.driver.app.domain.CouponUserMapping" useGeneratedKeys="true" keyProperty="cumId">
+        insert into coupon_user_mapping
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cumId != null">
+                cum_id,
+            </if>
+            <if test="infoId != null">
+                info_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="cumNumber != null">
+                cum_number,
+            </if>
+            <if test="cumStatus != null">
+                cum_status,
+            </if>
+            <if test="giveBranchId != null">
+                give_branch_id,
+            </if>
+            <if test="giveBranchType != null">
+                give_branch_type,
+            </if>
+            <if test="cumGiveTime != null">
+                cum_give_time,
+            </if>
+            <if test="cumExchangeTime != null">
+                cum_exchange_time,
+            </if>
+            <if test="exchangeBranchId != null">
+                exchange_branch_id,
+            </if>
+            <if test="exchangeBranchType != null">
+                exchange_branch_type,
+            </if>
+            <if test="cumApprovalTime != null">
+                cum_approval_time,
+            </if>
+            <if test="cumApprovalStatus != null">
+                cum_approval_status,
+            </if>
+            <if test="cumVin != null">
+                cum_vin,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cumId != null">
+                #{cumId,jdbcType=BIGINT},
+            </if>
+            <if test="infoId != null">
+                #{infoId,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="cumNumber != null">
+                #{cumNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="cumStatus != null">
+                #{cumStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="giveBranchId != null">
+                #{giveBranchId,jdbcType=BIGINT},
+            </if>
+            <if test="giveBranchType != null">
+                #{giveBranchType,jdbcType=VARCHAR},
+            </if>
+            <if test="cumGiveTime != null">
+                #{cumGiveTime,jdbcType=VARCHAR},
+            </if>
+            <if test="cumExchangeTime != null">
+                #{cumExchangeTime,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeBranchId != null">
+                #{exchangeBranchId,jdbcType=BIGINT},
+            </if>
+            <if test="exchangeBranchType != null">
+                #{exchangeBranchType,jdbcType=VARCHAR},
+            </if>
+            <if test="cumApprovalTime != null">
+                #{cumApprovalTime,jdbcType=VARCHAR},
+            </if>
+            <if test="cumApprovalStatus != null">
+                #{cumApprovalStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="cumVin != null">
+                #{cumVin,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByInfoIdInt" parameterType="java.lang.Long" resultType="java.util.Map">
+        select info_id, count(1) as num
+        from coupon_user_mapping
+        where info_id in
+        <foreach collection="infoIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY info_id
+    </select>
+
+</mapper>

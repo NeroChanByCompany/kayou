@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.truckingteam.app.dao.TeamDao">
+
+    <!-- 根据用户ID查询，查询用户下所有车辆的车型车系-->
+    <select id="queryRankCarsByUserId"
+            resultType="com.nut.truckingteam.app.dto.CarDto">
+    SELECT
+        CAST(mi.serise_id AS CHAR) AS carSeriesId,
+        mi.simple_name AS carSeriesName,
+        cc.car_model as carModelId,
+        CONCAT(mi.driver_type_name, mi.car_type_name) as carModelName,
+        mi.engine as engine,
+        dd.name AS emission,
+        mi.driver_type_name AS driverTypeName,
+        mi.car_type_name AS carTypeName
+    FROM
+      (SELECT fcm.car_id AS carId
+      FROM flt_fleet_car_mapping fcm
+      LEFT JOIN flt_fleet_user_mapping fum ON fcm.team_id = fum.team_id
+      LEFT JOIN car c ON fcm.car_id = c.id
+      WHERE fum.user_id = #{userId,jdbcType=BIGINT}
+      AND fum.role IN (0, 1)
+      UNION
+      SELECT cdm.car_id AS carId
+      FROM flt_car_driver_mapping cdm
+      LEFT JOIN car c ON cdm.car_id = c.id
+      WHERE cdm.user_id = #{userId,jdbcType=BIGINT}
+      UNION
+      SELECT com.car_id AS carId
+      FROM flt_car_owner_mapping com
+      LEFT JOIN car c ON com.car_id = c.id
+      WHERE com.user_id = #{userId,jdbcType=BIGINT}) fcm
+    LEFT JOIN car cc ON cc.id = fcm.carId
+    LEFT JOIN model_info mi ON mi.model_id = cc.car_model
+    LEFT JOIN data_dict dd ON dd.code = 'A060' AND dd.value = mi.emission_code
+  </select>
+    <select id="queryRankCarsByUserIdForMyCars"
+            resultType="com.nut.truckingteam.app.pojo.CarRolePojo">
+    SELECT fcm.car_id AS carId,
+            case WHEN  ISNULL(c.car_number) OR c.car_number = '' THEN c.car_vin ELSE c.car_number END carNumber
+        FROM flt_fleet_car_mapping fcm
+            LEFT JOIN flt_fleet_user_mapping fum ON fcm.team_id = fum.team_id
+            LEFT JOIN car c ON fcm.car_id = c.id
+        WHERE fum.user_id = #{userId,jdbcType=BIGINT}
+            AND fum.role IN (0, 1)
+        UNION
+        SELECT cdm.car_id AS carId,
+            case WHEN  ISNULL(c.car_number) OR c.car_number = '' THEN c.car_vin ELSE c.car_number END carNumber
+        FROM flt_car_driver_mapping cdm
+            LEFT JOIN car c ON cdm.car_id = c.id
+        WHERE cdm.user_id = #{userId,jdbcType=BIGINT}
+        UNION
+        SELECT com.car_id AS carId,
+            case WHEN  ISNULL(c.car_number) OR c.car_number = '' THEN c.car_vin ELSE c.car_number END carNumber
+        FROM flt_car_owner_mapping com
+            LEFT JOIN car c ON com.car_id = c.id
+        WHERE com.user_id = #{userId,jdbcType=BIGINT}
+  </select>
+    <select id="queryCarsInfo" parameterType="java.util.Map"
+            resultType="com.nut.truckingteam.app.dto.CarOilWearDto">
+        SELECT
+        cc.id AS carId,
+        cc.car_number AS carNumber,
+        cc.car_vin AS vin,
+        cc.auto_terminal AS autoTerminal,
+        CAST(mi.serise_id AS CHAR) AS seriesId,
+        mi.simple_name AS seriseName,
+        cc.car_model AS modelId,
+        CONCAT(mi.driver_type_name, mi.car_type_name) AS modelName,
+        mi.`engine` AS engine
+        FROM
+        car cc
+        LEFT JOIN model_info mi ON mi.model_id = cc.car_model
+        WHERE
+        cc.id IN
+        <foreach item="item" index="index" collection="carIds" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        AND cc.car_model IN
+        <foreach item="item" index="index" collection="carModels" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.CouponInfoDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.CouponInfoEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="infoType" column="info_type"/>
+        <result property="infoName" column="info_name"/>
+        <result property="infoContent" column="info_content"/>
+        <result property="infoValue" column="info_value"/>
+        <result property="infoFullDecre" column="info_full_decre"/>
+        <result property="infoValid" column="info_valid"/>
+        <result property="infoValidDay" column="info_valid_day"/>
+        <result property="infoValidStartDate" column="info_valid_start_date"/>
+        <result property="infoValidEndDate" column="info_valid_end_date"/>
+        <result property="infoTotalCountType" column="info_total_count_type"/>
+        <result property="infoTotalCount" column="info_total_count"/>
+        <result property="infoRule" column="info_rule"/>
+        <result property="isNationalThird" column="is_national_third"/>
+        <result property="applicableType" column="applicable_type"/>
+        <result property="giveType" column="give_type"/>
+        <result property="giveTimeStart" column="give_time_start"/>
+        <result property="giveTimeEnd" column="give_time_end"/>
+        <result property="giveTrigger" column="give_trigger"/>
+        <result property="exchangeType" column="exchange_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="infoStatus" column="info_status"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="productType" column="product_type"/>
+
+    </resultMap>
+    <resultMap id="couponApplicableMap" type="com.nut.driver.app.domain.CouponInfo" extends="BaseResultMap">
+        <result column="coupon_applicable_type" jdbcType="VARCHAR" property="couponApplicableType"></result>
+        <result column="applicable_number" jdbcType="VARCHAR" property="applicableNumber"></result>
+        <result column="total_amount" jdbcType="INTEGER" property="totalAmount"></result>
+        <collection property="couponApplicables" ofType="com.nut.driver.app.domain.CouponApplicable" column="id">
+            <result column="info_id" jdbcType="BIGINT" property="infoId"/>
+            <result column="applicable_type" jdbcType="VARCHAR" property="applicableType"/>
+            <result column="applicable_number" jdbcType="VARCHAR" property="applicableNumber"/>
+            <result column="applicable_vehicle_emission" jdbcType="VARCHAR" property="applicableVehicleEmission"/>
+            <result column="applicable_vehicle_model" jdbcType="VARCHAR" property="applicableVehicleModel"/>
+            <result column="applicable_vehicle_platform" jdbcType="VARCHAR" property="applicableVehiclePlatform"/>
+            <result column="applicable_vehicle_drive" jdbcType="VARCHAR" property="applicableVehicleDrive"/>
+            <result column="applicable_vehicle_displacement" jdbcType="VARCHAR" property="applicableVehicleDisplacement"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectList" parameterType="java.util.Map" resultType="com.nut.driver.app.domain.MyCouponInfo">
+
+        SELECT cum.cum_id as cumId,
+        ci.id as infoId,
+        ci.info_type as infoType,
+        ci.applicable_type as applicableType,
+        ci.info_name as infoName,
+        ci.info_valid as infoValid,
+        ci.info_value as infoValue,
+        ci.info_full_decre as fullDecre,
+        ci.info_valid_day as infoValidDay,
+        ci.info_valid_start_date as infoValidStartDate,
+        ci.info_valid_end_date as infoValidEndDate,
+        ci.is_national_third as isNationalThird,
+        case
+        when ci.info_valid = '2' and DATE_ADD(cum.cum_give_time, INTERVAL ci.info_valid_day DAY) &lt; now() and
+        cum.cum_status != '2' then '3'
+        when ci.info_valid = '3' and ci.info_valid_end_date &lt; curdate() and cum.cum_status != '2' then '3'
+        else cum.cum_status
+        end as cumStatus,
+        case
+        when ci.info_type = '3' then ci.info_value
+        else ci.info_content
+        end as infoContent,
+        ci.info_status as infoStatus,
+        cum.cum_give_time as cumGiveTime,
+        ci.info_rule as infoRule,
+        cum.give_branch_type as giveBranchType,
+        cum.cum_number as cumNumber,
+        cum.cum_vin as carVin,
+        ci.product_type as productType
+        FROM coupon_user_mapping cum
+        LEFT JOIN coupon_info ci ON cum.info_id = ci.id
+        WHERE cum.user_id = #{userId,jdbcType=BIGINT}
+        AND (ci.give_time_start IS NULL OR ci.give_time_start <![CDATA[<= ]]>now())
+        <if test="cumStatus != null and cumStatus !=''">
+            <if test="cumStatus == 1">
+                AND (
+                case
+                when ci.info_valid = '2' and DATE_ADD(cum.cum_give_time, INTERVAL ci.info_valid_day DAY) &lt; now() then
+                '1'
+                when ci.info_valid = '3' and ci.info_valid_end_date &lt; curdate() then '1'
+                else '2'
+                end
+                ) = '2'
+                AND cum.cum_status = '1'
+            </if>
+            <if test="cumStatus == 2">
+                AND cum.cum_status = '2'
+            </if>
+            <if test="cumStatus == 3">
+                AND (
+                case
+                when ci.info_valid = '2' and DATE_ADD(cum.cum_give_time, INTERVAL ci.info_valid_day DAY) &lt; now() then
+                '1'
+                when ci.info_valid = '3' and ci.info_valid_end_date &lt; curdate() then '1'
+                else '2'
+                end
+                ) = '1'
+                and cum.cum_status != '2'
+            </if>
+        </if>
+        <if test="cumId != null and cumId !=''">
+            AND cum.cum_id = #{cumId,jdbcType=BIGINT}
+        </if>
+        <if test="infoType != null">
+            and ci.info_type IN
+            <foreach item="item" index="index" collection="infoType" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="infoStatus != null">
+            and ci.info_status IN
+            <foreach item="item" index="index" collection="infoStatus" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by cum.cum_give_time desc
+
+    </select>
+
+    <select id="selectApplicableModelName" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT DISTINCT q.modelName
+        FROM coupon_applicable p
+                 LEFT JOIN (
+            SELECT GROUP_CONCAT(
+                           mi.model_id ORDER BY
+                mi.model_id ASC
+                       )                           modelId,
+                   IFNULL(mi.car_type_name, '') AS modelName
+            FROM model_info mi
+            GROUP BY modelName
+        ) q ON p.applicable_vehicle_model = q.modelId COLLATE utf8mb4_general_ci
+        WHERE q.modelName IS NOT NULL
+          AND p.info_id = #{infoId, jdbcType=BIGINT}
+    </select>
+    <select id="selectCouponInfoList" parameterType="java.util.Map" resultMap="couponApplicableMap">
+        select ci.id,
+               ci.info_type,
+               ci.info_name,
+               ci.info_content,
+               ci.info_value,
+               ci.info_full_decre,
+               ci.info_valid,
+               ci.info_valid_day,
+               ci.info_valid_start_date,
+               ci.info_valid_end_date,
+               ci.info_total_count_type,
+               ci.info_total_count,
+               ci.info_rule,
+               ci.applicable_type,
+               ci.give_type,
+               ci.give_time_start,
+               ci.give_time_end,
+               ci.give_trigger,
+               ci.exchange_type,
+               ci.create_time,
+               ci.info_status,
+               ca.id              coupon_applicable_id,
+               ca.applicable_vehicle_model,
+               ca.applicable_vehicle_platform,
+               ca.applicable_type coupon_applicable_type,
+               ca.applicable_number,
+               ci.total_amount
+        from coupon_info ci
+                 left join coupon_applicable ca on ci.id = ca.info_id
+        where ci.give_time_start <![CDATA[<= ]]>#{nowDate}
+          and ci.give_time_end <![CDATA[>= ]]>#{nowDate}
+          and ci.info_status = '1'
+          and ci.give_trigger = '1'
+          and ci.info_valid in ('1', '2')
+        union
+        select ci.id,
+               ci.info_type,
+               ci.info_name,
+               ci.info_content,
+               ci.info_value,
+               ci.info_full_decre,
+               ci.info_valid,
+               ci.info_valid_day,
+               ci.info_valid_start_date,
+               ci.info_valid_end_date,
+               ci.info_total_count_type,
+               ci.info_total_count,
+               ci.info_rule,
+               ci.applicable_type,
+               ci.give_type,
+               ci.give_time_start,
+               ci.give_time_end,
+               ci.give_trigger,
+               ci.exchange_type,
+               ci.create_time,
+               ci.info_status,
+               ca.id              coupon_applicable_id,
+               ca.applicable_vehicle_model,
+               ca.applicable_vehicle_platform,
+               ca.applicable_type coupon_applicable_type,
+               ca.applicable_number ,
+               ci.total_amount
+        from coupon_info ci
+                 left join coupon_applicable ca on ci.id = ca.info_id
+        where ci.give_time_start <![CDATA[<= ]]>#{nowDate}
+          and ci.give_time_end <![CDATA[>= ]]>#{nowDate}
+          and ci.info_status = '1'
+          and ci.give_trigger = '1'
+          and ci.info_valid = '3'
+          and ci.info_valid_start_date <![CDATA[<= ]]>#{nowDate}
+          and ci.info_valid_end_date <![CDATA[>= ]]>#{nowDate}
+    </select>
+    <select id="selectCouponInfoListByMaintenance" parameterType="java.util.Map"
+            resultType="com.nut.driver.app.domain.CouponInfo">
+        select *
+        from coupon_info
+        where applicable_type = '8'
+          and give_time_start <![CDATA[<= ]]>#{nowDate}
+          and give_time_end <![CDATA[>= ]]>#{nowDate}
+    </select>
+
+    <select id="queryBranchList" parameterType="java.util.Map"
+            resultType="com.nut.driver.app.domain.CouponExchangeBranch">
+        SELECT DISTINCT ce.exchange_branch_id   as exchangeBranchId,
+                        ce.exchange_branch_type as exchangeBranchType,
+                        CASE
+                            WHEN ce.exchange_branch_type = '1' THEN ht.T_NAME
+                            WHEN ce.exchange_branch_type = '2' THEN hss.station_name
+                            END                 as branchName,
+                        CASE
+                            WHEN ce.exchange_branch_type = '1' THEN ht.COMPANY_ADDRESS
+                            WHEN ce.exchange_branch_type = '2' THEN hss.address
+                            END                 as branchAddress,
+                        CASE
+                            WHEN ce.exchange_branch_type = '1' THEN ht.COMPANY_LINKTEL
+                            WHEN ce.exchange_branch_type = '2' THEN hss.phone
+                            END                 as branchPhone
+        FROM coupon_exchange ce
+                 LEFT JOIN ${DbName}.hy_team ht ON ce.exchange_branch_id = ht.T_ID AND ce.exchange_branch_type = '1'
+                 LEFT JOIN ${DbName}.hy_service_station hss
+                           ON ce.exchange_branch_id = hss.id AND ce.exchange_branch_type = '2'
+        WHERE ce.info_id = #{infoId,jdbcType=BIGINT}
+          and (
+                ht.mb_city_id = #{areaCode,jdbcType=VARCHAR}
+                or
+                hss.city = #{areaCode,jdbcType=VARCHAR}
+            )
+    </select>
+
+
+</mapper>

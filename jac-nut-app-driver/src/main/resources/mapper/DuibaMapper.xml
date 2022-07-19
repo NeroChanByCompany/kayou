@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.DuibaDao">
+  <insert id="insertIntegralConsumeInfo" parameterType="com.nut.driver.app.domain.IntegralConsumeInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into integral_consume_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="credits != null">
+        credits,
+      </if>
+      <if test="itemCode != null">
+        item_code,
+      </if>
+      <if test="appKey != null">
+        app_key,
+      </if>
+      <if test="timestamp != null">
+        timestamp,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="orderNum != null">
+        order_num,
+      </if>
+      <if test="clwOrderNum != null">
+        clw_order_num,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="facePrice != null">
+        face_price,
+      </if>
+      <if test="actualPrice != null">
+        actual_price,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="qq != null">
+        qq,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="alipay != null">
+        alipay,
+      </if>
+      <if test="waitAudit != null">
+        wait_audit,
+      </if>
+      <if test="params != null">
+        params,
+      </if>
+      <if test="sign != null">
+        sign,
+      </if>
+      <if test="isSuccess != null">
+        is_success,
+      </if>
+      <if test="errorMessage != null">
+        error_message,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="credits != null">
+        #{credits,jdbcType=VARCHAR},
+      </if>
+      <if test="itemCode != null">
+        #{itemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="appKey != null">
+        #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="timestamp != null">
+        #{timestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNum != null">
+        #{orderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="clwOrderNum != null">
+        #{clwOrderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="facePrice != null">
+        #{facePrice,jdbcType=INTEGER},
+      </if>
+      <if test="actualPrice != null">
+        #{actualPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null">
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="alipay != null">
+        #{alipay,jdbcType=VARCHAR},
+      </if>
+      <if test="waitAudit != null">
+        #{waitAudit,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null">
+        #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null">
+        #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="isSuccess != null">
+        #{isSuccess,jdbcType=VARCHAR},
+      </if>
+      <if test="errorMessage != null">
+        #{errorMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="selectOrderByConfirmMap" parameterType="java.util.Map" resultType="com.nut.driver.app.domain.IntegralConsumeInfo">
+    select *
+    from integral_consume_info
+    where 1 = 1
+    <if test="appKey != null">
+      and  app_key = #{appKey}
+    </if>
+    <if test="uid != null">
+      and  uid = #{uid}
+    </if>
+    <if test="orderNum != null">
+      and  order_num = #{orderNum}
+    </if>
+    limit 1
+  </select>
+
+  <update id="updateIntegralConsumeInfoByConfirmInfo" parameterType="com.nut.driver.app.domain.IntegralConsumeInfo">
+    update integral_consume_info set is_success = #{isSuccess,jdbcType=BIGINT},error_message = #{errorMessage,jdbcType=BIGINT},update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <insert id="insertIntegralAlterRecord" parameterType="com.nut.driver.app.domain.IntegralAlterRecord">
+    insert into integral_alter_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="credits != null">
+        credits,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="integralItem != null">
+        integral_item,
+      </if>
+      <if test="integralResource != null">
+        integral_resource,
+      </if>
+      <if test="orderNum != null">
+        order_num,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="balance != null">
+        balance,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="credits != null">
+        #{credits,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="integralItem != null">
+        #{integralItem,jdbcType=VARCHAR},
+      </if>
+      <if test="integralResource != null">
+        #{integralResource,jdbcType=VARCHAR},
+    </if>
+      <if test="orderNum != null">
+        #{orderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="balance != null">
+        #{balance},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="countByUserIdAndItem"  resultType="java.lang.Integer">
+    select count(1)
+    from integral_alter_record
+    where uid = #{userId} and integral_item = #{item}
+  </select>
+  <select id="countByUserIdAndItemAndToday"  resultType="java.lang.Integer">
+    select count(1)
+    from integral_alter_record
+    where uid = #{userId} and integral_item = #{item} and create_time between  CURDATE() and date_add(CURDATE(), interval 1 day)
+  </select>
+
+  <select id="findByUserId" resultType="com.nut.driver.app.domain.IntegralAlterRecord">
+    select id, credits, `type`,
+(case integral_item when '1' then '注册' when '2' then '绑车' when '3' then '评论'
+when '4' then '发帖' when '5' then '分享' when '6' then '服务预约' when '7' then '服务评价'
+when '8' then '兑吧积分消费成功' when '9' then '兑吧积分消费失败' when '10' then '积分导入'
+when '100' then '用户完善资料' when '101' then '完善车辆资料' when '21' then '活动发帖' when '22' then '活动点赞'else integral_item end) as integralItem,
+		create_time as createTime
+    from integral_alter_record
+    where uid = #{userId}
+    order by create_time desc
+  </select>
+
+</mapper>

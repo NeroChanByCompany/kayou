@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.MaintainStationTubeDao">
+    <resultMap id="BaseResultMap" type="com.nut.driver.app.entity.MaintainStationTubeEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="company_id" jdbcType="VARCHAR" property="companyId"/>
+        <result column="company" jdbcType="VARCHAR" property="company"/>
+        <result column="server_id" jdbcType="VARCHAR" property="serverId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, company_id, company, server_id, create_time
+    </sql>
+    <select id="queryAllList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        maintain_station_tube
+    </select>
+    <delete id="deleteMaintainStationTube" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            delete from maintain_station_tube
+            where
+            id = #{item.id}
+        </foreach>
+    </delete>
+    <insert id="insertMaintainStationTube" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            INSERT INTO maintain_station_tube
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.companyId != null">
+                    company_id,
+                </if>
+                <if test="item.company != null">
+                    company,
+                </if>
+                <if test="item.serverId != null">
+                    server_id,
+                </if>
+                <if test="item.createTime != null">
+                    create_time,
+                </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.companyId != null">
+                    #{item.companyId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.company != null">
+                    #{item.company,jdbcType=VARCHAR},
+                </if>
+                <if test="item.serverId != null">
+                    #{item.serverId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.createTime != null">
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+    <select id="queryListByCompanyId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        maintain_station_tube
+        where
+        company_id = #{companyId}
+        and
+        server_id = #{serviceCode}
+    </select>
+
+    <select id="queryCarVinListByVinsAndServiceCode" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT
+            c.chassis_no
+        FROM
+            maintain_vehicle_tube c
+        INNER JOIN maintain_station_tube s ON c.company_id = s.company_id
+        WHERE
+            c.chassis_no IN
+        <foreach item="item" index="index" collection="carVinList" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        AND
+        s.server_id = #{serviceCode,jdbcType=VARCHAR}
+        GROUP BY
+        c.chassis_no
+    </select>
+</mapper>

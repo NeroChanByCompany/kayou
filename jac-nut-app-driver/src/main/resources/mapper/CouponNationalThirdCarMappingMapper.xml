@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.CouponNationalThirdCarMappingDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.CouponNationalThirdCarMappingEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="cumId" column="cum_id"/>
+        <result property="carId" column="car_id"/>
+        <result property="number" column="number"/>
+        <result property="vehicleType" column="vehicle_type"/>
+        <result property="name" column="name"/>
+        <result property="address" column="address"/>
+        <result property="useCharacter" column="use_character"/>
+        <result property="model" column="model"/>
+        <result property="engineno" column="engineNo"/>
+        <result property="vin" column="vin"/>
+        <result property="registerDate" column="register_date"/>
+        <result property="fileno" column="fileNo"/>
+        <result property="approvedPassengers" column="approved_passengers"/>
+        <result property="grossMass" column="gross_mass"/>
+        <result property="unladenMass" column="unladen_mass"/>
+        <result property="approvedLoad" column="approved_load"/>
+        <result property="dimension" column="dimension"/>
+        <result property="tractionMass" column="traction_mass"/>
+        <result property="remarks" column="remarks"/>
+        <result property="inspectionRecord" column="inspection_record"/>
+        <result property="codeNumber" column="code_number"/>
+        <result property="chassisno" column="chassisNo"/>
+        <result property="identityCard" column="identity_card"/>
+        <result property="isDrive" column="is_drive"/>
+        <result property="isValid" column="is_valid"/>
+        <result property="picturePath" column="picture_path"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="getNationalThirdCarToCoupon" parameterType="java.lang.String" resultType="com.nut.driver.app.pojo.CouponNationalThirdCarInfoPojo">
+        select
+            chassisNo as chassisNo,
+            picture_path as picturePath,
+            register_date as registerDate,
+            engineNo as engineNo,
+            vin as vin,
+            identity_card as identityCard,
+            model as model
+        from coupon_national_third_car_mapping
+        where user_id = #{userId,jdbcType=BIGINT}
+          and cum_id = #{cumId,jdbcType=BIGINT}
+    </select>
+
+
+</mapper>

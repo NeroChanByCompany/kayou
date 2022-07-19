@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jac.app.job.mapper.CarMapper">
+    <resultMap id="BaseResultMap" type="com.jac.app.job.domain.Car">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="car_vin" jdbcType="VARCHAR" property="carVin"/>
+        <result column="car_brand" jdbcType="VARCHAR" property="carBrand"/>
+        <result column="car_series" jdbcType="VARCHAR" property="carSeries"/>
+        <result column="car_series_name" jdbcType="VARCHAR" property="carSeriesName"/>
+        <result column="car_model" jdbcType="VARCHAR" property="carModel"/>
+        <result column="car_model_code" jdbcType="VARCHAR" property="carModelCode"/>
+        <result column="car_model_name" jdbcType="VARCHAR" property="carModelName"/>
+        <result column="engine" jdbcType="VARCHAR" property="engine"/>
+        <result column="engine_no" jdbcType="VARCHAR" property="engineNo"/>
+        <result column="is_vip" jdbcType="CHAR" property="isVip"/>
+        <result column="owner_id" jdbcType="VARCHAR" property="ownerId"/>
+        <result column="invoice_photo" jdbcType="VARCHAR" property="invoicePhoto"/>
+        <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo"/>
+        <result column="identity_card" jdbcType="VARCHAR" property="identityCard"/>
+        <result column="organization" jdbcType="VARCHAR" property="organization"/>
+        <result column="car_number" jdbcType="VARCHAR" property="carNumber"/>
+        <result column="terminal_id" jdbcType="VARCHAR" property="terminalId"/>
+        <result column="auto_terminal" jdbcType="VARCHAR" property="autoTerminal"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="sales_date" jdbcType="TIMESTAMP" property="salesDate"/>
+        <result column="T_ID" jdbcType="BIGINT" property="tId"/>
+        <result column="MB_SALES_STATUS" jdbcType="INTEGER" property="mbSalesStatus"/>
+        <result column="MB_SALES_DATE" jdbcType="TIMESTAMP" property="mbSalesDate"/>
+        <result column="SALES_STATUS" jdbcType="INTEGER" property="salesStatus"/>
+        <result column="tbox_type" jdbcType="INTEGER" property="tboxType"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , car_vin, car_brand, car_series, car_series_name, car_model, car_model_code, car_model_name,
+    engine, engine_no, is_vip, owner_id, invoice_photo, invoice_no, identity_card, organization,
+    car_number, terminal_id, auto_terminal, create_time, update_time, sales_date, T_ID,
+    MB_SALES_STATUS, MB_SALES_DATE, SALES_STATUS, tbox_type
+    </sql>
+
+    <select id="selectCarByCarVin" parameterType="java.lang.String" resultType="com.jac.app.job.domain.Car">
+        SELECT id,
+               car_vin    as carVin,
+               car_number AS carNumber
+        FROM car
+        WHERE car_vin like CONCAT('%', #{chassisNum,jdbcType=VARCHAR})
+        ORDER BY create_time desc LIMIT 1
+    </select>
+    <!-- 查询终端通信号 -->
+    <select id="queryAutoTerminalByCarId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT auto_terminal AS autoTerminal
+        FROM CAR
+        WHERE ID = #{carId,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 根据sim卡号查询车牌号 -->
+    <select id="selectCarBySimNum" parameterType="java.lang.String" resultType="com.jac.app.job.domain.Car">
+        SELECT id,
+               car_vin    as carVin,
+               car_number AS carNumber
+        FROM car
+        WHERE auto_terminal =  #{autoTerminal,jdbcType=VARCHAR}
+        ORDER BY create_time desc LIMIT 1
+    </select>
+
+</mapper>

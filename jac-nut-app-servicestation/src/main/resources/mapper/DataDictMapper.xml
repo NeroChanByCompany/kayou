@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.DataDictDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.DataDict">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="value" jdbcType="INTEGER" property="value" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="key_type" jdbcType="VARCHAR" property="keyType" />
+        <result column="pattern_a" jdbcType="INTEGER" property="patternA" />
+        <result column="pattern_b" jdbcType="INTEGER" property="patternB" />
+        <result column="pattern_c" jdbcType="INTEGER" property="patternC" />
+        <result column="pattern_d" jdbcType="INTEGER" property="patternD" />
+        <result column="available_flag" jdbcType="INTEGER" property="availableFlag" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, code, value, name, key_type, pattern_a, pattern_b, pattern_c, pattern_d, available_flag
+  </sql>
+
+    <select id="selectByCodeAndValue" parameterType="com.nut.servicestation.app.domain.DataDict"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from data_dict
+        where code = #{code,jdbcType=VARCHAR}
+        AND value = #{value,jdbcType=INTEGER}
+    </select>
+
+</mapper>

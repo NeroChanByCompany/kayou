@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.StationInfoDao">
+
+
+    <select id="getInfo"
+            resultType="com.nut.servicestation.app.domain.AddWoStationInfo">
+        SELECT
+           hss.id as stationId,
+           hss.station_name AS stationName,
+           hss.service_code AS stationCode,
+           CAST(CAST(hss.`longitude` / 1000000 AS DECIMAL(15, 6)) AS CHAR(20)) AS stationLon,
+           CAST(CAST(hss.`latitude` / 1000000 AS DECIMAL(15, 6)) AS CHAR(20)) AS stationLat,
+           hss.phone as stationTel,
+           hss.povince as povince,
+           hss.andnet as engineType,
+           hss.ratings as level,
+           hss.picture
+        FROM ${hyDbName}.hy_service_station hss
+        WHERE id = #{id}
+    </select>
+
+    <update id="updatePic">
+        update ${hyDbName}.hy_service_station
+        set picture = #{pic}
+        where id = #{id}
+    </update>
+</mapper>

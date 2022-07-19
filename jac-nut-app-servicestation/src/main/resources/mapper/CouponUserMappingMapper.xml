@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.CouponUserMappingDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.CouponUserMapping">
+        <id column="cum_id" jdbcType="BIGINT" property="cumId" />
+        <result column="info_id" jdbcType="BIGINT" property="infoId" />
+        <result column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="cum_number" jdbcType="VARCHAR" property="cumNumber" />
+        <result column="cum_status" jdbcType="VARCHAR" property="cumStatus" />
+        <result column="give_branch_id" jdbcType="BIGINT" property="giveBranchId" />
+        <result column="give_branch_type" jdbcType="VARCHAR" property="giveBranchType" />
+        <result column="cum_give_time" jdbcType="VARCHAR" property="cumGiveTime" />
+        <result column="cum_exchange_time" jdbcType="VARCHAR" property="cumExchangeTime" />
+        <result column="exchange_branch_id" jdbcType="BIGINT" property="exchangeBranchId" />
+        <result column="exchange_branch_type" jdbcType="VARCHAR" property="exchangeBranchType" />
+        <result column="cum_approval_time" jdbcType="VARCHAR" property="cumApprovalTime" />
+        <result column="cum_approval_status" jdbcType="VARCHAR" property="cumApprovalStatus" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    cum_id, info_id, user_id, cum_number, cum_status, give_branch_id, give_branch_type,
+    cum_give_time, cum_exchange_time, exchange_branch_id, exchange_branch_type, cum_approval_time,
+    cum_approval_status, create_time
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from coupon_user_mapping
+        where cum_id = #{cumId,jdbcType=BIGINT}
+    </select>
+    <update id="updateByPrimaryKeySelective" parameterType="com.nut.servicestation.app.domain.CouponUserMapping">
+        update coupon_user_mapping
+        <set>
+            <if test="infoId != null">
+                info_id = #{infoId,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="cumNumber != null">
+                cum_number = #{cumNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="cumStatus != null">
+                cum_status = #{cumStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="giveBranchId != null">
+                give_branch_id = #{giveBranchId,jdbcType=BIGINT},
+            </if>
+            <if test="giveBranchType != null">
+                give_branch_type = #{giveBranchType,jdbcType=VARCHAR},
+            </if>
+            <if test="cumGiveTime != null">
+                cum_give_time = #{cumGiveTime,jdbcType=VARCHAR},
+            </if>
+            <if test="cumExchangeTime != null">
+                cum_exchange_time = #{cumExchangeTime,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeBranchId != null">
+                exchange_branch_id = #{exchangeBranchId,jdbcType=BIGINT},
+            </if>
+            <if test="exchangeBranchType != null">
+                exchange_branch_type = #{exchangeBranchType,jdbcType=VARCHAR},
+            </if>
+            <if test="cumApprovalTime != null">
+                cum_approval_time = #{cumApprovalTime,jdbcType=VARCHAR},
+            </if>
+            <if test="cumApprovalStatus != null">
+                cum_approval_status = #{cumApprovalStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where cum_id = #{cumId,jdbcType=BIGINT}
+    </update>
+</mapper>

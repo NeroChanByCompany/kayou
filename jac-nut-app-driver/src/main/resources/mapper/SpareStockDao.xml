@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.SpareStockDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.SpareStockEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="dmsId" column="dms_id"/>
+        <result property="stockType" column="stock_type"/>
+        <result property="stockCode" column="stock_code"/>
+        <result property="stockName" column="stock_name"/>
+        <result property="stockAddress" column="stock_address"/>
+        <result property="linkPerson" column="link_person"/>
+        <result property="linkPhone" column="link_phone"/>
+        <result property="sparePartCode" column="spare_part_code"/>
+        <result property="sparePartName" column="spare_part_name"/>
+        <result property="stock" column="stock"/>
+        <result property="supplierCode" column="supplier_code"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="syncTime" column="sync_time"/>
+    </resultMap>
+
+    <select id="getSpareStockList" resultType="com.nut.driver.app.pojo.SpareStockListPojo">
+        SELECT
+        id AS id,
+        <choose>
+            <when test="null != paramMap.lon and '' != paramMap.lon and null != paramMap.lat and '' != paramMap.lat">
+                getDistanceByLong (#{paramMap.lat}, #{paramMap.lon}, ss.latitude, ss.longitude) AS distance,
+            </when>
+            <otherwise>
+                IFNULL(getDistanceByLong (
+                NULL,
+                NULL,
+                ss.latitude,
+                ss.longitude
+                ),'--') AS distance,
+            </otherwise>
+        </choose>
+        ss.stock_type AS stockType,
+        ss.stock_name AS stockName,
+        ss.stock_address AS stockAddress,
+        ss.link_person AS linkPerson,
+        ss.link_phone AS linkPhone,
+        ss.spare_part_code AS sparePartCode,
+        ss.spare_part_name AS sparePartName,
+        ss.stock AS stock,
+        ss.supplier_name AS supplierName,
+        ss.longitude AS longitude,
+        ss.latitude AS latitude
+        FROM
+        ${DbName}.hy_spare_stock ss
+        WHERE
+        1=1
+        <if test="paramMap.searchType != null and paramMap.searchType == 0 ">
+            AND ss.spare_part_code LIKE CONCAT('%',#{paramMap.searchInfo,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="paramMap.searchType != null and paramMap.searchType == 1 ">
+            AND ss.spare_part_name LIKE CONCAT('%',#{paramMap.searchInfo,jdbcType=VARCHAR}, '%')
+        </if>
+        ORDER BY distance,stock desc
+    </select>
+
+    <select id="getSpareStockListByName" resultType="com.nut.driver.app.pojo.SpareStockListPojo">
+        SELECT
+        id AS id,
+        <choose>
+            <when test="null != paramMap.lon and '' != paramMap.lon and null != paramMap.lat and '' != paramMap.lat">
+                getDistanceByLong (#{paramMap.lat}, #{paramMap.lon}, ss.latitude, ss.longitude) AS distance,
+            </when>
+            <otherwise>
+                IFNULL(getDistanceByLong (
+                NULL,
+                NULL,
+                ss.latitude,
+                ss.longitude
+                ),'--') AS distance,
+            </otherwise>
+        </choose>
+        ss.stock_type AS stockType,
+        ss.stock_name AS stockName,
+        ss.stock_address AS stockAddress,
+        ss.link_person AS linkPerson,
+        ss.link_phone AS linkPhone,
+        ss.spare_part_code AS sparePartCode,
+        ss.spare_part_name AS sparePartName,
+        ss.stock AS stock,
+        ss.supplier_name AS supplierName,
+        ss.longitude AS longitude,
+        ss.latitude AS latitude
+        FROM
+        ${DbName}.hy_spare_stock ss
+        WHERE
+        1=1
+        <if test="paramMap.searchInfo != null ">
+            AND ss.spare_part_name LIKE CONCAT('%',#{paramMap.searchInfo,jdbcType=VARCHAR}, '%')
+        </if>
+
+    </select>
+
+
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.servicestation.app.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.nut.servicestation.app.domain.User">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="uc_id" jdbcType="VARCHAR" property="ucId" />
+        <result column="account_name" jdbcType="VARCHAR" property="accountName" />
+        <result column="uc_password" jdbcType="VARCHAR" property="ucPassword" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="create_type" jdbcType="INTEGER" property="createType" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="identity_card" jdbcType="VARCHAR" property="identityCard" />
+        <result column="driving_license" jdbcType="INTEGER" property="drivingLicense" />
+        <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+        <result column="ownr_cur_team_id" jdbcType="VARCHAR" property="ownrCurTeamId" />
+        <result column="drvr_cur_team_id" jdbcType="VARCHAR" property="drvrCurTeamId" />
+        <result column="drvr_cur_car_id" jdbcType="VARCHAR" property="drvrCurCarId" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="last_logon_time" jdbcType="TIMESTAMP" property="lastLogonTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, uc_id, account_name, uc_password, password, create_type, name, phone, identity_card,
+    driving_license, create_user_id, ownr_cur_team_id, drvr_cur_team_id, drvr_cur_car_id,
+    create_time, update_time, last_logon_time
+  </sql>
+
+    <select id="queryLoginInfoSql" parameterType="java.lang.String" resultType="com.nut.servicestation.app.dto.UserInfoDto">
+        SELECT
+            ha.ACCOUNT_NAME AS accountId,
+            ha.ACCOUNT_LINKTEL AS phone,
+            ha.ACCOUNT_NICKNAME AS accountName,
+            ha.ACCOUNT_PWD AS accountPwd,
+            ss.id AS serviceStationId,
+            ss.station_name AS serviceStationName,
+            ss.service_code AS serviceCode,
+            ss.phone AS serviceStationPhone,
+            ss.address AS address,
+            ss.STATION_ENABLE AS stationEnable,
+            ss.picture AS picture,
+            ifnull(ha.JOB_TYPE,2) AS roleCode,
+            ss.longitude AS serviceStationLon, -- 服务站经度（需要除法）
+            ss.latitude AS serviceStationLat, -- 服务站纬度（需要除法）
+            ss.povince AS areaCode,
+            ha.LOCK_ACCOUNT AS lockAccount,
+            he.radius AS stationRadius
+        FROM
+            ${DbName}.hy_account_station hs
+        INNER JOIN ${DbName}.hy_account ha ON ha.ACCOUNT_ID = hs.ACCOUNT_ID
+        INNER JOIN ${DbName}.hy_service_station ss ON ss.id = hs.STATION_ID
+        LEFT JOIN ${DbName}.hy_electronic_station_mapping he ON ss.service_code = he.station_code AND he.type = 1
+        WHERE
+            ha.ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR}
+        AND ha.ACCOUNT_TYPE = 3
+    </select>
+
+    <update id="updatePwdByAccountName" parameterType="java.lang.String">
+        UPDATE ${DbName}.hy_account
+        SET ACCOUNT_PWD = #{accountPwd,jdbcType=VARCHAR}
+        WHERE
+        ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR}
+        AND ACCOUNT_TYPE = 3
+    </update>
+
+    <update id="updateUserInfoByAccountName" parameterType="java.lang.String">
+        UPDATE ${DbName}.hy_account
+        <set>
+            <if test="accountNickname != null and accountNickname != ''">
+                ACCOUNT_NICKNAME = #{accountNickname,jdbcType=VARCHAR},
+            </if>
+            <if test="accountLinktel != null and accountLinktel != ''">
+                ACCOUNT_LINKTEL = #{accountLinktel,jdbcType=VARCHAR},
+            </if>
+            <if test="sendMessageKey != null and sendMessageKey != ''">
+                send_message_key = #{sendMessageKey,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE
+        ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR}
+        AND ACCOUNT_TYPE = 3
+    </update>
+    <update id="updateById">
+        update ${databaseName}.hy_account
+            set send_message_key = ''
+        where ACCOUNT_ID = #{accountId}
+    </update>
+    <update id="updateLockByAccountName">
+        update ${databaseName}.hy_account
+        set LOCK_ACCOUNT =#{lockStatus}
+        where ACCOUNT_NAME = #{accountId}
+    </update>
+
+    <select id="queryStaffList" parameterType="java.lang.String"
+            resultType="com.nut.servicestation.app.dto.StaffListDto">
+        SELECT
+            ha.ACCOUNT_NAME AS userId,
+            ha.ACCOUNT_NAME AS userName
+        FROM
+            ${DbName}.hy_account_station hs
+        INNER JOIN ${DbName}.hy_account ha ON ha.ACCOUNT_ID = hs.ACCOUNT_ID
+        INNER JOIN ${DbName}.hy_service_station ss ON ss.id = hs.STATION_ID
+        WHERE
+            ss.id = #{stationId, jdbcType=VARCHAR}
+        AND ha.ACCOUNT_TYPE = 3
+        AND ha.LOCK_ACCOUNT = '0'
+
+    </select>
+
+    <select id="queryStationPhone" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        ss.phone AS phone
+        FROM
+        ${DbName}.hy_service_station ss
+        WHERE
+        ss.id = #{stationId, jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryUserIdByPhone" parameterType="java.util.List" resultType="java.lang.String">
+        SELECT
+        GROUP_concat(DISTINCT uc_id) AS userId
+        FROM
+        user
+        WHERE
+        phone IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryAccountIds" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT
+        GROUP_concat(DISTINCT ha.ACCOUNT_NAME) AS userId
+        FROM
+        ${DbName}.hy_account_station hs
+        INNER JOIN ${DbName}.hy_account ha ON ha.ACCOUNT_ID = hs.ACCOUNT_ID
+        INNER JOIN ${DbName}.hy_service_station ss ON ss.id = hs.STATION_ID
+        WHERE
+        ss.id = #{stationId, jdbcType=VARCHAR}
+        AND ha.ACCOUNT_TYPE = 3
+        AND ha.JOB_TYPE = #{jobType}
+        AND ha.LOCK_ACCOUNT = '0'
+    </select>
+
+    <select id="queryIdByPhone" parameterType="java.lang.String" resultType="java.lang.Long">
+        SELECT
+        id AS userId
+        FROM
+        user
+        WHERE
+        phone = #{phone}
+        LIMIT 1
+    </select>
+
+    <select id="querySecondaryCreateWoRange" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select
+         case
+         when IFNULL(hss.secondary,'N')='Y' then IFNULL(hss.scope_service,0)
+         else 3
+         end as secondaryEn
+        from ${DbName}.hy_service_station hss where hss.service_code=#{serviceCode}
+    </select>
+
+    <select id="queryUcIdByWorkCode" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        uc_id as ucId
+        FROM
+        relation_work_order_user
+        WHERE
+        wo_code = #{wo_code}
+        LIMIT 1
+    </select>
+    <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user
+        WHERE phone = #{phone,jdbcType=VARCHAR}
+        LIMIT 1
+    </select>
+
+    <select id="queryStationId" resultType="java.lang.Integer">
+        select STATION_ID
+        from ${DbName}.hy_account_station
+        where ACCOUNT_ID = #{userId,jdbcType=VARCHAR}
+    </select>
+    <select id="queryUserInfo" resultType="com.nut.servicestation.app.dto.UserInfoDto">
+       select
+            ACCOUNT_ID accountId,
+            send_message_key sendMessageKey
+        from
+            ${databaseName}.hy_account
+        where
+            ACCOUNT_NAME = #{userId}
+    </select>
+
+    <select id="queryUserNameById" resultType="java.lang.String">
+        select ACCOUNT_NAME from ${databaseName}.hy_account where ACCOUNT_ID = #{accountId}
+    </select>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.locationservice.app.dao.CarEolSystemDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.locationservice.app.entity.CarEolSystemEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="carVin" column="car_vin"/>
+        <result property="autoTerminal" column="auto_terminal"/>
+        <result property="tboxType" column="tbox_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="carModelBase" column="car_model_base"/>
+        <result property="carVinSub" column="car_vin_sub"/>
+    </resultMap>
+
+    <resultMap id="CarLocationInputDto" type="com.nut.locationservice.app.dto.CarLocationInputDto">
+        <result column="vin" jdbcType="VARCHAR" property="vin" />
+        <result column="terminalId" jdbcType="BIGINT" property="terminalId" />
+    </resultMap>
+
+    <select id="selectByTerminalId" parameterType="list" resultMap="CarLocationInputDto">
+        select
+        c.car_vin as vin,
+        c.auto_terminal as terminalId
+        from
+        car_eol_system c
+        WHERE
+        c.car_vin IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.PhyExaRecordDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.PhyExaRecordEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="carId" column="car_id"/>
+        <result property="faultNumber" column="fault_number"/>
+        <result property="faultIds" column="fault_ids"/>
+        <result property="phyExaTime" column="phy_exa_time"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        , car_id, fault_number, fault_ids, phy_exa_time
+    </sql>
+
+    <select id="queryPhyExaRecordByCars" parameterType="java.util.List" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        phy_exa_record
+        WHERE car_id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryPhyExaRecordByCarId" parameterType="java.lang.String"
+            resultType="com.nut.driver.app.domain.PhyExaRecord">
+        SELECT p.id,
+               c.id            AS carId,
+               p.fault_number  AS faultNumber,
+               p.fault_ids     AS faultIds,
+               p.phy_exa_time  AS phyExaTime,
+               c.auto_terminal AS autoTerminal
+        FROM car c
+                 LEFT JOIN phy_exa_record p ON p.car_id = c.id
+        WHERE c.id = #{carId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryFaultByIds" parameterType="java.util.List"
+            resultType="com.nut.driver.app.dto.CarPhyExaFaultDetailDto">
+        SELECT
+        id,
+        fault_code AS faultCode,
+        spn,
+        fmi,
+        fault_des AS faultDesc
+        FROM
+        fault_base
+        WHERE
+        id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryFaultBySpnFmi" parameterType="com.nut.driver.app.dto.CurrentQueryFaultResponseDto"
+            resultType="com.nut.driver.app.dto.CarPhyExaFaultDetailDto">
+        SELECT id,
+               fault_code AS faultCode,
+               spn,
+               fmi,
+               fault_des  AS faultDesc
+        FROM fault_base
+        WHERE spn = #{spn}
+          and fmi = #{fmi}
+
+    </select>
+
+    <insert id="insertSelective" parameterType="com.nut.driver.app.domain.PhyExaRecord">
+        insert into phy_exa_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="carId != null">
+                car_id,
+            </if>
+            <if test="faultNumber != null">
+                fault_number,
+            </if>
+            <if test="faultIds != null">
+                fault_ids,
+            </if>
+            <if test="phyExaTime != null">
+                phy_exa_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="carId != null">
+                #{carId,jdbcType=VARCHAR},
+            </if>
+            <if test="faultNumber != null">
+                #{faultNumber,jdbcType=INTEGER},
+            </if>
+            <if test="faultIds != null">
+                #{faultIds,jdbcType=VARCHAR},
+            </if>
+            <if test="phyExaTime != null">
+                #{phyExaTime,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.nut.driver.app.domain.PhyExaRecord">
+        update phy_exa_record
+        set car_id       = #{carId,jdbcType=VARCHAR},
+            fault_number = #{faultNumber,jdbcType=INTEGER},
+            fault_ids    = #{faultIds,jdbcType=VARCHAR},
+            phy_exa_time = #{phyExaTime,jdbcType=BIGINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

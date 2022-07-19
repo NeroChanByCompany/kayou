@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.WorkOrderOperateDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.driver.app.entity.WorkOrderOperateEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="woCode" column="wo_code"/>
+        <result property="operateCode" column="operate_code"/>
+        <result property="operateId" column="operate_id"/>
+        <result property="isHiddenToApp" column="is_hidden_to_app"/>
+        <result property="serviceType" column="service_type"/>
+        <result property="dealType" column="deal_type"/>
+        <result property="chargeType" column="charge_type"/>
+        <result property="payType" column="pay_type"/>
+        <result property="description" column="description"/>
+        <result property="photoNum" column="photo_num"/>
+        <result property="title" column="title"/>
+        <result property="textJson" column="text_json"/>
+        <result property="textJsonTb" column="text_json_tb"/>
+        <result property="hiddenFlg" column="hidden_flg"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="userId" column="user_id"/>
+        <result property="timesRescueNumber" column="times_rescue_number"/>
+        <result property="finishedStatus" column="finished_status"/>
+        <result property="subTwiceMark" column="sub_twice_mark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <insert id="insertSelective" parameterType="com.nut.driver.app.entity.WorkOrderOperateEntity">
+        insert into work_order_operate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="woCode != null">
+                wo_code,
+            </if>
+            <if test="operateCode != null">
+                operate_code,
+            </if>
+            <if test="operateId != null">
+                operate_id,
+            </if>
+            <if test="isHiddenToApp != null">
+                is_hidden_to_app,
+            </if>
+            <if test="serviceType != null">
+                service_type,
+            </if>
+            <if test="dealType != null">
+                deal_type,
+            </if>
+            <if test="chargeType != null">
+                charge_type,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="photoNum != null">
+                photo_num,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="textJson != null">
+                text_json,
+            </if>
+            <if test="textJsonTb != null">
+                text_json_tb,
+            </if>
+            <if test="hiddenFlg != null">
+                hidden_flg,
+            </if>
+            <if test="longitude != null">
+                longitude,
+            </if>
+            <if test="latitude != null">
+                latitude,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="woCode != null">
+                #{woCode,jdbcType=VARCHAR},
+            </if>
+            <if test="operateCode != null">
+                #{operateCode,jdbcType=INTEGER},
+            </if>
+            <if test="operateId != null">
+                #{operateId,jdbcType=VARCHAR},
+            </if>
+            <if test="isHiddenToApp != null">
+                #{isHiddenToApp,jdbcType=INTEGER},
+            </if>
+            <if test="serviceType != null">
+                #{serviceType,jdbcType=INTEGER},
+            </if>
+            <if test="dealType != null">
+                #{dealType,jdbcType=INTEGER},
+            </if>
+            <if test="chargeType != null">
+                #{chargeType,jdbcType=INTEGER},
+            </if>
+            <if test="payType != null">
+                #{payType,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="photoNum != null">
+                #{photoNum,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="textJson != null">
+                #{textJson,jdbcType=VARCHAR},
+            </if>
+            <if test="textJsonTb != null">
+                #{textJsonTb,jdbcType=VARCHAR},
+            </if>
+            <if test="hiddenFlg != null">
+                #{hiddenFlg,jdbcType=INTEGER},
+            </if>
+            <if test="longitude != null">
+                #{longitude,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude != null">
+                #{latitude,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="queryCancelRescueReason" resultType="java.lang.String">
+        SELECT description
+        FROM work_order_operate
+        WHERE wo_code = #{woCode,jdbcType=VARCHAR}
+          AND operate_code = #{operateCode,jdbcType=INTEGER}
+          AND times_rescue_number IS NULL LIMIT 1
+    </select>
+
+</mapper>

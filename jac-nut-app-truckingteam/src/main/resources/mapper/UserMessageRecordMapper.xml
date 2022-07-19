@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.truckingteam.app.dao.UserMessageRecordDao">
+  <resultMap id="BaseResultMap" type="com.nut.truckingteam.app.domain.UserMessageRecord">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="message_id" jdbcType="VARCHAR" property="messageId"/>
+    <result column="title" jdbcType="VARCHAR" property="title"/>
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="push_show_type" jdbcType="INTEGER" property="pushShowType" />
+    <result column="message_code" jdbcType="INTEGER" property="messageCode"/>
+    <result column="user_visible" jdbcType="INTEGER" property="userVisible" />
+    <result column="receiver_id" jdbcType="VARCHAR" property="receiverId"/>
+    <result column="receive_app_type" jdbcType="INTEGER" property="receiveAppType" />
+    <result column="sender_id" jdbcType="VARCHAR" property="senderId" />
+    <result column="send_time" jdbcType="BIGINT" property="sendTime" />
+    <result column="read_flag" jdbcType="INTEGER" property="readFlag" />
+    <result column="message_extra" jdbcType="VARCHAR" property="messageExtra" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="stype" jdbcType="INTEGER" property="stype" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, message_id, title, content, push_show_type, message_code, user_visible, receiver_id, 
+    receive_app_type, sender_id, send_time, read_flag, message_extra, type, stype, create_time, 
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_message_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user_message_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.nut.truckingteam.app.domain.UserMessageRecord">
+    insert into user_message_record (id, message_id, title, 
+      content, push_show_type, message_code, 
+      user_visible, receiver_id, receive_app_type, 
+      sender_id, send_time, read_flag, 
+      message_extra, type, stype, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{messageId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{pushShowType,jdbcType=INTEGER}, #{messageCode,jdbcType=INTEGER}, 
+      #{userVisible,jdbcType=INTEGER}, #{receiverId,jdbcType=VARCHAR}, #{receiveAppType,jdbcType=INTEGER}, 
+      #{senderId,jdbcType=VARCHAR}, #{sendTime,jdbcType=BIGINT}, #{readFlag,jdbcType=INTEGER}, 
+      #{messageExtra,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{stype,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.nut.truckingteam.app.domain.UserMessageRecord">
+    insert into user_message_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="messageId != null">
+        message_id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="pushShowType != null">
+        push_show_type,
+      </if>
+      <if test="messageCode != null">
+        message_code,
+      </if>
+      <if test="userVisible != null">
+        user_visible,
+      </if>
+      <if test="receiverId != null">
+        receiver_id,
+      </if>
+      <if test="receiveAppType != null">
+        receive_app_type,
+      </if>
+      <if test="senderId != null">
+        sender_id,
+      </if>
+      <if test="sendTime != null">
+        send_time,
+      </if>
+      <if test="readFlag != null">
+        read_flag,
+      </if>
+      <if test="messageExtra != null">
+        message_extra,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="stype != null">
+        stype,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="messageId != null">
+        #{messageId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="pushShowType != null">
+        #{pushShowType,jdbcType=INTEGER},
+      </if>
+      <if test="messageCode != null">
+        #{messageCode,jdbcType=INTEGER},
+      </if>
+      <if test="userVisible != null">
+        #{userVisible,jdbcType=INTEGER},
+      </if>
+      <if test="receiverId != null">
+        #{receiverId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveAppType != null">
+        #{receiveAppType,jdbcType=INTEGER},
+      </if>
+      <if test="senderId != null">
+        #{senderId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null">
+        #{sendTime,jdbcType=BIGINT},
+      </if>
+      <if test="readFlag != null">
+        #{readFlag,jdbcType=INTEGER},
+      </if>
+      <if test="messageExtra != null">
+        #{messageExtra,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="stype != null">
+        #{stype,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nut.truckingteam.app.domain.UserMessageRecord">
+    update user_message_record
+    <set>
+      <if test="messageId != null">
+        message_id = #{messageId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="pushShowType != null">
+        push_show_type = #{pushShowType,jdbcType=INTEGER},
+      </if>
+      <if test="messageCode != null">
+        message_code = #{messageCode,jdbcType=INTEGER},
+      </if>
+      <if test="userVisible != null">
+        user_visible = #{userVisible,jdbcType=INTEGER},
+      </if>
+      <if test="receiverId != null">
+        receiver_id = #{receiverId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveAppType != null">
+        receive_app_type = #{receiveAppType,jdbcType=INTEGER},
+      </if>
+      <if test="senderId != null">
+        sender_id = #{senderId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null">
+        send_time = #{sendTime,jdbcType=BIGINT},
+      </if>
+      <if test="readFlag != null">
+        read_flag = #{readFlag,jdbcType=INTEGER},
+      </if>
+      <if test="messageExtra != null">
+        message_extra = #{messageExtra,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="stype != null">
+        stype = #{stype,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nut.truckingteam.app.domain.UserMessageRecord">
+    update user_message_record
+    set message_id = #{messageId,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      push_show_type = #{pushShowType,jdbcType=INTEGER},
+      message_code = #{messageCode,jdbcType=INTEGER},
+      user_visible = #{userVisible,jdbcType=INTEGER},
+      receiver_id = #{receiverId,jdbcType=VARCHAR},
+      receive_app_type = #{receiveAppType,jdbcType=INTEGER},
+      sender_id = #{senderId,jdbcType=VARCHAR},
+      send_time = #{sendTime,jdbcType=BIGINT},
+      read_flag = #{readFlag,jdbcType=INTEGER},
+      message_extra = #{messageExtra,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      stype = #{stype,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!-- 自定义sql由此向下 -->
+
+  <!--查询车队的管理员 推送-->
+  <select id="queryPushAdmin" parameterType="java.util.Map" resultType="java.lang.String">
+    SELECT
+    GROUP_CONCAT(uu.uc_id) AS userId
+    FROM
+    flt_fleet_user_mapping fum
+    LEFT JOIN flt_fleet_car_mapping fcm ON fum.team_id = fcm.team_id
+    LEFT JOIN user uu ON uu.id = fum.user_id
+    WHERE
+    fum.role = 1
+    <if test="carList != null">
+      AND fcm.car_id IN
+      <foreach item="item" index="index" collection="carList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="teamId != null">
+      AND fum.team_id = #{teamId,jdbcType=BIGINT}
+    </if>
+    AND LENGTH(uu.uc_id) > 0
+  </select>
+
+  <!--查询车辆的司机 推送-->
+  <select id="queryPushDriver" parameterType="java.util.Map" resultType="java.lang.String">
+    SELECT
+    GROUP_CONCAT(uu.uc_id) AS userId
+    FROM
+    flt_car_driver_mapping cdm
+    LEFT JOIN user uu ON uu.id = cdm.user_id
+    WHERE 1=1
+    <if test="carList != null">
+      AND cdm.car_id IN
+      <foreach item="item" index="index" collection="carList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="teamId != null">
+      AND cdm.team_id = #{teamId,jdbcType=BIGINT}
+    </if>
+    AND LENGTH(uu.uc_id) > 0
+  </select>
+
+  <!--查询车队的创建者 推送-->
+  <select id="queryPushCreator" parameterType="java.util.Map" resultType="java.lang.String">
+    SELECT
+    GROUP_CONCAT(uu.uc_id) AS userId
+    FROM
+    flt_fleet_user_mapping fum
+    LEFT JOIN flt_fleet_car_mapping fcm ON fum.team_id = fcm.team_id
+    LEFT JOIN user uu ON uu.id = fum.user_id
+    WHERE
+    fum.role = 0
+    <if test="carList != null">
+      AND fcm.car_id IN
+      <foreach item="item" index="index" collection="carList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="teamId != null">
+      AND fum.team_id = #{teamId,jdbcType=BIGINT}
+    </if>
+    AND LENGTH(uu.uc_id) > 0
+  </select>
+
+  <!--查询车辆的车主 推送-->
+  <select id="queryPushOwner" parameterType="java.util.Map" resultType="java.lang.String">
+    SELECT
+    GROUP_CONCAT(uu.uc_id) AS userId
+    FROM
+    flt_car_owner_mapping com
+    LEFT JOIN user uu ON uu.id = com.user_id
+    WHERE 1=1
+    <if test="carList != null">
+      AND com.car_id IN
+      <foreach item="item" index="index" collection="carList" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    AND LENGTH(uu.uc_id) > 0
+  </select>
+
+  <!--查询车队下的车辆-->
+  <select id="queryCarInfoByTeamId" parameterType="java.util.Map"
+          resultType="com.nut.truckingteam.app.pojo.CarInfoPojo">
+    SELECT
+      c.id AS carId,
+      c.car_number AS carNumber,
+      c.car_vin AS vin
+    FROM
+      flt_fleet_car_mapping fcm
+    INNER JOIN car c ON c.id = fcm.car_id
+    WHERE
+      fcm.team_id = #{teamId}
+  </select>
+
+  <!--查询车辆信息-->
+  <select id="queryCarInfoByCarId" parameterType="java.util.List"
+          resultType="com.nut.truckingteam.app.pojo.CarInfoPojo">
+    SELECT
+    c.id AS carId,
+    c.car_number AS carNumber,
+    c.car_vin AS vin
+    FROM
+    car c
+    WHERE
+    c.id in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <!--车牌号修改推送-管理员查询-->
+  <select id="queryAdminByCarId" parameterType="java.lang.String"
+          resultType="com.nut.truckingteam.app.pojo.PushUserInfoPojo">
+    SELECT
+      fcm.team_id AS teamId,
+      GROUP_CONCAT(uu.uc_id) AS userId
+    FROM
+      flt_fleet_car_mapping fcm
+    LEFT JOIN flt_fleet_user_mapping fum ON fum.team_id = fcm.team_id AND fum.role = 1
+    LEFT JOIN USER uu ON uu.id = fum.user_id
+    WHERE fcm.car_id = #{carId}
+    AND LENGTH(uu.uc_id) > 0
+    GROUP BY
+      fcm.team_id
+  </select>
+
+  <!--车牌号修改推送-司机查询-->
+  <select id="queryDriverByCarId" parameterType="java.lang.String"
+            resultType="com.nut.truckingteam.app.pojo.PushUserInfoPojo">
+    SELECT
+      cdm.team_id AS teamId
+      GROUP_CONCAT(uu.uc_id) AS userId
+    FROM
+      flt_car_driver_mapping cdm
+    LEFT JOIN USER uu ON uu.id = cdm.user_id
+    WHERE cdm.car_id = #{carId}
+    AND LENGTH(uu.uc_id) > 0
+    GROUP BY
+      cdm.team_id
+  </select>
+</mapper>

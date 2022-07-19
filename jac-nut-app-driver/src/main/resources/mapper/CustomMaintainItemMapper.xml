@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.CustomMaintainItemDao">
+    <resultMap id="BaseResultMap" type="com.nut.driver.app.entity.CustomMaintainItemEntity">
+        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="MAINTAIN_ID" jdbcType="BIGINT" property="maintainId"/>
+        <result column="MAINTAIN_ITEM_ID" jdbcType="INTEGER" property="maintainItemId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        ID
+        , MAINTAIN_ID, MAINTAIN_ITEM_ID
+    </sql>
+    <insert id="insertItemList">
+        insert into custom_maintain_item (MAINTAIN_ID, MAINTAIN_ITEM_ID
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.maintainId,jdbcType=BIGINT}, #{item.maintainItemId,jdbcType=INTEGER}
+            )
+        </foreach>
+    </insert>
+    <select id="selectItemListByMaintainId" resultType="com.nut.driver.app.entity.CustomMaintainItemEntity">
+        select
+        <include refid="Base_Column_List"/>
+        from custom_maintain_item
+        where MAINTAIN_ID = #{maintainId,jdbcType=BIGINT}
+    </select>
+
+
+</mapper>

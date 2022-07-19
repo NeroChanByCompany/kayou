@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jac.app.job.mapper.CustomMaintainMapper">
+    <update id="updateByPrimaryKeySelective">
+        update custom_maintain_info
+        <set>
+            <if test="customMaintainName != null">
+                CUSTOM_MAINTAIN_NAME = #{customMaintainName,jdbcType=VARCHAR},
+            </if>
+            <if test="customMaintainType != null">
+                CUSTOM_MAINTAIN_TYPE = #{customMaintainType,jdbcType=INTEGER},
+            </if>
+            <if test="customMaintainDescribe != null">
+                CUSTOM_MAINTAIN_DESCRIBE = #{customMaintainDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="carId != null">
+                CAR_ID = #{carId,jdbcType=VARCHAR},
+            </if>
+            <if test="carNumber != null">
+                CAR_NUMBER = #{carNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                USER_ID = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="maintainStatus != null">
+                MAINTAIN_STATUS = #{maintainStatus,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="remarks != null">
+                REMARKS = #{remarks,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="appType != null">
+                APP_TYPE = #{appType,jdbcType=INTEGER},
+            </if>
+            <if test="remind != null">
+                remind = #{remind,jdbcType=INTEGER},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="queryMaintanceInfos" resultType="com.jac.app.job.domain.CustomMaintainInfo">
+        SELECT temp.ID                       AS id,
+               temp.CUSTOM_MAINTAIN_NAME     AS customMaintainName,
+               temp.CUSTOM_MAINTAIN_TYPE     AS customMaintainType,
+               temp.CUSTOM_MAINTAIN_DESCRIBE AS customMaintainDescribe,
+               c.id                          AS carId,
+               c.car_number                  AS carNumber,
+               temp.USER_ID                  AS userId,
+               temp.MAINTAIN_STATUS          AS maintainStatus,
+               temp.STATUS                   AS status,
+               temp.REMARKS                  AS remarks,
+               temp.CREATE_TIME              AS createTime,
+               temp.UPDATE_TIME              AS updateTime,
+               temp.APP_TYPE                 AS appType,
+               temp.remind                   as remind,
+               c.car_vin                     AS vin
+        FROM custom_maintain_info AS temp
+                 INNER JOIN car AS c ON temp.CAR_ID = c.id and temp.MAINTAIN_STATUS != 2 and (temp.remind is null or temp.remind = 2) and temp.STATUS != 0;
+    </select>
+    <select id="selectByMaintainId" resultType="java.lang.String">
+        select maintain_item_name from maintain_item_info info , custom_maintain_item item where item.MAINTAIN_ID = #{id} and item.MAINTAIN_ITEM_ID = info.maintain_item_id;
+    </select>
+</mapper>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.driver.app.dao.MaintainNewDao">
+    <resultMap id="BaseResultMap" type="com.nut.driver.app.entity.CarMaintainEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="car_vin" jdbcType="VARCHAR" property="carVin"/>
+        <result column="car_number" jdbcType="VARCHAR" property="carNumber"/>
+        <result column="protocol_type" jdbcType="VARCHAR" property="protocolType"/>
+        <result column="mtc_item" jdbcType="VARCHAR" property="mtcItem"/>
+        <result column="mtc_type" jdbcType="VARCHAR" property="mtcType"/>
+        <result column="last_maintain_mileage" jdbcType="VARCHAR" property="lastMaintainMileage"/>
+        <result column="last_maintain_time" jdbcType="TIMESTAMP" property="lastMaintainTime"/>
+        <result column="next_maintain_mileage" jdbcType="DECIMAL" property="nextMaintainMileage"/>
+        <result column="next_maintain_time" jdbcType="TIMESTAMP" property="nextMaintainTime"/>
+        <result column="mai_mileage" jdbcType="VARCHAR" property="maiMileage"/>
+        <result column="mai_month" jdbcType="VARCHAR" property="maiMonth"/>
+        <result column="fst_mileage" jdbcType="VARCHAR" property="fstMileage"/>
+        <result column="fst_month" jdbcType="VARCHAR" property="fstMonth"/>
+        <result column="inv_mileage" jdbcType="VARCHAR" property="invMileage"/>
+        <result column="inv_month" jdbcType="VARCHAR" property="invMonth"/>
+        <result column="assy_type" jdbcType="VARCHAR" property="assyType"/>
+        <result column="part_num" jdbcType="VARCHAR" property="partNum"/>
+        <result column="part_name" jdbcType="VARCHAR" property="partName"/>
+        <result column="count" jdbcType="VARCHAR" property="count"/>
+        <result column="unitofmmt" jdbcType="VARCHAR" property="unitofmmt"/>
+        <result column="is_check" jdbcType="INTEGER" property="isCheck"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, car_vin, car_number, protocol_type, mtc_item,mtc_type,last_maintain_mileage,last_maintain_time,next_maintain_mileage,next_maintain_time,
+        mai_mileage,mai_month,fst_mileage,fst_month,inv_mileage,inv_month,assy_type,part_num,part_name,`count`,unitofmmt,is_check,update_user,create_date,update_date
+    </sql>
+    <insert id="insertCarMaintainRecord">
+        INSERT INTO car_maintain_record
+        (car_vin, car_number, maintenance_program_str,maintain_mileage_time,maintain_mileage_mileage,maintain_source,op_user,opt_date)
+        VALUES
+        (#{carVin},
+         #{carNumber},
+         #{maintenanceProgramStr},
+         #{maintainMileageTime},
+         #{maintainMileageMileage},
+         #{maintainSource},
+         #{opUser},
+         #{optDate}
+        )
+    </insert>
+    <update id="updateCarMaintain">
+
+        UPDATE
+        car_maintain
+        SET
+        <if  test='lastMaintainMileage != null and lastMaintainMileage != ""'>
+            last_maintain_mileage = #{lastMaintainMileage,jdbcType=VARCHAR},
+        </if>
+        <if  test='lastMaintainTime != null'>
+            last_maintain_time = #{lastMaintainTime,jdbcType=TIMESTAMP},
+        </if>
+        <if  test='nextMaintainMileage != null and nextMaintainMileage != ""'>
+            next_maintain_mileage = #{nextMaintainMileage,jdbcType=DECIMAL},
+        </if>
+        <if  test='nextMaintainTime != null'>
+            next_maintain_time = #{nextMaintainTime,jdbcType=TIMESTAMP},
+        </if>
+        <if  test='protocolType != null and protocolType != ""'>
+            protocol_type = #{protocolType,jdbcType=VARCHAR},
+        </if>
+        <if  test='isCheck != null and isCheck != ""'>
+            is_check = #{isCheck,jdbcType=INTEGER},
+        </if>
+        <if  test='assyType != null and assyType != ""'>
+            assy_type = #{assyType,jdbcType=VARCHAR},
+        </if>
+        <if  test='mtcType != null and mtcType != ""'>
+            mtc_type = #{mtcType,jdbcType=VARCHAR},
+        </if>
+        <if  test='partNum != null and partNum != ""'>
+            part_num = #{partNum,jdbcType=VARCHAR},
+        </if>
+        <if  test='partName != null and partName != ""'>
+            part_name = #{partName,jdbcType=VARCHAR},
+        </if>
+        <if  test='count != null and count != ""'>
+            `count` = #{count,jdbcType=VARCHAR},
+        </if>
+        <if  test='updateUser != null and updateUser != ""'>
+            update_user = #{updateUser,jdbcType=VARCHAR},
+        </if>
+        <if  test='maiMileage != null and maiMileage != ""'>
+            mai_mileage = #{maiMileage,jdbcType=VARCHAR},
+        </if>
+        <if  test='maiMonth != null and maiMonth != ""'>
+            mai_month = #{maiMonth,jdbcType=VARCHAR},
+        </if>
+        <if  test='fstMileage != null and fstMileage != ""'>
+            fst_mileage = #{fstMileage,jdbcType=VARCHAR},
+        </if>
+        <if  test='fstMonth != null and fstMonth != ""'>
+            fst_month = #{fstMonth,jdbcType=VARCHAR},
+        </if>
+        <if  test='invMileage != null and invMileage != ""'>
+            inv_mileage = #{invMileage,jdbcType=VARCHAR},
+        </if>
+        <if  test='invMonth != null and invMonth != ""'>
+            inv_month = #{invMonth,jdbcType=VARCHAR},
+        </if>
+        <if  test='unitofmmt != null and unitofmmt != ""'>
+            unitofmmt = #{unitofmmt,jdbcType=VARCHAR},
+        </if>
+        update_date = #{updateDate,jdbcType=TIMESTAMP}
+        WHERE
+        <choose>
+            <when test='id != null and id != -1'>
+                id = #{id,jdbcType=BIGINT}
+            </when>
+            <otherwise>
+                id = -1
+            </otherwise>
+        </choose>
+
+    </update>
+    <select id="getMaintainsByVins" resultType="com.nut.driver.app.pojo.MaintainPojo">
+        select
+        id AS id,
+        car_vin AS vin,
+        car_number AS carNumber,
+        protocol_type AS protocolType,
+        IF(min(next_maintain_mileage),min(next_maintain_mileage),'') AS nextMileage,
+        count(next_maintain_mileage) AS maintainItemCount,
+        IF(min(next_maintain_time),DATE_FORMAT(min(next_maintain_time),'%Y-%m-%d'),'') AS nextDate,
+        count(next_maintain_time) AS maintainItemTmCount
+        FROM car_maintain
+        WHERE car_vin IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test='keyword != null and kwyword != ""'>
+            AND (
+            car_vin LIKE CONCAT('%',#{keyword,jdbcType=VARCHAR}, '%')
+            OR car_number LIKE CONCAT('%',#{keyword,jdbcType=VARCHAR}, '%')
+            )
+        </if>
+        GROUP BY car_vin
+    </select>
+    <select id="queryMaintainVehicleTubeByPhone" resultType="java.lang.String">
+        SELECT
+            chassis_no
+        FROM
+            maintain_vehicle_tube
+        WHERE
+            delete_flag = 0
+          AND mobile = #{phone,jdbcType=VARCHAR}
+
+    </select>
+    <select id="queryCarNewMaintainDetail" resultType="com.nut.driver.app.pojo.CarMaintainNewDetailPojo">
+        SELECT
+        id AS carMaintainId,
+        car_vin AS carVin,
+        car_number AS carNumber,
+        protocol_type AS protocolType,
+        mtc_item AS mtcItem,
+        mtc_type AS mtcType,
+        is_check AS isCheck,
+        cast(next_maintain_mileage AS CHAR ) AS nextMaintainMileage,
+        IF(next_maintain_time,DATE_FORMAT(next_maintain_time,'%Y-%m-%d'),'') AS nextMaintainTime,
+        last_maintain_mileage AS lastMaintainMileage,
+        IF(last_maintain_time,DATE_FORMAT(last_maintain_time,'%Y-%m-%d'),'') AS lastMaintainTime
+        FROM
+        car_maintain
+        WHERE
+        1=1
+        <if test="carVin != null and carVin!= ''">
+            AND car_vin = #{carVin}
+        </if>
+        <if test="classifyCode != null and classifyCode!= ''">
+            AND mtc_type = #{classifyCode}
+        </if>
+        ORDER BY next_maintain_mileage is null, next_maintain_mileage ASC,next_maintain_time is null,next_maintain_time  ASC,mtc_item ASC
+    </select>
+    <select id="queryCarMaintainCountByVin" resultType="com.nut.driver.app.pojo.StatisticsCarMaintainPojo">
+        SELECT
+            mtc_type AS mtcType,
+            count(mtc_type) AS mtcTypeCount
+        FROM
+            car_maintain
+        WHERE
+            car_vin = #{carVin}
+        GROUP BY mtc_type
+    </select>
+    <select id="queryNewMaintainRecord" resultType="com.nut.driver.app.pojo.CarMaintainRecordPojo">
+        SELECT
+            id AS id,
+            car_vin AS carVin,
+            car_number AS carNumber,
+            maintenance_program_str AS maintenanceProgramStr,
+            DATE_FORMAT(maintain_mileage_time,'%Y-%m-%d')  AS maintainMileageTime,
+            maintain_mileage_mileage AS maintainMileageMileage,
+            maintain_source AS maintainSource,
+            op_user AS opUser,
+            DATE_FORMAT(opt_date,'%Y-%m-%d') AS opDate
+        FROM
+            car_maintain_record
+        WHERE
+            car_vin = #{carVin}
+        ORDER BY opt_date DESC
+    </select>
+    <select id="queryCarMaintainByIds" resultType="com.nut.driver.app.entity.CarMaintainEntity">
+        select
+        <include refid="Base_Column_List"/>
+        FROM
+        car_maintain
+        WHERE
+        1=1
+        <if test="list != null">
+            and id in
+            <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

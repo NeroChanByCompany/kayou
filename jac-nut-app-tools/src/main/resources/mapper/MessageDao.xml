@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.tools.app.mapper.MessageDao">
+    <!-- 查询模板-->
+    <select id="getMessageTemplate" parameterType="java.util.Map"
+            resultType="com.nut.tools.app.entity.MessageTemplateEntity">
+        SELECT
+        templateId AS templateId,
+        title AS title,
+        content AS content,
+        type AS type,
+        stype AS stype,
+        receive_type AS receiveType,
+        message_type AS messageType,
+        message_type_name AS messageTypeName
+        FROM
+        message_template
+        WHERE
+        type = #{type}
+        AND stype = #{stype}
+        AND receive_type IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectAppTypeByUcId" parameterType="java.lang.String" resultType="java.lang.String">
+        select app_type
+        from user
+        where uc_id = #{ucId}
+    </select>
+
+    <select id="selectRegistrationIdByUcId" parameterType="java.lang.String" resultType="java.lang.String">
+        select send_message_key sendMessageKey
+        from user
+        where uc_id = #{ucId}
+    </select>
+
+    <select id="selectTspRegistrationIdByAccountName" parameterType="java.lang.String" resultType="string">
+        SELECT send_message_key
+        FROM ${tspDatabaseName}.hy_account
+        where ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR}
+    </select>
+    <!-- 获取不接收消息的用户-->
+    <select id="getNotReceiveUser" parameterType="java.util.Map"
+            resultType="com.nut.tools.app.pojo.NotReceiveUserInfoPojo">
+        SELECT DISTINCT
+        umrs.user_id AS userId,
+        umrs.app_type AS notReceiveAppType
+        FROM
+        user_message_receive_set umrs
+        INNER JOIN message_template mt ON mt.message_type = umrs.message_type AND umrs.app_type = mt.receive_type
+        WHERE
+        mt.type = #{type}
+        AND mt.stype = #{stype}
+        AND mt.receive_type IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="receiverIdList != null">
+            AND umrs.user_id IN
+            <foreach item="item" index="index" collection="receiverIdList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 获取不接收消息的用户-->
+    <select id="getNotReceiveUserByMessageType" parameterType="java.util.Map"
+            resultType="com.nut.tools.app.pojo.NotReceiveUserInfoPojo">
+        SELECT DISTINCT
+        user_id AS userId,
+        app_type AS notReceiveAppType
+        FROM
+        user_message_receive_set
+        WHERE
+        message_type = #{messageType}
+        AND app_type IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="getMessageTemplateById" resultType="com.nut.tools.app.entity.MessageTemplateEntity">
+        SELECT
+        templateId AS templateId,
+        title AS title,
+        content AS content,
+        type AS type,
+        stype AS stype,
+        receive_type AS receiveType,
+        message_type AS messageType,
+        message_type_name AS messageTypeName
+        FROM
+        message_template
+        WHERE
+            templateId = '1111'
+    </select>
+</mapper>
+

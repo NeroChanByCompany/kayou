@@ -1,0 +1,8 @@
+### 发送短信验证码
+POST {{base_url}}/smsVerificationCode
+Content-Type: application/json
+
+{
+  "phone": "15524004175",
+  "sign": "0"
+}

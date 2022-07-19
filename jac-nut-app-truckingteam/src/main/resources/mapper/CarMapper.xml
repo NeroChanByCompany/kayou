@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.truckingteam.app.dao.CarDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.truckingteam.app.entity.CarEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="carVin" column="car_vin"/>
+        <result property="carBrand" column="car_brand"/>
+        <result property="carSeries" column="car_series"/>
+        <result property="carSeriesName" column="car_series_name"/>
+        <result property="carModel" column="car_model"/>
+        <result property="carModelCode" column="car_model_code"/>
+        <result property="carModelBase" column="car_model_base"/>
+        <result property="carModelName" column="car_model_name"/>
+        <result property="engine" column="engine"/>
+        <result property="engineNo" column="engine_no"/>
+        <result property="isVip" column="is_vip"/>
+        <result property="ownerId" column="owner_id"/>
+        <result property="invoicePhoto" column="invoice_photo"/>
+        <result property="invoiceNo" column="invoice_no"/>
+        <result property="identityCard" column="identity_card"/>
+        <result property="organization" column="organization"/>
+        <result property="addFlag" column="add_flag"/>
+        <result property="carNumber" column="car_number"/>
+        <result property="terminalId" column="terminal_id"/>
+        <result property="autoTerminal" column="auto_terminal"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="salesDate" column="sales_date"/>
+        <result property="tId" column="T_ID"/>
+        <result property="mbSalesStatus" column="MB_SALES_STATUS"/>
+        <result property="mbSalesDate" column="MB_SALES_DATE"/>
+        <result property="salesStatus" column="SALES_STATUS"/>
+        <result property="tboxType" column="tbox_type"/>
+        <result property="isBind" column="is_bind"/>
+        <result property="fuel" column="fuel"/>
+        <result property="ps" column="ps"/>
+        <result property="emissionCode" column="emission_code"/>
+        <result property="emissionName" column="emission_name"/>
+        <result property="definedType" column="defined_type"/>
+        <result property="isDefined" column="is_defined"/>
+        <result property="frontAxleFactoryOne" column="front_axle_factory_one"/>
+        <result property="frontAxleTypeOne" column="front_axle_type_one"/>
+        <result property="rearAxleFactoryOne" column="rear_axle_factory_one"/>
+        <result property="rearAxleTypeOne" column="rear_axle_type_one"/>
+        <result property="frontAxleFactoryTwo" column="front_axle_factory_two"/>
+        <result property="frontAxleTypeTwo" column="front_axle_type_two"/>
+        <result property="rearAxleFactoryTwo" column="rear_axle_factory_two"/>
+        <result property="rearAxleTypeTwo" column="rear_axle_type_two"/>
+        <result property="vfactory" column="vfactory"/>
+        <result property="ishowwater" column="ishowwater"/>
+        <result property="dmsSyncTime" column="dms_sync_time"/>
+        <result property="remark" column="remark"/>
+        <result property="dataSource" column="data_source"/>
+        <result property="clwflag" column="clwflag"/>
+        <result property="extInfoOk" column="ext_info_ok"/>
+        <result property="vehiclecode" column="vehicleCode"/>
+        <result property="vehicletype" column="vehicleType"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , car_vin, car_brand, car_series, car_series_name, car_model, car_model_code, car_model_base,
+    car_model_name, engine, engine_no, is_vip, owner_id, invoice_photo, invoice_no, identity_card,
+    organization, car_number, terminal_id, auto_terminal, create_time, update_time, sales_date,
+    T_ID, MB_SALES_STATUS, MB_SALES_DATE, SALES_STATUS, tbox_type, is_bind, ext_info_ok
+    </sql>
+
+    <!-- 根据用户ID查询，所有车队内，与此用户相关的车（创建人、管理员、绑定司机、车主） -->
+    <select id="selectUserRelatedCar" resultType="com.nut.truckingteam.app.pojo.CarRolePojo">
+        SELECT fcm.car_id  AS carId,
+               fum.team_id AS teamId,
+               fum.role    AS role
+        FROM flt_fleet_car_mapping fcm
+                 LEFT JOIN flt_fleet_user_mapping fum ON fcm.team_id = fum.team_id
+        WHERE fum.user_id = #{userId,jdbcType=BIGINT}
+          AND fum.role IN (0, 1)
+        UNION
+        SELECT cdm.car_id  AS carId,
+               cdm.team_id AS teamId,
+               2           AS role -- 司机
+        FROM flt_car_driver_mapping cdm
+        WHERE cdm.user_id = #{userId,jdbcType=BIGINT}
+        UNION
+        SELECT com.car_id AS carId,
+               null       AS teamId,
+               9          AS role -- 车主
+        FROM flt_car_owner_mapping com
+        WHERE com.user_id = #{userId,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据车辆ID列表查询车辆信息 -->
+    <select id="selectByCarIdIn" parameterType="java.util.List" resultType="com.nut.truckingteam.app.pojo.CarInfoPojo">
+        SELECT id AS carId,
+        car_number AS carNumber,
+        car_vin AS vin
+        FROM car
+        WHERE id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findById" parameterType="java.lang.String"
+            resultType="com.nut.truckingteam.app.entity.CarEntity">
+        select car_vin    carVin,
+               car_number carNumber
+        from car
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

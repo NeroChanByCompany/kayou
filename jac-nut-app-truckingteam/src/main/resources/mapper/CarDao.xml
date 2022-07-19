@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.truckingteam.app.dao.FltCarOwnerMappingDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.truckingteam.app.entity.FltCarOwnerMappingEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="carId" column="car_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="createType" column="create_type"/>
+        <result property="tbossUserId" column="tboss_user_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <!--查询车队的管理员 推送-->
+    <select id="queryPushAdmin" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT
+        GROUP_CONCAT(uu.uc_id) AS userId
+        FROM
+        flt_fleet_user_mapping fum
+        LEFT JOIN flt_fleet_car_mapping fcm ON fum.team_id = fcm.team_id
+        LEFT JOIN user uu ON uu.id = fum.user_id
+        WHERE
+        fum.role = 1
+        <if test="carList != null">
+            AND fcm.car_id IN
+            <foreach item="item" index="index" collection="carList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="teamId != null">
+            AND fum.team_id = #{teamId,jdbcType=BIGINT}
+        </if>
+        AND LENGTH(uu.uc_id) > 0
+    </select>
+
+    <!--查询车辆的司机 推送-->
+    <select id="queryPushDriver" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT
+        GROUP_CONCAT(uu.uc_id) AS userId
+        FROM
+        flt_car_driver_mapping cdm
+        LEFT JOIN user uu ON uu.id = cdm.user_id
+        WHERE 1=1
+        <if test="carList != null">
+            AND cdm.car_id IN
+            <foreach item="item" index="index" collection="carList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="teamId != null">
+            AND cdm.team_id = #{teamId,jdbcType=BIGINT}
+        </if>
+        AND LENGTH(uu.uc_id) > 0
+    </select>
+
+    <!--查询车队的创建者 推送-->
+    <select id="queryPushCreator" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT
+        GROUP_CONCAT(uu.uc_id) AS userId
+        FROM
+        flt_fleet_user_mapping fum
+        LEFT JOIN flt_fleet_car_mapping fcm ON fum.team_id = fcm.team_id
+        LEFT JOIN user uu ON uu.id = fum.user_id
+        WHERE
+        fum.role = 0
+        <if test="carList != null">
+            AND fcm.car_id IN
+            <foreach item="item" index="index" collection="carList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="teamId != null">
+            AND fum.team_id = #{teamId,jdbcType=BIGINT}
+        </if>
+        AND LENGTH(uu.uc_id) > 0
+    </select>
+
+    <!--查询车辆的车主 推送-->
+    <select id="queryPushOwner" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT
+        GROUP_CONCAT(uu.uc_id) AS userId
+        FROM
+        flt_car_owner_mapping com
+        LEFT JOIN user uu ON uu.id = com.user_id
+        WHERE 1=1
+        <if test="carList != null">
+            AND com.car_id IN
+            <foreach item="item" index="index" collection="carList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        AND LENGTH(uu.uc_id) > 0
+    </select>
+
+</mapper>

@@ -1,0 +1,93 @@
+spring:
+#数据库配置
+  datasource:
+    url: jdbc:mysql://192.168.31.241:3306/jac_tboss?autoReconnect=true&allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: esvtek2019
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      initial-size: 5
+      max-active: 80
+      min-idle: 5
+      max-wait: 60000
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+      validation-query: SELECT 1
+      validation-query-timeout: 60000
+      test-on-borrow: true
+      test-on-return: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      max-evictable-idle-time-millis: 600000
+      filters: stat,wall,slf4j
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: .js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*
+        session-stat-enable: true
+        session-stat-max-count: 20
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: true
+        login-username: admin
+        login-password: admin
+
+dms:
+  workOrderReportUrl: http://59.48.146.132:50000/RESTAdapter/Gdsb
+mes:
+  vehicleProductSearchUrl: http://59.48.146.132:50000/RESTAdapter/Clpzcx
+#xxl-job configuration
+### xxl-job admin address list, such as "http://address" or "http://address01,http://address02"
+xxl:
+  job:
+    accessToken:
+    executor:
+      appname: jac-nut-app-job
+      address:
+      ip:
+      port: 10520
+      logpath: /opt/jac/backend/app/app-jobs/logs
+      logretentiondays: 30
+    admin:
+     addresses: http://192.168.31.243:9080/xxl-job-admin
+
+#招商银行请求地址
+cmb:
+  baseUrl: https://api.cmburl.cn:8065/hou/apiuat
+#招行appid
+  appId: 8ab74856-8772-45c9-96db-54cb30ab9f74
+#招行appSecret
+  appSecret: 5b96f20a-011f-4254-8be8-9a5ceb2f317f
+#商户私钥（国密SM2）
+  sm2_private_key: D5F2AFA24E6BA9071B54A8C9AD735F9A1DE9C4657FA386C09B592694BC118B38
+#招行公钥（国密SM2）
+  sm2_cmb_public_key: MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAE6Q+fktsnY9OFP+LpSR5Udbxf5zHCFO0PmOKlFNTxDIGl8jsPbbB/9ET23NV+acSz4FEkzD74sW2iiNVHRLiKHg==
+#回调地址（一网通）
+  notify_url_netpay: http://localhost:13017/peijian/api/pay/notify/netpay
+#回调地址（支付宝）
+  notify_url_alipay: http://localhost:13017/peijian/api/pay/notify/alipay
+#回调地址（微信）
+  notify_url_wechat: http://localhost:13017/peijian/api/pay/notify/wechat
+#回调地址（支付宝/微信退款）
+  refund_notify_url: http://localhost:13017/peijian/api/pay/refund/notify
+#商户号
+  mer_id: 308999107420078
+#收银员号
+  user_id: N003279195
+#子商户号
+  sub_mer_id: 30899910742007A
+#子门店号
+  sub_store_id: 30899910742007A0001
+#开放平台appid（微信）
+  wechat_appid: wx88297831a71c80e3
+#商户号（微信）
+  wechat_mer_id: 308999107420080
+#收银员号（微信）
+  wechat_user_id: N003282575
+#子商户号（微信）
+  wechat_sub_mer_id: 308999107420081
+#子门店号（微信）
+  wechat_sub_store_id: 3089991074200810001

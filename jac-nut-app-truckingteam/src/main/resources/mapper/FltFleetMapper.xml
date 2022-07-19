@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.truckingteam.app.dao.FltFleetDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.truckingteam.app.entity.FltFleetEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="avatar" column="avatar"/>
+        <result property="createType" column="create_type"/>
+        <result property="tbossUserId" column="tboss_user_id"/>
+        <result property="isCompany" column="is_company"/>
+        <result property="companyName" column="company_name"/>
+        <result property="creditCode" column="credit_code"/>
+        <result property="isGroup" column="is_group"/>
+        <result property="isVip" column="is_vip"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        , name, avatar, create_type, tboss_user_id, is_company, company_name, credit_code,
+    is_group, is_vip, create_time, update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from flt_fleet
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+</mapper>

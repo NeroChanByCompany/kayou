@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nut.locationservice.app.dao.HyCarDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.nut.locationservice.app.entity.HyCarEntity" id="BaseResultMap">
+        <result property="carId" column="CAR_ID"/>
+        <result property="districtId" column="DISTRICT_ID"/>
+        <result property="carCph" column="CAR_CPH"/>
+        <result property="carColor" column="CAR_COLOR"/>
+        <result property="carTerminal" column="CAR_TERMINAL"/>
+        <result property="carTeamId" column="CAR_TEAM_ID"/>
+        <result property="carState" column="CAR_STATE"/>
+        <result property="carPw" column="CAR_PW"/>
+        <result property="carAccountName" column="CAR_ACCOUNT_NAME"/>
+        <result property="carAutoNumber" column="CAR_AUTO_NUMBER"/>
+        <result property="carDate" column="CAR_DATE"/>
+        <result property="carPlace" column="CAR_PLACE"/>
+        <result property="carCompany" column="CAR_COMPANY"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <result property="carType" column="CAR_TYPE"/>
+        <result property="carTrade" column="CAR_TRADE"/>
+        <result property="carServiceStop" column="CAR_SERVICE_STOP"/>
+        <result property="serviceBegin" column="SERVICE_BEGIN"/>
+        <result property="serviceEnd" column="SERVICE_END"/>
+        <result property="nettingTime" column="NETTING_TIME"/>
+        <result property="nettingLog" column="NETTING_LOG"/>
+        <result property="nettingLat" column="NETTING_LAT"/>
+        <result property="chassisNum" column="CHASSIS_NUM"/>
+        <result property="structureNum" column="STRUCTURE_NUM"/>
+        <result property="oilCapacity" column="OIL_CAPACITY"/>
+        <result property="lockStauts" column="LOCK_STAUTS"/>
+        <result property="carTerminalId" column="CAR_TERMINAL_ID"/>
+        <result property="autoFlag" column="AUTO_FLAG"/>
+        <result property="tamperStatue" column="TAMPER_STATUE"/>
+        <result property="operateCommon" column="OPERATE_COMMON"/>
+        <result property="operateUser" column="OPERATE_USER"/>
+        <result property="operateDate" column="OPERATE_DATE"/>
+        <result property="tamperNoticeStatus" column="tamper_notice_status"/>
+        <result property="offlineTime" column="OFFLINE_TIME"/>
+        <result property="removalTime" column="REMOVAL_TIME"/>
+        <result property="registerTime" column="REGISTER_TIME"/>
+        <result property="operateIp" column="OPERATE_IP"/>
+        <result property="carFkdate" column="CAR_FKDATE"/>
+        <result property="batteryType" column="BATTERY_TYPE"/>
+        <result property="batteryBatches" column="BATTERY_BATCHES"/>
+        <result property="carModelCode" column="car_model_code"/>
+        <result property="onlineTime" column="online_time"/>
+        <result property="carModel" column="CAR_MODEL"/>
+        <result property="warehouseLog" column="WAREHOUSE_LOG"/>
+        <result property="warehouseLat" column="WAREHOUSE_LAT"/>
+        <result property="warehouseTime" column="WAREHOUSE_TIME"/>
+        <result property="orderNumber" column="order_number"/>
+        <result property="syncTime" column="sync_time"/>
+        <result property="lockMethod" column="lock_method"/>
+        <result property="qrCode" column="qr_code"/>
+        <result property="financingCompany" column="financing_company"/>
+        <result property="payType" column="pay_type"/>
+        <result property="createAccountId" column="CREATE_ACCOUNT_ID"/>
+        <result property="createStationId" column="CREATE_STATION_ID"/>
+        <result property="instalType" column="INSTAL_TYPE"/>
+        <result property="vfactory" column="vfactory"/>
+        <result property="teamIdOld" column="TEAM_ID_OLD"/>
+        <result property="state" column="STATE"/>
+        <result property="vinOld" column="VIN_OLD"/>
+        <result property="chassisNumOld" column="CHASSIS_NUM_OLD"/>
+        <result property="isf9" column="ISF9"/>
+        <result property="carDriveId" column="CAR_DRIVE_ID"/>
+        <result property="stationTime" column="STATION_TIME"/>
+        <result property="remarkOne" column="remark_one"/>
+        <result property="remarkTwo" column="remark_two"/>
+        <result property="loanFlag" column="LOAN_FLAG"/>
+        <result property="cumminsStatus" column="cummins_status"/>
+        <result property="prodCode" column="prod_code"/>
+        <result property="mateName" column="MATE_NAME"/>
+        <result property="transitTime" column="TRANSIT_TIME"/>
+        <result property="agencyCloseTime" column="AGENCY_CLOSE_TIME"/>
+        <result property="factoryWarehouseTime" column="FACTORY_WAREHOUSE_TIME"/>
+        <result property="carAttributes" column="car_attributes"/>
+        <result property="vehicleColor" column="vehicle_color"/>
+        <result property="fuel" column="fuel"/>
+        <result property="addFinanceCompanyTime" column="add_finance_company_time"/>
+        <result property="structureNo" column="structure_no"/>
+        <result property="remark" column="remark"/>
+        <result property="clwflag" column="clwflag"/>
+    </resultMap>
+
+    <resultMap id="CarLocationInputDto" type="com.nut.locationservice.app.dto.CarLocationInputDto">
+        <result column="vin" jdbcType="VARCHAR" property="vin" />
+        <result column="terminalId" jdbcType="BIGINT" property="terminalId" />
+    </resultMap>
+
+    <select id="selectByTerminalId" parameterType="list" resultMap="CarLocationInputDto">
+        SELECT
+        c.STRUCTURE_NUM AS vin,
+        (
+        CASE
+        WHEN t.t_auto_communication_id IS NULL THEN
+        t.T_COMMUNICATION_ID
+        ELSE
+        t.t_auto_communication_id
+        END
+        ) AS terminalId
+        FROM
+        ${DatabaseName}.hy_car c
+        LEFT JOIN ${DatabaseName}.hy_terminal t ON c.CAR_TERMINAL_ID = t.T_ID OR c.CAR_TERMINAL = t.T_ID
+        WHERE
+        (
+        t.t_auto_communication_id IS NOT NULL
+        OR t.T_COMMUNICATION_ID IS NOT NULL
+        )
+        AND c.STRUCTURE_NUM IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+</mapper>
