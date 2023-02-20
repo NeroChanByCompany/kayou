@@ -36,6 +36,6 @@ public class TruckingteamApplication {
                 "Local: \t\thttp://localhost:" + port + "/\n\t" +
                 "External: \thttp://" + address + ":" + port + "/\n\t" +
                 "Swagger文档: \thttp://" + address + ":" + port  + "/doc.html\n" +
-                "----------------------------------------------------------");
+                "-----------------------------------------------------------");
     }
 }
